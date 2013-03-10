@@ -26,7 +26,7 @@ package jLibNoise.noise.utils;
 
 import jLibNoise.noise.ExceptionInvalidParam;
 import jLibNoise.noise.ExceptionOutOfMemory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 /**
  * Implements an image, a 2-dimensional array of color values.
@@ -151,7 +151,7 @@ public class Image {
         for (int i = 0; i < m_height * m_width; i++) {
             m_pImage[i] = value;
         }
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -172,7 +172,7 @@ public class Image {
      * @return A const pointer to a slab at the position (0, 0), or @a NULL if the image is empty.
      */
     public Color GetConstSlabPtr() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
 //      return m_pImage;
     }
 
@@ -232,7 +232,7 @@ public class Image {
      */
     public Color GetSlabPtr() {
 //        return m_pImage;
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -332,7 +332,7 @@ public class Image {
 //            m_pImage = pNewImage;
 //            m_memUsed = newMemUsage;
 //        }
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -433,7 +433,7 @@ public class Image {
 //        // Now that the source buffer is assigned to this image, reset the source
 //        // image object.
 //        source.InitObj();
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -486,7 +486,7 @@ public class Image {
 //
 //        // Copy the border value as well.
 //        m_borderValue = source.m_borderValue;
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**

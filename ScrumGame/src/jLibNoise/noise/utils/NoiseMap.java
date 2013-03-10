@@ -26,7 +26,7 @@ package jLibNoise.noise.utils;
 
 import jLibNoise.noise.ExceptionInvalidParam;
 import jLibNoise.noise.ExceptionOutOfMemory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 /**
  * Implements a noise map, a 2-dimensional array of floating-point values.
@@ -293,7 +293,7 @@ public class NoiseMap {
         if (m_pNoiseMap != null) {
             if (x >= 0 && x < m_width && y >= 0 && y < m_height) {
 //                return*(GetConstSlabPtr(x, y));
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
         }
         // The coordinates specified are outside the noise map.  Return the border
@@ -335,7 +335,7 @@ public class NoiseMap {
 //            m_pNoiseMap = pNewNoiseMap;
 //            m_memUsed = newMemUsage;
 //        }
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -409,7 +409,7 @@ public class NoiseMap {
         if (m_pNoiseMap != null) {
             if (x >= 0 && x < m_width && y >= 0 && y < m_height) {
 //                *(GetSlabPtr(x, y)) = value;
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
         }
     }
@@ -492,7 +492,7 @@ public class NoiseMap {
 //
 //        // Copy the border value as well.
 //        m_borderValue = source.m_borderValue;
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**

@@ -28,7 +28,7 @@ import jLibNoise.noise.ExceptionInvalidParam;
 import jLibNoise.noise.Interp;
 import jLibNoise.noise.MathConst;
 import jLibNoise.noise.Misc;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 /**
  * Renders an image from a noise map.

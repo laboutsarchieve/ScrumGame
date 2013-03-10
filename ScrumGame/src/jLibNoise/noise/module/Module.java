@@ -45,7 +45,6 @@ package jLibNoise.noise.module;
 
 import jLibNoise.noise.ExceptionInvalidParam;
 import jLibNoise.noise.ExceptionNoModule;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Abstract base class for noise modules.
@@ -100,7 +99,7 @@ public abstract class Module {
      * @return The number of source modules required by this noise module.
      */
     public int GetSourceModuleCount() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**
