@@ -8,6 +8,7 @@ public class MapDrawer {
 	private float screenHeight;
 	private HeightMap map;
 	private final int TILE_SIZE = 32;
+	
 	public MapDrawer(HeightMap map, float screenWidth, float screenHeight) {
 		this.map = map;
 		this.screenWidth = screenWidth;
@@ -30,8 +31,8 @@ public class MapDrawer {
 	
 	public SpriteHelper getTileFromHeight(float height) {
 		if (height < 0.1)
-			return MainGame.getTexRepo().getSprite(TextureType.grass);
+			return MainGame.getTextureRepo().getSprite(TextureType.grass);
 		else
-			return MainGame.getTexRepo().getSprite(TextureType.mountain);
+			return MainGame.getTextureRepo().getSprite(TextureType.mountain);
 	}
 }

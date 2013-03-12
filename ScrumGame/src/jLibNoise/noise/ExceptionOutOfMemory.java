@@ -32,4 +32,5 @@ package jLibNoise.noise;
  * @source 'exception.h'
  */
 public class ExceptionOutOfMemory extends RuntimeException {
+	private static final long serialVersionUID = -1739478895572058760L;
 }

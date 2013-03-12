@@ -36,4 +36,5 @@ package jLibNoise.noise;
  * is done for performance reasons.
  */
 public class ExceptionNoModule extends RuntimeException {
+	private static final long serialVersionUID = 6769708066497300823L;
 }

@@ -24,8 +24,6 @@
 
 package jLibNoise.noise.utils;
 
-import jLibNoise.noise.ExceptionInvalidParam;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;

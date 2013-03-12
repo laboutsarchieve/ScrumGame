@@ -32,4 +32,5 @@ package jLibNoise.noise;
  * @source 'exception.h'
  */
 public class ExceptionInvalidParam extends RuntimeException {
+	private static final long serialVersionUID = 3428307273506027633L;
 }
