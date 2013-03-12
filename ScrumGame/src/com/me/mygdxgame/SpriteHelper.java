@@ -12,7 +12,7 @@ public class SpriteHelper {
 	
 	public SpriteHelper(String fileName, float screenHeight) {
 		texture = new Texture(Gdx.files.internal(fileName));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		texture.setFilter(TextureFilter.Linear, TextureFilter.MipMapLinearNearest);
 		
 		TextureRegion region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
 		

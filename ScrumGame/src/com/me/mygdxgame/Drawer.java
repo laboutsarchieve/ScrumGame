@@ -47,7 +47,7 @@ public class Drawer {
 		
 		for (int x = 0; x < tileScreenWidth; x++) {
 			for (int y = 0; y < tileScreenHeight; y++) {
-				if(!map.contains(x,y))
+				if(!map.contains(x+tileOffsetX,y+tileOffsetY))
 					break;
 				Sprite sprite = getTileFromHeight(map.values[x+tileOffsetX][y+tileOffsetY]).getSprite();
 				drawAtLocation(sprite, x * TILE_SIZE - viewOffset.x, y * TILE_SIZE - viewOffset.y);
@@ -82,7 +82,7 @@ public class Drawer {
 		float maxX = map.getWidth() * TILE_SIZE - (screenWidth);
 		float maxY = map.getHeight() * TILE_SIZE - (screenHeight);
 		
-		lowerLeftOfView = GameTools.clamp(lowerLeftOfView, Vector2.Zero, new Vector2(maxX, maxY));
+		GameTools.clamp(lowerLeftOfView, new Vector2(0, 0), new Vector2(maxX, maxY));
 	}
 
 	public float getWidth() {
