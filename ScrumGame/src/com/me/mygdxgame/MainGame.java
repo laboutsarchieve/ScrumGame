@@ -2,17 +2,12 @@ package com.me.mygdxgame;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MainGame implements ApplicationListener {
-	private static TextureRepository textureRepo;
-	private OrthographicCamera camera;
-	private SpriteBatch batch;	
+	private static TextureRepository textureRepo;	
 	private HeightMap map;
-	private MapDrawer mapDrawer;
-	private Input input;
+	private Drawer drawer;
+	private GameInput gameInput;
 
 	@Override
 	public void create() {
@@ -22,38 +17,25 @@ public class MainGame implements ApplicationListener {
 		
 		map = HeightMap.randomMap(400, 400);
 		
-		mapDrawer = new MapDrawer(map, width, height);
-
-		camera = new OrthographicCamera(1, height / width);
-		batch = new SpriteBatch();
-		
-		input = new Input(this);
+		drawer = new Drawer(map, width, height);		
+		gameInput = new GameInput(this);
+		Gdx.input.setInputProcessor(gameInput);
 	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
+		drawer.dispose( );
 		textureRepo.dispose();
 	}
 
 	@Override
 	public void render() {		
 		update( );
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		
-		mapDrawer.draw(batch);
-		
-		batch.end();
+		drawer.draw();
 	}
 	public void update( ) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
-		handleInput(deltaTime);
-	}
-	public void handleInput(float deltaTime) {
-		
+		gameInput.update(deltaTime);
 	}
 	@Override
 	public void resize(int width, int height) {
@@ -67,23 +49,19 @@ public class MainGame implements ApplicationListener {
 	public void resume() {
 	}
 	
-	public MapDrawer getMapDrawer() {
-		return mapDrawer;
+	public Drawer getMapDrawer() {
+		return drawer;
 	}
 
 	public static TextureRepository getTextureRepo() {
 		return textureRepo;
 	}
-
-	public OrthographicCamera getCamera() {
-		return camera;
-	}
-
+	
 	public HeightMap getMap() {
 		return map;
 	}
 
-	public Input getInput() {
-		return input;
+	public GameInput getInput() {
+		return gameInput;
 	}
 }

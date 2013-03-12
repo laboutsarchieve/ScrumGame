@@ -22,6 +22,9 @@ public class HeightMap {
 		
 		return map;
 	}
+	public boolean contains(int x, int y) {
+		return x > -1 && y > -1 && x < getWidth( ) && y < getHeight( );			
+	}
 
 	public int getWidth() {
 		return values.length;
