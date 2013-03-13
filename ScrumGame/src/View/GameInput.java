@@ -1,7 +1,8 @@
-package com.me.mygdxgame;
+package View;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.me.mygdxgame.MainGame;
 
 public class GameInput implements InputProcessor {
 	MainGame game;
