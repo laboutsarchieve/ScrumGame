@@ -1,4 +1,4 @@
-package com.me.mygdxgame;
+package View;
 
 enum TextureType {
 	grass, mountain

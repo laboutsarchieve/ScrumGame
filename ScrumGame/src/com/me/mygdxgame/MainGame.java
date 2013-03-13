@@ -1,5 +1,10 @@
 package com.me.mygdxgame;
 
+import Data.HeightMap;
+import View.Drawer;
+import View.GameInput;
+import View.TextureRepository;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 
@@ -10,14 +15,11 @@ public class MainGame implements ApplicationListener {
 	private GameInput gameInput;
 
 	@Override
-	public void create() {
-		float width = Gdx.graphics.getWidth();
-		float height = Gdx.graphics.getHeight();
-		textureRepo = new TextureRepository(height);
+	public void create() {		
+		textureRepo = new TextureRepository();
 		
-		map = HeightMap.randomMap(400, 400);
-		
-		drawer = new Drawer(map, width, height);		
+		map = HeightMap.randomMap(400, 400);		
+		drawer = new Drawer(map);		
 		gameInput = new GameInput(this);
 		Gdx.input.setInputProcessor(gameInput);
 	}

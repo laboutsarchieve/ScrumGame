@@ -1,4 +1,4 @@
-package com.me.mygdxgame;
+package Data;
 
 import jLibNoise.noise.module.Perlin;
 

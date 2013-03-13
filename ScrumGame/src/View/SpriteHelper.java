@@ -1,4 +1,6 @@
-package com.me.mygdxgame;
+package View;
+
+import Data.GameSettings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,7 +12,7 @@ public class SpriteHelper {
 	private Texture texture;
 	private Sprite sprite;
 	
-	public SpriteHelper(String fileName, float screenHeight) {
+	public SpriteHelper(String fileName) {
 		texture = new Texture(Gdx.files.internal(fileName));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.MipMapLinearNearest);
 		
@@ -18,7 +20,7 @@ public class SpriteHelper {
 		
 		sprite = new Sprite(region);
 		
-		sprite.setSize(sprite.getHeight()/screenHeight, sprite.getWidth()/screenHeight);
+		sprite.setSize(sprite.getHeight()/GameSettings.getScreenHeight( ), sprite.getWidth()/GameSettings.getScreenHeight( ));
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 	}
 	
