@@ -9,4 +9,7 @@ public class GameSettings {
 	public static float getScreenHeight() {
 		return Gdx.graphics.getHeight();
 	}
+	public static float getAspectRatio( ) {
+		return GameSettings.getScreenHeight( ) / GameSettings.getScreenWidth( );
+	}
 }

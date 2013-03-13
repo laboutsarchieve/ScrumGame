@@ -39,6 +39,10 @@ public class GameInput implements InputProcessor {
 		touching = true;
 		startTouchPoint = new Vector2(screenX, screenY);
 		previousTouchPoint = new Vector2(screenX, screenY);
+		
+		MainGame.getMapDrawer().setDrawMoveCenter(true);
+		MainGame.getMapDrawer().setMoveCenter(startTouchPoint);
+		
 		return false;
 	}
 	@Override
@@ -46,6 +50,8 @@ public class GameInput implements InputProcessor {
 		touching = false;
 		startTouchPoint = new Vector2(screenX, screenY);
 		previousTouchPoint = new Vector2(screenX, screenY);
+		
+		MainGame.getMapDrawer().setDrawMoveCenter(false);
 		return false;
 	}
 	@Override
@@ -79,3 +85,4 @@ public class GameInput implements InputProcessor {
 		return false;
 	}
 }
+

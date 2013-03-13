@@ -17,13 +17,15 @@ public class Drawer {
 	private HeightMap map;
 	private Vector2 lowerLeftOfView;
 	private SpriteBatch batch;
-	private OrthographicCamera camera; 
+	private OrthographicCamera camera;
+	private boolean drawMoveCenter;
+	private Vector2 touchPosition; 
 	
 	public Drawer(HeightMap map) {
 		this.map = map;
 		lowerLeftOfView = Vector2.Zero;		
 		
-		camera = new OrthographicCamera(1, GameSettings.getScreenHeight( ) / GameSettings.getScreenWidth( ));
+		camera = new OrthographicCamera(1, GameSettings.getAspectRatio());
         camera.update();
 		batch = new SpriteBatch();
 		batch.enableBlending();
@@ -34,6 +36,7 @@ public class Drawer {
 		batch.begin();		
 		drawMap(deltaTime);
 		drawEntities(deltaTime);
+		drawUi(deltaTime);
 		batch.end();
 	}
 	public void drawMap(float deltaTime) {		
@@ -61,6 +64,16 @@ public class Drawer {
 			Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
 			drawAtLocation(entity.getSprite(), monsterPos.x, monsterPos.y);
 		}
+	}
+	public void drawUi(float deltaTime) {
+		if(drawMoveCenter) {
+			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.MoveCenter).getSprite();
+			drawAtLocation(toDraw, touchPosition);
+		}
+			
+	}
+	private void drawAtLocation(Sprite sprite, Vector2 position) {
+		drawAtLocation(sprite, position.x, position.y);
 	}
 	private void drawAtLocation(Sprite sprite, float x, float y) {
 		//This weirdness is related to how aspect ratio is handled
@@ -91,5 +104,15 @@ public class Drawer {
 
 	public void dispose() {
 		batch.dispose();
+	}
+
+	public void setDrawMoveCenter(boolean draw) {
+		drawMoveCenter = draw;
+		
+	}
+	public void setMoveCenter(Vector2 startTouchPoint) {
+		touchPosition = startTouchPoint.cpy( );		
+		touchPosition.y = GameSettings.getScreenHeight() - touchPosition.y;
+		touchPosition.mul(GameSettings.getAspectRatio());
 	}
 }
