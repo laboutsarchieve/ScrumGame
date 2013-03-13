@@ -53,8 +53,8 @@ public class Drawer {
 		Vector2 viewOffset = lowerLeftOfView.cpy();
 		viewOffset.sub(new Vector2(tileOffsetX*TILE_SIZE,tileOffsetY*TILE_SIZE));
 		
-		for (int x = 0; x < tileScreenWidth; x++) {
-			for (int y = 0; y < tileScreenHeight; y++) {
+		for (int x = 0; x < tileScreenWidth + 1; x++) {
+			for (int y = 0; y < tileScreenHeight + 1; y++) {
 				Vector2 position = new Vector2(x+tileOffsetX,y+tileOffsetY);
 				if(!map.contains(position))
 					break;
