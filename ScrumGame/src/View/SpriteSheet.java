@@ -35,9 +35,9 @@ public class SpriteSheet {
 	
 	public Sprite getFrame(int frameNum) {
 		Vector2 framePoint = new Vector2((frameNum / numCol), (frameNum % numCol));
-		int left = (int)(start.x + framePoint.x) * frameHeight; 		
+		int left = (int)(start.x + framePoint.x) * frameHeight;
 		int down = (int)(start.y + framePoint.y) * frameWidth;
-		TextureRegion region = new TextureRegion(texture, left, down, frameWidth, frameHeight);
+		TextureRegion region = new TextureRegion(texture, down, left, frameWidth, frameHeight);
 		
 		Sprite sprite = new Sprite(region);
 		
