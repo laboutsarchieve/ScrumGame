@@ -33,8 +33,25 @@ public class SpriteSheet {
 		numCol = (int)(end.x - start.x);
 	}
 	
-	public Sprite getFrame(int frameNum) {
+	public Sprite getFrame(int step) {
+		int frameNum = step % getNumFrames( );
+		
 		Vector2 framePoint = new Vector2((frameNum / numCol), (frameNum % numCol));
+		int left = (int)(start.x + framePoint.x) * frameHeight;
+		int down = (int)(start.y + framePoint.y) * frameWidth;
+		TextureRegion region = new TextureRegion(texture, down, left, frameWidth, frameHeight);
+		
+		Sprite sprite = new Sprite(region);
+		
+		sprite.setSize(frameHeight/GameSettings.getScreenHeight( ), frameWidth/GameSettings.getScreenHeight( ));
+		sprite.setOrigin(0, 0);
+		
+		return sprite;
+	}
+	public Sprite getStepInCol(int col, int step) {
+		int frameNum = step % getNumFrames( );
+		
+		Vector2 framePoint = new Vector2(col, (frameNum % numCol));
 		int left = (int)(start.x + framePoint.x) * frameHeight;
 		int down = (int)(start.y + framePoint.y) * frameWidth;
 		TextureRegion region = new TextureRegion(texture, down, left, frameWidth, frameHeight);
