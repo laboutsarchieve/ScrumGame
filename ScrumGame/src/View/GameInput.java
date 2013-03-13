@@ -41,8 +41,8 @@ public class GameInput implements InputProcessor {
 		previousTouchPoint = new Vector2(screenX, screenY);
 		
 		MainGame.getMapDrawer().setDrawMoveCenter(true);
-		MainGame.getMapDrawer().setMoveCenter(startTouchPoint);
-		
+		MainGame.getMapDrawer().setStartTouch(startTouchPoint);
+		MainGame.getMapDrawer().setCurrTouch(previousTouchPoint);		
 		return false;
 	}
 	@Override
@@ -57,6 +57,7 @@ public class GameInput implements InputProcessor {
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		previousTouchPoint = new Vector2(screenX, screenY);
+		MainGame.getMapDrawer().setCurrTouch(previousTouchPoint);
 		return false;
 	}
 	@Override

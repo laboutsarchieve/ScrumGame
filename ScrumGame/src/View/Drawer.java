@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.me.mygdxgame.GameTools;
 import com.me.mygdxgame.MainGame;
@@ -19,7 +21,9 @@ public class Drawer {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private boolean drawMoveCenter;
-	private Vector2 touchPosition; 
+	private Vector2 startTouchPosition;
+	private Vector2 currTouchPosition;
+	ShapeRenderer shapeRenderer;
 	
 	public Drawer(HeightMap map) {
 		this.map = map;
@@ -29,14 +33,14 @@ public class Drawer {
         camera.update();
 		batch = new SpriteBatch();
 		batch.enableBlending();
-	}
-	
+		shapeRenderer = new ShapeRenderer(7);
+	}	
 	public void draw(float deltaTime) {
 		setupDisplay( );		
 		batch.begin();		
 		drawMap(deltaTime);
 		drawEntities(deltaTime);
-		drawUi(deltaTime);
+		drawUi(deltaTime);		
 		batch.end();
 	}
 	public void drawMap(float deltaTime) {		
@@ -55,7 +59,7 @@ public class Drawer {
 				if(!map.contains(position))
 					break;
 				Sprite sprite = MainGame.getTextureRepo().getTile(map.getTileType(position)).getSprite();
-				drawAtLocation(sprite, x * TILE_SIZE - viewOffset.x, y * TILE_SIZE - viewOffset.y);
+				drawAtLocation(sprite, x * TILE_SIZE - (int)viewOffset.x, y * TILE_SIZE - (int)viewOffset.y);
 			}
 		}
 	}
@@ -68,7 +72,7 @@ public class Drawer {
 	public void drawUi(float deltaTime) {
 		if(drawMoveCenter) {
 			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.MoveCenter).getSprite();
-			drawAtLocation(toDraw, touchPosition);
+			drawAtLocation(toDraw, startTouchPosition);
 		}
 			
 	}
@@ -91,6 +95,7 @@ public class Drawer {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
+		shapeRenderer.setProjectionMatrix(camera.combined);
 	}
 	
 	public void moveView(Vector2 movementInTiles) {
@@ -110,9 +115,14 @@ public class Drawer {
 		drawMoveCenter = draw;
 		
 	}
-	public void setMoveCenter(Vector2 startTouchPoint) {
-		touchPosition = startTouchPoint.cpy( );		
-		touchPosition.y = GameSettings.getScreenHeight() - touchPosition.y;
-		touchPosition.mul(GameSettings.getAspectRatio());
+	public void setStartTouch(Vector2 startTouchPoint) {
+		startTouchPosition = startTouchPoint.cpy( );		
+		startTouchPosition.y = GameSettings.getScreenHeight() - startTouchPosition.y;
+		startTouchPosition.mul(GameSettings.getAspectRatio());
+	}
+	public void setCurrTouch(Vector2 startTouchPoint) {
+		currTouchPosition = startTouchPoint.cpy( );		
+		currTouchPosition.y = GameSettings.getScreenHeight() - startTouchPosition.y;
+		currTouchPosition.mul(GameSettings.getAspectRatio());
 	}
 }
