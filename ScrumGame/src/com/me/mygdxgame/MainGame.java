@@ -1,6 +1,5 @@
 package com.me.mygdxgame;
 
-import Data.GameSettings;
 import Data.HeightMap;
 import View.Drawer;
 import View.GameInput;
@@ -16,10 +15,7 @@ public class MainGame implements ApplicationListener {
 	private GameInput gameInput;
 
 	@Override
-	public void create() {
-		GameSettings.setScreenWidth(Gdx.graphics.getWidth());
-		GameSettings.setScreenHeight(Gdx.graphics.getHeight());
-		
+	public void create() {		
 		textureRepo = new TextureRepository();
 		
 		map = HeightMap.randomMap(400, 400);		

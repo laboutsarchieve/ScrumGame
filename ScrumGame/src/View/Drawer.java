@@ -26,12 +26,14 @@ public class Drawer {
 		camera = new OrthographicCamera(1, GameSettings.getScreenHeight( ) / GameSettings.getScreenWidth( ));
         camera.update();
 		batch = new SpriteBatch();
+		batch.enableBlending();
 	}
 	
 	public void draw( ) {
 		setupDisplay( );		
 		batch.begin();		
 		drawMap();
+		drawEntities( );
 		batch.end();
 	}
 	public void drawMap() {		
@@ -51,6 +53,13 @@ public class Drawer {
 				Sprite sprite = getTileFromHeight(map.values[x+tileOffsetX][y+tileOffsetY]).getSprite();
 				drawAtLocation(sprite, x * TILE_SIZE - viewOffset.x, y * TILE_SIZE - viewOffset.y);
 			}
+		}
+	}
+	public void drawEntities() {
+		SpriteSheet sheet = MainGame.getTextureRepo().getSpriteSheet(SheetType.Monster);
+		for (int x = 0; x < sheet.getNumFrames(); x++) {
+			Sprite sprite = sheet.getFrame(x);
+			drawAtLocation(sprite, x*TILE_SIZE, 0);
 		}
 	}
 	private void drawAtLocation(Sprite sprite, float x, float y) {

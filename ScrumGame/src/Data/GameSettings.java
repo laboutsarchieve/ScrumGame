@@ -1,19 +1,12 @@
 package Data;
 
-public class GameSettings {
-	private static int screenWidth;
-	private static int screenHeight;
-	
-	public static int getScreenWidth() {
-		return screenWidth;
+import com.badlogic.gdx.Gdx;
+
+public class GameSettings {	
+	public static float getScreenWidth() {
+		return Gdx.graphics.getWidth();
 	}
-	public static void setScreenWidth(int newScreenWidth) {
-		screenWidth = newScreenWidth;
-	}
-	public static int getScreenHeight() {
-		return screenHeight;
-	}
-	public static void setScreenHeight(int newScreenHeight) {
-		screenHeight = newScreenHeight;
+	public static float getScreenHeight() {
+		return Gdx.graphics.getHeight();
 	}
 }

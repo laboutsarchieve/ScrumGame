@@ -1,6 +1,5 @@
 package View;
 
-import java.awt.Point;
 import java.util.HashMap;
 
 import com.badlogic.gdx.math.Vector2;
@@ -17,12 +16,15 @@ public class TextureRepository {
 		tileMap.put(type, new SpriteHelper(fileName));
 	}
 	private void addToSheetMap(SheetType type, String fileName, int frameHeight, int frameWidth) {
-		//sheetMap.put(type, new SpriteSheet(fileName, new Vector2(0,0), new Vector2(3,4),frameHeight, frameWidth));
+		sheetMap.put(type, new SpriteSheet(fileName, new Vector2(0,0), new Vector2(3,4),frameHeight, frameWidth));
 	}
 	public SpriteHelper getTile(TextureType type) {
 		return tileMap.get(type);
 	}
-	public void dispose() {	
-		
+	public SpriteSheet getSpriteSheet(SheetType type) {
+		return sheetMap.get(type);
 	}
+	public void dispose() {	
+		//TODO
+	}	
 }
