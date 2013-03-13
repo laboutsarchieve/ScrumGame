@@ -1,8 +1,8 @@
 package View;
 
+import Data.Entity;
 import Data.GameSettings;
 import Data.HeightMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -29,14 +29,14 @@ public class Drawer {
 		batch.enableBlending();
 	}
 	
-	public void draw( ) {
+	public void draw(float deltaTime) {
 		setupDisplay( );		
 		batch.begin();		
-		drawMap();
-		drawEntities( );
+		drawMap(deltaTime);
+		drawEntities(deltaTime);
 		batch.end();
 	}
-	public void drawMap() {		
+	public void drawMap(float deltaTime) {		
 		float tileScreenWidth = GameSettings.getScreenWidth( )/TILE_SIZE;
 		float tileScreenHeight = GameSettings.getScreenHeight( )/TILE_SIZE;
 		
@@ -48,18 +48,18 @@ public class Drawer {
 		
 		for (int x = 0; x < tileScreenWidth; x++) {
 			for (int y = 0; y < tileScreenHeight; y++) {
-				if(!map.contains(x+tileOffsetX,y+tileOffsetY))
+				Vector2 position = new Vector2(x+tileOffsetX,y+tileOffsetY);
+				if(!map.contains(position))
 					break;
-				Sprite sprite = getTileFromHeight(map.values[x+tileOffsetX][y+tileOffsetY]).getSprite();
+				Sprite sprite = MainGame.getTextureRepo().getTile(map.getTileType(position)).getSprite();
 				drawAtLocation(sprite, x * TILE_SIZE - viewOffset.x, y * TILE_SIZE - viewOffset.y);
 			}
 		}
 	}
-	public void drawEntities() {
-		SpriteSheet sheet = MainGame.getTextureRepo().getSpriteSheet(SheetType.Monster);
-		for (int x = 0; x < sheet.getNumFrames(); x++) {
-			Sprite sprite = sheet.getFrame(x);
-			drawAtLocation(sprite, x*TILE_SIZE, 0);
+	public void drawEntities(float deltaTime) {
+		for(Entity entity : MainGame.getEntityManager( ).getEntities( )) {			
+			Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
+			drawAtLocation(entity.getSprite(), monsterPos.x, monsterPos.y);
 		}
 	}
 	private void drawAtLocation(Sprite sprite, float x, float y) {
@@ -78,12 +78,6 @@ public class Drawer {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
-	}
-	public SpriteHelper getTileFromHeight(float height) {
-		if (height < 0.1)
-			return MainGame.getTextureRepo().getTile(TextureType.grass);
-		else
-			return MainGame.getTextureRepo().getTile(TextureType.mountain);
 	}
 	
 	public void moveView(Vector2 movementInTiles) {

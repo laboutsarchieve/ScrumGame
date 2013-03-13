@@ -17,51 +17,85 @@ public class SpriteSheet {
 	Vector2 start;
 	Vector2 end;
 	Vector2 sheetSize;
-	
+
 	Texture texture;
-	
-	public SpriteSheet(String fileName, Vector2 start, Vector2 end, int frameHeight, int frameWidth) {
+
+	public SpriteSheet(String fileName, Vector2 start, Vector2 end,
+			int frameHeight, int frameWidth) {
 		this.start = start;
 		this.end = end;
 		this.frameWidth = frameWidth;
 		this.frameHeight = frameHeight;
-		
+
 		texture = new Texture(Gdx.files.internal(fileName));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.MipMapLinearNearest);
-		
-		numRow = (int)(end.y - start.y);
-		numCol = (int)(end.x - start.x);
+		texture.setFilter(TextureFilter.Linear,
+				TextureFilter.MipMapLinearNearest);
+
+		numRow = (int) (end.y - start.y);
+		numCol = (int) (end.x - start.x);
+	}
+
+	public Sprite getFrame(int step) {
+		int frameNum = step % getNumFrames();
+
+		Vector2 framePoint = new Vector2((frameNum / numCol),
+				(frameNum % numCol));
+		int left = (int) (start.x + framePoint.x) * frameHeight;
+		int down = (int) (start.y + framePoint.y) * frameWidth;
+		TextureRegion region = new TextureRegion(texture, down, left,
+				frameWidth, frameHeight);
+
+		Sprite sprite = new Sprite(region);
+
+		sprite.setSize(frameHeight / GameSettings.getScreenHeight(), frameWidth
+				/ GameSettings.getScreenHeight());
+		sprite.setOrigin(0, 0);
+
+		return sprite;
+	}
+
+	public Sprite getStepInRow(int row, int step) {
+		int frameNum = step % numCol;
+
+		Vector2 framePoint = new Vector2(row, frameNum);
+		int left = (int) (start.x + framePoint.x) * frameHeight;
+		int down = (int) (start.y + framePoint.y) * frameWidth;
+		TextureRegion region = new TextureRegion(texture, down, left,
+				frameWidth, frameHeight);
+
+		Sprite sprite = new Sprite(region);
+
+		sprite.setSize(frameHeight / GameSettings.getScreenHeight(), frameWidth
+				/ GameSettings.getScreenHeight());
+		sprite.setOrigin(0, 0);
+
+		return sprite;
 	}
 	
-	public Sprite getFrame(int step) {
-		int frameNum = step % getNumFrames( );
-		
-		Vector2 framePoint = new Vector2((frameNum / numCol), (frameNum % numCol));
-		int left = (int)(start.x + framePoint.x) * frameHeight;
-		int down = (int)(start.y + framePoint.y) * frameWidth;
-		TextureRegion region = new TextureRegion(texture, down, left, frameWidth, frameHeight);
-		
+	public Sprite getStepInCol(int col, int step) {
+		int frameNum = step % numCol;
+
+		Vector2 framePoint = new Vector2(frameNum, col);
+		int left = (int) (start.x + framePoint.x) * frameHeight;
+		int down = (int) (start.y + framePoint.y) * frameWidth;
+		TextureRegion region = new TextureRegion(texture, down, left,
+				frameWidth, frameHeight);
+
 		Sprite sprite = new Sprite(region);
-		
-		sprite.setSize(frameHeight/GameSettings.getScreenHeight( ), frameWidth/GameSettings.getScreenHeight( ));
+
+		sprite.setSize(frameHeight / GameSettings.getScreenHeight(), frameWidth
+				/ GameSettings.getScreenHeight());
 		sprite.setOrigin(0, 0);
-		
+
 		return sprite;
 	}
-	public Sprite getStepInCol(int col, int step) {
-		int frameNum = step % getNumFrames( );
-		
-		Vector2 framePoint = new Vector2(col, (frameNum % numCol));
-		int left = (int)(start.x + framePoint.x) * frameHeight;
-		int down = (int)(start.y + framePoint.y) * frameWidth;
-		TextureRegion region = new TextureRegion(texture, down, left, frameWidth, frameHeight);
-		
-		Sprite sprite = new Sprite(region);
-		
-		sprite.setSize(frameHeight/GameSettings.getScreenHeight( ), frameWidth/GameSettings.getScreenHeight( ));
-		sprite.setOrigin(0, 0);
-		
-		return sprite;
+
+	public int getNumRow() {
+		return numRow;
+	}
+
+	public int getNumCol() {
+		return numCol;
 	}
 
 	public int getNumFrames() {

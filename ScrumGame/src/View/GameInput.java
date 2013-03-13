@@ -23,7 +23,7 @@ public class GameInput implements InputProcessor {
 		if(!touching)
 			return;
 		
-		Drawer drawer = game.getMapDrawer();
+		Drawer drawer = MainGame.getMapDrawer();
 		Vector2 movement = startTouchPoint.cpy().sub(previousTouchPoint);
 		movement.x /= -GameSettings.getScreenWidth();
 		movement.y /= GameSettings.getScreenHeight();
