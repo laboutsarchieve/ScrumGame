@@ -32,6 +32,7 @@ public class GameInput implements InputProcessor {
 	}
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO: game.entityManager.checkForSpriteHit(int screenX, int screenY);
 		touching = true;
 		startTouchPoint = new Vector2(screenX, screenY);
 		previousTouchPoint = new Vector2(screenX, screenY);
