@@ -1,5 +1,7 @@
 package View;
 
+import Data.GameSettings;
+
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.me.mygdxgame.MainGame;
@@ -23,8 +25,8 @@ public class GameInput implements InputProcessor {
 		
 		Drawer drawer = game.getMapDrawer();
 		Vector2 movement = startTouchPoint.cpy().sub(previousTouchPoint);
-		movement.x /= -drawer.getWidth( );
-		movement.y /= drawer.getHeight( );
+		movement.x /= -GameSettings.getScreenWidth();
+		movement.y /= GameSettings.getScreenHeight();
 		
 		final int MAX_TPS = 40; //Tiles per second
 		movement.mul(MAX_TPS * deltaTime);		

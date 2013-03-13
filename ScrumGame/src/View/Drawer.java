@@ -29,11 +29,9 @@ public class Drawer {
 	}
 	
 	public void draw( ) {
-		setupDisplay( );
-		
-		batch.setProjectionMatrix(camera.combined);
+		setupDisplay( );		
 		batch.begin();		
-		drawMap();		
+		drawMap();
 		batch.end();
 	}
 	public void drawMap() {		
@@ -63,12 +61,14 @@ public class Drawer {
 	private void setupDisplay( ) {
 		GL10 gl = Gdx.graphics.getGL10();
 		gl.glViewport(0, 0, (int)GameSettings.getScreenWidth( ), (int)GameSettings.getScreenHeight( ));		
-		camera.position.set(0.5f, getHeight() / getWidth() / 2, 0);		
+		camera.position.set(0.5f, GameSettings.getScreenHeight() / GameSettings.getScreenWidth() / 2, 0);		
 		camera.update();
 		camera.apply(gl);
 		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		batch.setProjectionMatrix(camera.combined);
 	}
 	public SpriteHelper getTileFromHeight(float height) {
 		if (height < 0.1)
@@ -84,14 +84,6 @@ public class Drawer {
 		float maxY = map.getHeight() * TILE_SIZE - (GameSettings.getScreenHeight( ));
 		
 		GameTools.clamp(lowerLeftOfView, new Vector2(0, 0), new Vector2(maxX, maxY));
-	}
-
-	public float getWidth() {
-		return GameSettings.getScreenWidth( );
-	}
-
-	public float getHeight() {
-		return GameSettings.getScreenHeight( );
 	}
 
 	public void dispose() {

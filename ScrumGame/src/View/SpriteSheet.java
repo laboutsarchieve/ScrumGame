@@ -1,7 +1,5 @@
 package View;
 
-import java.awt.Point;
-
 import Data.GameSettings;
 
 import com.badlogic.gdx.Gdx;
