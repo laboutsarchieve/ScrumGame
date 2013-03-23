@@ -1,12 +1,13 @@
-package View;
+package view;
 
-import Data.GameSettings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import data.GameSettings;
 
 public class SpriteHelper {
 	private Texture texture;

@@ -1,4 +1,4 @@
-package Data;
+package data;
 
 public enum TileType {
 	Grass,

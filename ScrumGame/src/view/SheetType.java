@@ -1,4 +1,4 @@
-package View;
+package view;
 
 public enum SheetType {
 	Monster,

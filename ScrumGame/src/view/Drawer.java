@@ -1,8 +1,8 @@
-package View;
+package view;
 
-import Data.Entity;
-import Data.GameSettings;
-import Data.HeightMap;
+import application.GameTools;
+import application.MainGame;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.me.mygdxgame.GameTools;
-import com.me.mygdxgame.MainGame;
+
+import data.Entity;
+import data.GameSettings;
+import data.HeightMap;
 
 public class Drawer {
 	public final int TILE_SIZE = 32;

@@ -1,22 +1,23 @@
-package Data;
+package data;
 
-import View.AnimatedSprite;
-import View.SheetType;
+import view.AnimatedSprite;
+import view.SheetType;
+
+import application.MainGame;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.me.mygdxgame.MainGame;
 
-public class Monster extends Entity {
+public class Mage extends Entity {
 	private float BETWEEN_MOVES = 1.0f;
 	private float tillNextMove = 0;
 	//TODO: This should managed in a separate but parallel class
 	private AnimatedSprite animations;
 	
-	public Monster(Vector2 position, Facing facing) {
-		super(position, facing, Faction.Monster);
-		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Monster));
+	public Mage(Vector2 position, Facing facing) {
+		super(position, facing, Faction.Player);
+		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Mage));
 	}
 	
 	@Override

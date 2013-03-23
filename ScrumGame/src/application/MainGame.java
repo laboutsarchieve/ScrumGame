@@ -1,13 +1,14 @@
-package com.me.mygdxgame;
+package application;
 
-import Data.*;
-import View.Drawer;
-import View.GameInput;
-import View.TextureRepository;
+import view.Drawer;
+import view.GameInput;
+import view.TextureRepository;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+
+import data.*;
 
 public class MainGame implements ApplicationListener {
 	private static TextureRepository textureRepo;	

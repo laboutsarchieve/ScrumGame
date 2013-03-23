@@ -1,4 +1,4 @@
-package View;
+package view;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 

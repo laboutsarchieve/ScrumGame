@@ -1,4 +1,4 @@
-package com.me.mygdxgame;
+package application;
 
 public class GameException extends RuntimeException {
 	public GameException(String string) {

@@ -1,7 +1,8 @@
-package Data;
+package data;
+
+import application.GameException;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.me.mygdxgame.GameException;
 
 public enum Facing {
 	Up,

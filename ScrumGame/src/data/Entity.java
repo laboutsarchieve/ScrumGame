@@ -1,4 +1,4 @@
-package Data;
+package data;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;

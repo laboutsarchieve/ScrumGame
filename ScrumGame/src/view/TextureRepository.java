@@ -1,10 +1,11 @@
-package View;
+package view;
 
 import java.util.HashMap;
 
-import Data.TileType;
 
 import com.badlogic.gdx.math.Vector2;
+
+import data.TileType;
 
 public class TextureRepository {
 	HashMap<TileType, SpriteHelper> tileMap = new HashMap<TileType, SpriteHelper>();
