@@ -16,7 +16,7 @@ public class Mage extends Entity {
 	
 	public Mage(Vector2 position, Facing facing) {
 		super(position, facing, Faction.Player);
-		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Monster));
+		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Mage));
 	}
 	
 	@Override
