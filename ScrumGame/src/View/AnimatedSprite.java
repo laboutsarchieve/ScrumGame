@@ -32,7 +32,7 @@ public class AnimatedSprite {
 	}
 	
 	public Sprite getSprite( ) {
-		return sheet.getStepInRow(currAnimation, currFrame);
+		return sheet.getStepInCol(currAnimation, currFrame);
 	}
 	
 	public void setFrameLength(int animationNumber, float time) {

@@ -8,28 +8,29 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.me.mygdxgame.MainGame;
 
-public class Monster extends Entity {
+public class Archer extends Entity {
 	private float BETWEEN_MOVES = 1.0f;
 	private float tillNextMove = 0;
-	//TODO: This should managed in a separate but parallel class
+	// TODO: This should managed in a separate but parallel class
 	private AnimatedSprite animations;
-	
-	public Monster(Vector2 position, Facing facing) {
-		super(position, facing, Faction.Monster);
-		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Monster));
+
+	public Archer(Vector2 position, Facing facing) {
+		super(position, facing, Faction.Player);
+		animations = new AnimatedSprite(MainGame.getTextureRepo()
+				.getSpriteSheet(SheetType.Archer));
 	}
-	
+
 	@Override
 	public void update(float deltaTime) {
 		animations.update(deltaTime);
 		tillNextMove -= deltaTime;
-		
-		while(tillNextMove < 0) {
+
+		while (tillNextMove < 0) {
 			move();
 			tillNextMove += BETWEEN_MOVES;
 		}
 	}
-	
+
 	private void move() {
 		Facing nextFacing = facing;
 		if (MathUtils.random() > 0.6) {
@@ -66,8 +67,8 @@ public class Monster extends Entity {
 			facing = Facing.getRandom();
 		}
 	}
-	
-	public Sprite getSprite( ) {
+
+	public Sprite getSprite() {
 		return animations.getSprite();
 	}
 }

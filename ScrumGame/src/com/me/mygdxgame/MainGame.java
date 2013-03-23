@@ -1,10 +1,6 @@
 package com.me.mygdxgame;
 
-import Data.EntityManager;
-import Data.Facing;
-import Data.HeightMap;
-import Data.Monster;
-import Data.TileType;
+import Data.*;
 import View.Drawer;
 import View.GameInput;
 import View.TextureRepository;
@@ -24,20 +20,36 @@ public class MainGame implements ApplicationListener {
 	public void create() {		
 		textureRepo = new TextureRepository();
 		
-		map = HeightMap.randomMap(100, 100);		
+		map = HeightMap.randomMap(50, 50);		
 		drawer = new Drawer(map);		
 		gameInput = new GameInput(this);		
 		Gdx.input.setInputProcessor(gameInput);
 		entityManager = new EntityManager( );
 		
-		addTestMonsters( );
+		//addTestMonsters(50, 10, 10, 10, 100);
+		addTestMonsters(20, 5, 5, 5, 30);
 	}
 	
-	public void addTestMonsters( ) {
-		final int NUM_MONSTERS = 50;
-		for(int x = 0; x < NUM_MONSTERS; x++) {
+	public void addTestMonsters(int numMonsters, int numSoldier, int numArcher, int numMage, int numVillager) {
+		for(int x = 0; x < numMonsters; x++) {
 			Vector2 position = map.getRandomPosWithTile(TileType.Grass);
 			entityManager.addEntity(new Monster(position, Facing.Down));
+		}
+		for(int x = 0; x < numSoldier; x++) {
+			Vector2 position = map.getRandomPosWithTile(TileType.Grass);
+			entityManager.addEntity(new Soldier(position, Facing.Down));
+		}
+		for(int x = 0; x < numArcher; x++) {
+			Vector2 position = map.getRandomPosWithTile(TileType.Grass);
+			entityManager.addEntity(new Archer(position, Facing.Down));
+		}
+		for(int x = 0; x < numMage; x++) {
+			Vector2 position = map.getRandomPosWithTile(TileType.Grass);
+			entityManager.addEntity(new Mage(position, Facing.Down));
+		}
+		for(int x = 0; x < numVillager; x++) {
+			Vector2 position = map.getRandomPosWithTile(TileType.Grass);
+			entityManager.addEntity(new Villager(position, Facing.Down));
 		}
 	}
 

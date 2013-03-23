@@ -3,6 +3,7 @@ package View;
 import Data.GameSettings;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -26,8 +27,8 @@ public class SpriteSheet {
 		this.end = end;
 		this.frameWidth = frameWidth;
 		this.frameHeight = frameHeight;
-
-		texture = new Texture(Gdx.files.internal(fileName));
+		FileHandle file = Gdx.files.internal(fileName);
+		texture = new Texture(file);
 		texture.setFilter(TextureFilter.Linear,
 				TextureFilter.MipMapLinearNearest);
 
@@ -60,7 +61,7 @@ public class SpriteSheet {
 		Vector2 framePoint = new Vector2(row, frameNum);
 		int left = (int) (start.x + framePoint.x) * frameHeight;
 		int down = (int) (start.y + framePoint.y) * frameWidth;
-		TextureRegion region = new TextureRegion(texture, down, left,
+		TextureRegion region = new TextureRegion(texture, left, down,
 				frameWidth, frameHeight);
 
 		Sprite sprite = new Sprite(region);
@@ -78,7 +79,7 @@ public class SpriteSheet {
 		Vector2 framePoint = new Vector2(frameNum, col);
 		int left = (int) (start.x + framePoint.x) * frameHeight;
 		int down = (int) (start.y + framePoint.y) * frameWidth;
-		TextureRegion region = new TextureRegion(texture, down, left,
+		TextureRegion region = new TextureRegion(texture, left, down,
 				frameWidth, frameHeight);
 
 		Sprite sprite = new Sprite(region);

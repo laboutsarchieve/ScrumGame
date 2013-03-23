@@ -1,5 +1,9 @@
 package View;
 
 public enum SheetType {
-	Monster
+	Monster,
+	Villager,
+	Soldier,
+	Archer,
+	Mage	
 }

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.me.mygdxgame.GameTools;
 import com.me.mygdxgame.MainGame;
@@ -23,7 +22,8 @@ public class Drawer {
 	private boolean drawMoveCenter;
 	private Vector2 startTouchPosition;
 	private Vector2 currTouchPosition;
-	ShapeRenderer shapeRenderer;
+	private float tileScreenWidth;
+	private float tileScreenHeight;
 	
 	public Drawer(HeightMap map) {
 		this.map = map;
@@ -33,7 +33,6 @@ public class Drawer {
         camera.update();
 		batch = new SpriteBatch();
 		batch.enableBlending();
-		shapeRenderer = new ShapeRenderer(7);
 	}	
 	public void draw(float deltaTime) {
 		setupDisplay( );		
@@ -44,8 +43,8 @@ public class Drawer {
 		batch.end();
 	}
 	public void drawMap(float deltaTime) {		
-		float tileScreenWidth = GameSettings.getScreenWidth( )/TILE_SIZE;
-		float tileScreenHeight = GameSettings.getScreenHeight( )/TILE_SIZE;
+		tileScreenWidth = GameSettings.getScreenWidth( )/TILE_SIZE;
+		tileScreenHeight = GameSettings.getScreenHeight( )/TILE_SIZE;
 		
 		int tileOffsetX = (int)(lowerLeftOfView.x/TILE_SIZE);
 		int tileOffsetY = (int)(lowerLeftOfView.y/TILE_SIZE);
@@ -66,9 +65,18 @@ public class Drawer {
 	public void drawEntities(float deltaTime) {
 		for(Entity entity : MainGame.getEntityManager( ).getEntities( )) {			
 			Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
-			drawAtLocation(entity.getSprite(), monsterPos.x, monsterPos.y);
+			if(isOnScreen(monsterPos))
+				drawAtLocation(entity.getSprite(), monsterPos.x, monsterPos.y);
 		}
 	}
+	private boolean isOnScreen(Vector2 monsterPos) {
+		Vector2 monsterPosInPixels = monsterPos.cpy().mul(TILE_SIZE);
+		Vector2 clampedLoc = monsterPosInPixels;
+		
+		GameTools.clamp(clampedLoc, lowerLeftOfView, getUpperRightOfView( ));
+		
+		return clampedLoc.epsilonEquals(monsterPosInPixels, 2);
+	}	
 	public void drawUi(float deltaTime) {
 		if(drawMoveCenter) {
 			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.MoveCenter).getSprite();
@@ -95,7 +103,6 @@ public class Drawer {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
-		shapeRenderer.setProjectionMatrix(camera.combined);
 	}
 	
 	public void moveView(Vector2 movementInTiles) {
@@ -124,5 +131,9 @@ public class Drawer {
 		currTouchPosition = startTouchPoint.cpy( );		
 		currTouchPosition.y = GameSettings.getScreenHeight() - startTouchPosition.y;
 		currTouchPosition.mul(GameSettings.getAspectRatio());
+	}
+	
+	private Vector2 getUpperRightOfView() {
+		return lowerLeftOfView.cpy().add(new Vector2(GameSettings.getScreenWidth( ), GameSettings.getScreenHeight( )));	
 	}
 }
