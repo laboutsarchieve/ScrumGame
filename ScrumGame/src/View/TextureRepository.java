@@ -31,7 +31,7 @@ public class TextureRepository {
 				new Vector2(3, 8), 32, 32);
 		addToSheetMap(SheetType.Mage, "art/SheetOne.png", new Vector2(3, 4), 
 				new Vector2(6, 8), 32, 32);
-		addToSheetMap(SheetType.Villager, "art/SheetOne.png", new Vector2(9, 4), // This wastes some memory, but its not a very big deal at the moment.
+		addToSheetMap(SheetType.Villager, "art/SheetTwo.png", new Vector2(9, 4), // This wastes some memory, but its not a very big deal at the moment.
 				new Vector2(12, 8), 32, 32);
 	}
 
