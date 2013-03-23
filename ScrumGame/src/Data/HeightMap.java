@@ -18,7 +18,7 @@ public class HeightMap {
 
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				map.values[x][y] = (float) noiseMaker.GetValue(x / 4.0, y / 4.0, 1);
+				map.values[x][y] = (float) noiseMaker.GetValue(x / 8.0, y / 8.0, 1);
 			}
 		}
 		
@@ -30,7 +30,7 @@ public class HeightMap {
 	public TileType getTileType(int x, int y) {
 		float height = values[x][y];
 		
-		if (height < 0.1)
+		if (height < 0.2)
 			return TileType.Grass;
 		else
 			return TileType.Mountain;
