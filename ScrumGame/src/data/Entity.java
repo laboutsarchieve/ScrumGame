@@ -55,4 +55,11 @@ public abstract class Entity {
 	public int getVisionRange() {
 		return visionRange;
 	}
+	
+	protected void init() {
+		hitpoints = GameData.getHitpoints(unitType);
+		attackDamage = GameData.getAttackDamage(unitType);
+		attackRange = GameData.getRange(unitType);
+		actionInterval = GameData.getActionInterval(unitType);
+	}
 }

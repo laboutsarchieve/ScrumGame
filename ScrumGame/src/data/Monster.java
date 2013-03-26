@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Monster extends Entity {
-	private float BETWEEN_MOVES = 1.0f;
 	private float tillNextMove = 0;
 	//TODO: This should managed in a separate but parallel class
 	private AnimatedSprite animations;
@@ -18,6 +17,9 @@ public class Monster extends Entity {
 	public Monster(Vector2 position, Facing facing) {
 		super(position, facing, Faction.Monster);
 		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Monster));
+	
+		unitType = EntityType.Monster;
+		init();
 	}
 	
 	@Override
@@ -27,7 +29,7 @@ public class Monster extends Entity {
 		
 		while(tillNextMove < 0) {
 			move();
-			tillNextMove += BETWEEN_MOVES;
+			tillNextMove += actionInterval;
 		}
 	}
 	
@@ -38,7 +40,7 @@ public class Monster extends Entity {
 		}
 
 		Vector2 oldPosition = position.cpy();
-		/*switch (nextFacing) {
+		switch (nextFacing) {
 		case Down:
 			position.y--;
 			animations.setCurrAnimation(0);
@@ -57,7 +59,7 @@ public class Monster extends Entity {
 			break;
 		default:
 			break;
-		}*/
+		}
 
 		HeightMap map = MainGame.getMap();
 

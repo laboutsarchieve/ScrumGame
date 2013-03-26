@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Villager extends Entity {
-	private float BETWEEN_MOVES = 1.0f;
 	private float tillNextMove = 0;
 	//TODO: This should managed in a separate but parallel class
 	private AnimatedSprite animations;
@@ -18,6 +17,9 @@ public class Villager extends Entity {
 	public Villager(Vector2 position, Facing facing) {
 		super(position, facing, Faction.Villager);
 		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Villager));
+	
+		unitType = EntityType.Villager;
+		init();
 	}
 	
 	@Override
@@ -27,7 +29,7 @@ public class Villager extends Entity {
 		
 		while(tillNextMove < 0) {
 			move();
-			tillNextMove += BETWEEN_MOVES;
+			tillNextMove += actionInterval;
 		}
 	}
 	

@@ -11,11 +11,13 @@ public class GameData {
 	private static int baseSoldierATK = 10;
 	private static int baseArcherATK = 15;
 	private static int baseMageATK = 20;
+	private static int baseVillagerATK = 1;
 	
 	private static int baseMonsterRange = 1;
 	private static int baseSoldierRange = 1;
 	private static int baseArcherRange = 4;
 	private static int baseMageRange = 2;
+	private static int baseVillagerRange = 1;
 	
 	private static int baseMonsterVision = 5;
 	private static int baseSoldierVision = 5;
@@ -78,6 +80,9 @@ public class GameData {
 		case Mage:
 			atk = baseMageATK;
 			break;
+		case Villager:
+			atk = baseVillagerATK;
+			break;
 		default:
 			atk = 0;
 		}
@@ -98,6 +103,9 @@ public class GameData {
 			break;
 		case Mage:
 			r = baseMageRange;
+			break;
+		case Villager:
+			r = baseVillagerRange;
 			break;
 		default:
 			r = 0;

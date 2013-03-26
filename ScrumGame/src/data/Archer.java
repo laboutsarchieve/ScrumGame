@@ -20,10 +20,7 @@ public class Archer extends Entity {
 				.getSpriteSheet(SheetType.Archer));
 		
 		unitType = EntityType.Archer;
-		hitpoints = GameData.getHitpoints(unitType);
-		attackDamage = GameData.getAttackDamage(unitType);
-		attackRange = GameData.getRange(unitType);
-		actionInterval = GameData.getActionInterval(unitType);
+		init();
 	}
 
 	@Override

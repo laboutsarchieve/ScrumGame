@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Mage extends Entity {
-	private float BETWEEN_MOVES = 1.0f;
 	private float tillNextMove = 0;
 	//TODO: This should managed in a separate but parallel class
 	private AnimatedSprite animations;
@@ -18,6 +17,9 @@ public class Mage extends Entity {
 	public Mage(Vector2 position, Facing facing) {
 		super(position, facing, Faction.Player);
 		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Mage));
+	
+		unitType = EntityType.Mage;
+		init();
 	}
 	
 	@Override
@@ -27,7 +29,7 @@ public class Mage extends Entity {
 		
 		while(tillNextMove < 0) {
 			move();
-			tillNextMove += BETWEEN_MOVES;
+			tillNextMove += actionInterval;
 		}
 	}
 	
