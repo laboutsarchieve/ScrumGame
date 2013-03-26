@@ -22,12 +22,16 @@ public abstract class Entity {
 	protected int attackDamage;
 	protected int attackRange;
 	protected int visionRange;
+	protected int aggroRange;
 	protected float actionInterval;
+	protected float aggroActionInterval;
+	protected AIState state;
 	
 	public Entity(Vector2 startPosition, Facing startFacing, Faction faction) {
 		this.position = startPosition;
 		this.facing = startFacing;
 		this.faction = faction;
+		state = AIState.Idle;
 	}
 	
 	public abstract void update(float deltaTime);
@@ -65,11 +69,18 @@ public abstract class Entity {
 		return visionRange;
 	}
 	
+	public int getAggroRange() {
+		return aggroRange;
+	}
+	
 	protected void init() {
 		hitpoints = GameData.getHitpoints(unitType);
 		attackDamage = GameData.getAttackDamage(unitType);
 		attackRange = GameData.getRange(unitType);
+		visionRange = GameData.getVisionRadius(unitType);
+		aggroRange = GameData.getAggroRadius(unitType);
 		actionInterval = GameData.getActionInterval(unitType);
+		aggroActionInterval = GameData.getAggroInterval(unitType);
 	}
 	
 	protected void move() {

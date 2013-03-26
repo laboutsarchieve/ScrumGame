@@ -3,34 +3,50 @@ package data;
 public class GameData {
 	private static int baseMonsterHP = 100;
 	private static int baseSoldierHP = 100;
-	private static int baseArcherHP = 80;
-	private static int baseMageHP = 70;
-	private static int baseVillagerHP = 50;
+	private static int baseArcherHP = 60;
+	private static int baseMageHP = 60;
+	private static int baseVillagerHP = 40;
 	
 	private static int baseMonsterATK = 20;
 	private static int baseSoldierATK = 10;
-	private static int baseArcherATK = 15;
-	private static int baseMageATK = 20;
-	private static int baseVillagerATK = 1;
+	private static int baseArcherATK = 20;
+	private static int baseMageATK = 30;
+	private static int baseVillagerATK = 0;
 	
+	//Attack range
 	private static int baseMonsterRange = 1;
 	private static int baseSoldierRange = 1;
 	private static int baseArcherRange = 4;
 	private static int baseMageRange = 2;
-	private static int baseVillagerRange = 1;
+	private static int baseVillagerRange = 0;
 	
-	private static int baseMonsterVision = 5;
-	private static int baseSoldierVision = 5;
-	private static int baseArcherVision = 6;
-	private static int baseMageVision = 5;
-	private static int baseVillagerVision = 6;
+	//This is the scout/explore radius to begin moving towards a unit
+	private static int baseMonsterVision = 9;
+	private static int baseSoldierVision = 7;
+	private static int baseArcherVision = 10;
+	private static int baseMageVision = 8;
+	private static int baseVillagerVision = 7;
+	
+	//This is the radius to begin offensive/defensive action
+	private static int baseMonsterAggro = 5;
+	private static int baseSoldierAggro = 5;
+	private static int baseArcherAggro = 5;
+	private static int baseMageAggro = 5;
+	private static int baseVillagerAggro = 6;
 	
 	private static float baseMonsterActionInterval = 0.9f;
 	private static float baseSoldierActionInterval = 1.0f;
 	private static float baseArcherActionInterval = 0.8f;
-	private static float baseMageActionInterval = 0.9f;
-	private static float baseVillagerActionInterval = 1.1f;
+	private static float baseMageActionInterval = 0.8f;
+	private static float baseVillagerActionInterval = 1.5f;
 	
+	private static float baseMonsterAggroInterval = 0.9f;
+	private static float baseSoldierAggroInterval = 0.9f;
+	private static float baseArcherAggroInterval = 0.8f;
+	private static float baseMageAggroInterval = 0.8f;
+	private static float baseVillagerAggroInterval = 1.1f;
+	
+	//Note: Only affects new units created after being modified
 	private static float difficultyMultiplier = 1.0f;
 	
 	/**
@@ -137,6 +153,30 @@ public class GameData {
 		return v;
 	}
 	
+	public static int getAggroRadius(EntityType t) {
+		int v = 0;
+		switch(t){
+		case Monster:
+			v = baseMonsterAggro;
+			break;
+		case Soldier:
+			v = baseSoldierAggro;
+			break;
+		case Archer:
+			v = baseArcherAggro;
+			break;
+		case Mage:
+			v = baseMageAggro;
+			break;
+		case Villager:
+			v = baseVillagerAggro;
+			break;
+		default:
+			v = 0;
+		}
+		return v;
+	}
+	
 	public static float getActionInterval(EntityType t) {
 		float m = 0;
 		switch(t){
@@ -154,6 +194,30 @@ public class GameData {
 			break;
 		case Villager:
 			m = baseVillagerActionInterval;
+			break;
+		default:
+			m = 1.0f;
+		}
+		return m;
+	}
+
+	public static float getAggroInterval(EntityType t) {
+		float m = 0;
+		switch(t){
+		case Monster:
+			m = baseMonsterAggroInterval / difficultyMultiplier;
+			break;
+		case Soldier:
+			m = baseSoldierAggroInterval;
+			break;
+		case Archer:
+			m = baseArcherAggroInterval;
+			break;
+		case Mage:
+			m = baseMageAggroInterval;
+			break;
+		case Villager:
+			m = baseVillagerAggroInterval;
 			break;
 		default:
 			m = 1.0f;
