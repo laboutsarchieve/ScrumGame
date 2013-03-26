@@ -30,6 +30,8 @@ public abstract class Entity {
 	protected float targetRange;
 	
 	private static int deathcount = 0;
+	protected static int globalVillagerID = 1;
+	protected int myVillagerID;
 	
 	public Entity(Vector2 startPosition, Facing startFacing, Faction faction) {
 		this.position = startPosition;
@@ -111,6 +113,10 @@ public abstract class Entity {
 	
 	protected abstract void takeAction();
 	
+	protected boolean validTarget() {
+		return !(target == null || (target.getState() == AIState.Dead || target.getState() == AIState.Disabled));
+	}
+	
 	protected void roam() {
 		Facing nextFacing = facing;
 		if (MathUtils.random() > 0.6) {
@@ -176,9 +182,10 @@ public abstract class Entity {
 	protected void death() {
 		state = AIState.Disabled;
 		manager.queueRemoveEntity(this);
-		
+
+		//debug output
 		deathcount++;
-		System.out.println("omg im dead " + deathcount);
+		System.out.println("omg im dead " + deathcount + " " + myVillagerID);
 	}
 	//test func
 	protected void moveTo(Entity e) {

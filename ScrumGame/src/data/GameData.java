@@ -21,7 +21,7 @@ public class GameData {
 	private static int baseVillagerRange = 0;
 	
 	//This is the scout/explore radius to begin moving towards a unit
-	private static int baseMonsterVision = 5;
+	private static int baseMonsterVision = 10;
 	private static int baseSoldierVision = 7;
 	private static int baseArcherVision = 10;
 	private static int baseMageVision = 8;
@@ -34,13 +34,13 @@ public class GameData {
 	private static int baseMageAggro = 5;
 	private static int baseVillagerAggro = 6;
 	
-	private static float baseMonsterActionInterval = 0.9f;
+	private static float baseMonsterActionInterval = 1.5f;
 	private static float baseSoldierActionInterval = 1.0f;
 	private static float baseArcherActionInterval = 0.8f;
 	private static float baseMageActionInterval = 0.8f;
 	private static float baseVillagerActionInterval = 2.0f;
 	
-	private static float baseMonsterAggroInterval = 0.9f;
+	private static float baseMonsterAggroInterval = 0.5f;
 	private static float baseSoldierAggroInterval = 0.9f;
 	private static float baseArcherAggroInterval = 0.8f;
 	private static float baseMageAggroInterval = 0.8f;

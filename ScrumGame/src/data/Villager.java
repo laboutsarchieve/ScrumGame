@@ -17,6 +17,9 @@ public class Villager extends Entity {
 	
 		unitType = EntityType.Villager;
 		init();
+		
+		myVillagerID = globalVillagerID;
+		globalVillagerID++;
 	}
 	
 	@Override
