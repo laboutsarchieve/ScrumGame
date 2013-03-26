@@ -24,4 +24,8 @@ public class Archer extends Entity {
 	protected void takeAction() {
 		roam();
 	}
+	
+	protected  void attackedByEntity(Entity e) {
+		//null
+	}
 }

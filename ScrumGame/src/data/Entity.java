@@ -27,6 +27,9 @@ public abstract class Entity {
 	protected float actionInterval;
 	protected AIState state;
 	protected Entity target = null;
+	protected float targetRange;
+	
+	private static int deathcount = 0;
 	
 	public Entity(Vector2 startPosition, Facing startFacing, Faction faction) {
 		this.position = startPosition;
@@ -37,15 +40,19 @@ public abstract class Entity {
 	}
 	
 	public void update(float deltaTime) {
-		if(state == AIState.Dead)
+		if(state == AIState.Dead) {
 			death();
+		}
 		
-		animations.update(deltaTime);
-		tillNextMove -= deltaTime;
-
-		while (tillNextMove < 0) {
-			takeAction();
-			tillNextMove += actionInterval;
+		if (state != AIState.Disabled){
+			
+			animations.update(deltaTime);
+			tillNextMove -= deltaTime;
+	
+			while (tillNextMove < 0) {
+				takeAction();
+				tillNextMove += actionInterval;
+			}
 		}
 	}
 	
@@ -148,7 +155,7 @@ public abstract class Entity {
 			attackSuccess = true;
 		}
 		
-		if(e.getState() == AIState.Dead)
+		if(e.getState() == AIState.Dead || e.getState() == AIState.Disabled)
 			target = null;
 		
 		return attackSuccess;
@@ -157,18 +164,23 @@ public abstract class Entity {
 	protected void takeDamage(Entity e) {
 		hitpoints -= e.getAttackDamage();
 		
-		if (target == null)
-			target = e;
+		attackedByEntity(e);
 		
 		if (hitpoints <= 0) {
 			state = AIState.Dead;
 		}
 	}
+	
+	protected abstract void attackedByEntity(Entity e);
 
 	protected void death() {
+		state = AIState.Disabled;
 		//manager.removeEntity(this);
 		position.x = 9999;
 		position.y = 9999;
+		
+		deathcount++;
+		System.out.println("omg im dead " + deathcount);
 	}
 	//test func
 	protected void moveTo(Entity e) {

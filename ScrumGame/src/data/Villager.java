@@ -23,4 +23,9 @@ public class Villager extends Entity {
 	protected void takeAction() {
 		roam();
 	}
+	
+	protected  void attackedByEntity(Entity e) {
+		if (target == null)
+			target = e;
+	}
 }

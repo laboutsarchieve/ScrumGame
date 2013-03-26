@@ -6,5 +6,6 @@ public enum AIState {
 	Hunt,
 	Attack,
 	Flee,
-	Dead
+	Dead,
+	Disabled
 }

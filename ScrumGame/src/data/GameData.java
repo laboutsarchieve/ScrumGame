@@ -21,7 +21,7 @@ public class GameData {
 	private static int baseVillagerRange = 0;
 	
 	//This is the scout/explore radius to begin moving towards a unit
-	private static int baseMonsterVision = 9;
+	private static int baseMonsterVision = 5;
 	private static int baseSoldierVision = 7;
 	private static int baseArcherVision = 10;
 	private static int baseMageVision = 8;

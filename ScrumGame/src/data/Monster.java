@@ -26,16 +26,32 @@ public class Monster extends Entity {
 		case Idle:
 			state = AIState.Roam;
 		case Roam:
-			target = manager.getClosest(this, Faction.Villager);
-			if (manager.distance(target.getPosition(), position) < visionRange) {
-				state = AIState.Hunt;
-			} else {
-				roam();
-			}	
+			if (target == null)
+				target = manager.getClosest(this, Faction.Villager);
+			
+			if (target != null) {
+				if (target.getState() == AIState.Dead || target.getState() == AIState.Disabled) {
+					target = null;
+					break;
+				}
+				
+				targetRange = manager.distance(target.getPosition(), position);
+				if ( targetRange < visionRange )
+					state = AIState.Hunt;
+			} 
+			
+			roam();
 			break;
 		case Hunt:
+			if (target == null) {
+				state = AIState.Roam;
+				break;
+			}
 			moveTo(target);
-			state = AIState.Attack;
+			targetRange = manager.distance(target.getPosition(), position);
+			
+			if (targetRange <= attackRange)
+				state = AIState.Attack;
 			break;
 		case Attack:
 			if (!attack(target)) {
@@ -49,10 +65,24 @@ public class Monster extends Entity {
 			}
 			break;
 		case Dead:
+			//handled in parent class
 			break;
-			default:
-				//this shouldn't happen, so just remove the unit
-				MainGame.getEntityManager().removeEntity(this);
+		default:
+			//this shouldn't happen, so just kill the unit
+			state = AIState.Dead;
+		}
+	}
+	
+	/**
+	 * If monster is hunting a villager, being attacked by player unit will switch target
+	 * to that unit
+	 */
+	protected  void attackedByEntity(Entity e) {
+		if (target == null)
+			target = e;
+		else {
+			if (target.getFaction() != Faction.Player && e.getFaction() == Faction.Player)
+				target = e;
 		}
 	}
 }
