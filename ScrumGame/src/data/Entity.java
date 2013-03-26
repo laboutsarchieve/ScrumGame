@@ -37,6 +37,9 @@ public abstract class Entity {
 	}
 	
 	public void update(float deltaTime) {
+		if(state == AIState.Dead)
+			death();
+		
 		animations.update(deltaTime);
 		tillNextMove -= deltaTime;
 
@@ -84,6 +87,10 @@ public abstract class Entity {
 	
 	public int getAggroRange() {
 		return aggroRange;
+	}
+	
+	public AIState getState() {
+		return state;
 	}
 	
 	protected void init() {
@@ -134,6 +141,35 @@ public abstract class Entity {
 		}
 	}
 
+	protected boolean attack(Entity e){
+		boolean attackSuccess = false;
+		if ( manager.distance(e.getPosition(), position) <= attackRange) {
+			e.takeDamage(this);
+			attackSuccess = true;
+		}
+		
+		if(e.getState() == AIState.Dead)
+			target = null;
+		
+		return attackSuccess;
+	}
+	
+	protected void takeDamage(Entity e) {
+		hitpoints -= e.getAttackDamage();
+		
+		if (target == null)
+			target = e;
+		
+		if (hitpoints <= 0) {
+			state = AIState.Dead;
+		}
+	}
+
+	protected void death() {
+		//manager.removeEntity(this);
+		position.x = 9999;
+		position.y = 9999;
+	}
 	//test func
 	protected void moveTo(Entity e) {
 		Vector2 targetPos = e.getPosition();
