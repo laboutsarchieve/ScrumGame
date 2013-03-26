@@ -38,7 +38,7 @@ public class Monster extends Entity {
 		}
 
 		Vector2 oldPosition = position.cpy();
-		switch (nextFacing) {
+		/*switch (nextFacing) {
 		case Down:
 			position.y--;
 			animations.setCurrAnimation(0);
@@ -57,7 +57,7 @@ public class Monster extends Entity {
 			break;
 		default:
 			break;
-		}
+		}*/
 
 		HeightMap map = MainGame.getMap();
 

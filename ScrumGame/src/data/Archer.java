@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Archer extends Entity {
-	private float BETWEEN_MOVES = 1.0f;
 	private float tillNextMove = 0;
 	// TODO: This should managed in a separate but parallel class
 	private AnimatedSprite animations;
@@ -19,6 +18,12 @@ public class Archer extends Entity {
 		super(position, facing, Faction.Player);
 		animations = new AnimatedSprite(MainGame.getTextureRepo()
 				.getSpriteSheet(SheetType.Archer));
+		
+		unitType = EntityType.Archer;
+		hitpoints = GameData.getHitpoints(unitType);
+		attackDamage = GameData.getAttackDamage(unitType);
+		attackRange = GameData.getRange(unitType);
+		actionInterval = GameData.getActionInterval(unitType);
 	}
 
 	@Override
@@ -28,7 +33,7 @@ public class Archer extends Entity {
 
 		while (tillNextMove < 0) {
 			move();
-			tillNextMove += BETWEEN_MOVES;
+			tillNextMove += actionInterval;
 		}
 	}
 

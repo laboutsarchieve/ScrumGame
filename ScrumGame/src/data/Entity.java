@@ -8,6 +8,13 @@ public abstract class Entity {
 	protected Facing facing;
 	Faction faction;
 	
+	protected EntityType unitType;
+	protected int hitpoints;
+	protected int attackDamage;
+	protected int attackRange;
+	protected int visionRange;
+	protected float actionInterval;
+	
 	public Entity(Vector2 startPosition, Facing startFacing, Faction faction) {
 		this.position = startPosition;
 		this.facing = startFacing;
@@ -27,5 +34,25 @@ public abstract class Entity {
 	
 	public Faction getFaction() {
 		return faction;
+	}
+	
+	public EntityType getUnitType() {
+		return unitType;
+	}
+	
+	public int getHitpoints() {
+		return hitpoints;
+	}
+	
+	public int getAttackDamage() {
+		return attackDamage;
+	}
+	
+	public int getAttackRange() {
+		return attackRange;
+	}
+	
+	public int getVisionRange() {
+		return visionRange;
 	}
 }
