@@ -2,7 +2,7 @@ package data;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 
 public class EntityManager {
 	HashMap<Faction, LinkedList<Entity>> factionLists = new HashMap<Faction, LinkedList<Entity>>( );  
@@ -35,15 +35,24 @@ public class EntityManager {
 		}
 	}
 	
+	public float distance(Vector2 a, Vector2 b) {
+		return (float)Math.sqrt( Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2) );
+	}
+	
 	public Entity getClosest(Entity e, Faction f) {
 		Entity closest = null;
 		LinkedList<Entity> mobs = getFactionMembers(f);
 		
-		Vector2 closestPos;
+		Vector2 pos;
 		Vector2 myPos = e.getPosition();
-		float distance = 50f;
+		float dis = 9999f;
 		for(Entity entity : mobs) {
-			
+			pos = entity.getPosition();
+			float myDis = distance(myPos, pos);
+			if (myDis < dis) {
+				closest = entity;
+				dis = myDis;
+			}
 		}
 		
 		return closest;
