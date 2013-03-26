@@ -1,9 +1,18 @@
 package data;
 
+import view.AnimatedSprite;
+
+import application.MainGame;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity {
+	protected float tillNextMove = 0;
+	//TODO: This should managed in a separate but parallel class
+	protected AnimatedSprite animations;
+	
 	protected Vector2 position;
 	protected Facing facing;
 	Faction faction;
@@ -61,5 +70,42 @@ public abstract class Entity {
 		attackDamage = GameData.getAttackDamage(unitType);
 		attackRange = GameData.getRange(unitType);
 		actionInterval = GameData.getActionInterval(unitType);
+	}
+	
+	protected void move() {
+		Facing nextFacing = facing;
+		if (MathUtils.random() > 0.6) {
+			nextFacing = Facing.getRandom();
+		}
+
+		Vector2 oldPosition = position.cpy();
+		switch (nextFacing) {
+		case Down:
+			position.y--;
+			animations.setCurrAnimation(0);
+			break;
+		case Left:
+			position.x--;
+			animations.setCurrAnimation(1);
+			break;
+		case Right:
+			position.x++;
+			animations.setCurrAnimation(2);
+			break;
+		case Up:
+			position.y++;
+			animations.setCurrAnimation(3);
+			break;
+		default:
+			break;
+		}
+
+		HeightMap map = MainGame.getMap();
+
+		if (!map.contains(position)
+				|| map.getTileType(position) != TileType.Grass) {
+			position = oldPosition;
+			facing = Facing.getRandom();
+		}
 	}
 }
