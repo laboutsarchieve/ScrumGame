@@ -21,18 +21,28 @@ public class Monster extends Entity {
 	}
 	
 	@Override
-	public void update(float deltaTime) {
-		animations.update(deltaTime);
-		tillNextMove -= deltaTime;
-		
-		while(tillNextMove < 0) {
-			move();
-			tillNextMove += actionInterval;
+	protected void takeAction() {
+		switch(state) {
+		case Idle:
+			state = AIState.Roam;
+			break;
+		case Roam:
+			target = manager.getClosest(this, Faction.Villager);
+			if (manager.distance(target.getPosition(), position) < visionRange) {
+				state = AIState.Hunt;
+			} else {
+				roam();
+			}
+			break;
+		case Hunt:
+			moveTo(target);
+			break;
+		case Attack:
+			break;
+		case Dead:
+			default:
+				//this shouldn't happen, so just remove the unit
+				MainGame.getEntityManager().removeEntity(this);
 		}
-	}
-	
-	
-	public Sprite getSprite( ) {
-		return animations.getSprite();
 	}
 }

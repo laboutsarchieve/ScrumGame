@@ -38,7 +38,7 @@ public class GameData {
 	private static float baseSoldierActionInterval = 1.0f;
 	private static float baseArcherActionInterval = 0.8f;
 	private static float baseMageActionInterval = 0.8f;
-	private static float baseVillagerActionInterval = 1.5f;
+	private static float baseVillagerActionInterval = 2.0f;
 	
 	private static float baseMonsterAggroInterval = 0.9f;
 	private static float baseSoldierAggroInterval = 0.9f;

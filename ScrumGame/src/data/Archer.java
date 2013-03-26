@@ -19,19 +19,9 @@ public class Archer extends Entity {
 		unitType = EntityType.Archer;
 		init();
 	}
-
+	
 	@Override
-	public void update(float deltaTime) {
-		animations.update(deltaTime);
-		tillNextMove -= deltaTime;
-
-		while (tillNextMove < 0) {
-			move();
-			tillNextMove += actionInterval;
-		}
-	}
-
-	public Sprite getSprite() {
-		return animations.getSprite();
+	protected void takeAction() {
+		roam();
 	}
 }
