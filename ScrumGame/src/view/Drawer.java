@@ -12,12 +12,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import data.Entity;
+import data.Forest;
 import data.GameSettings;
-import data.HeightMap;
+import data.Map;
+import data.TileType;
+import data.Village;
 
 public class Drawer {
 	public final int TILE_SIZE = 32;
-	private HeightMap map;
+	private Map map;
 	private Vector2 lowerLeftOfView;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -27,7 +30,7 @@ public class Drawer {
 	private float tileScreenWidth;
 	private float tileScreenHeight;
 	
-	public Drawer(HeightMap map) {
+	public Drawer(Map map) {
 		this.map = map;
 		lowerLeftOfView = Vector2.Zero;		
 		
@@ -41,6 +44,8 @@ public class Drawer {
 		batch.begin();		
 		drawMap(deltaTime);
 		drawEntities(deltaTime);
+		drawVillages(deltaTime);
+		drawForests(deltaTime);
 		drawUi(deltaTime);		
 		batch.end();
 	}
@@ -71,13 +76,27 @@ public class Drawer {
 				drawAtLocation(entity.getSprite(), monsterPos.x, monsterPos.y);
 		}
 	}
-	private boolean isOnScreen(Vector2 monsterPos) {
-		Vector2 monsterPosInPixels = monsterPos.cpy().mul(TILE_SIZE);
-		Vector2 clampedLoc = monsterPosInPixels;
+	public void drawVillages(float deltaTime) {
+		for(Village entity : MainGame.getMap().getVillages( )) {			
+			Vector2 pos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
+			if(isOnScreen(pos))
+				drawAtLocation(MainGame.getTextureRepo().getTile(TileType.Village).getSprite(), pos.x, pos.y);
+		}
+	}
+	public void drawForests(float deltaTime) {
+		for(Forest entity : MainGame.getMap().getForests( )) {			
+			Vector2 pos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
+			if(isOnScreen(pos))
+				drawAtLocation(MainGame.getTextureRepo().getTile(TileType.Forest).getSprite(), pos.x, pos.y);
+		}
+	}
+	private boolean isOnScreen(Vector2 pos) {
+		Vector2 posInPixels = pos.cpy().mul(TILE_SIZE);
+		Vector2 clampedLoc = posInPixels;
 		
 		GameTools.clamp(clampedLoc, lowerLeftOfView, getUpperRightOfView( ));
 		
-		return clampedLoc.epsilonEquals(monsterPosInPixels, 2);
+		return clampedLoc.epsilonEquals(posInPixels, 2);
 	}	
 	public void drawUi(float deltaTime) {
 		if(drawMoveCenter) {

@@ -12,7 +12,7 @@ import data.*;
 
 public class MainGame implements ApplicationListener {
 	private static TextureRepository textureRepo;	
-	private static HeightMap map;
+	private static Map map;
 	private static Drawer drawer;
 	private static GameInput gameInput;
 	private static EntityManager entityManager;
@@ -21,7 +21,7 @@ public class MainGame implements ApplicationListener {
 	public void create() {		
 		textureRepo = new TextureRepository();
 		
-		map = HeightMap.randomMap(50, 50);		
+		map = Map.randomMap(50, 50);		
 		drawer = new Drawer(map);		
 		gameInput = new GameInput(this);		
 		Gdx.input.setInputProcessor(gameInput);
@@ -93,7 +93,7 @@ public class MainGame implements ApplicationListener {
 		return textureRepo;
 	}
 	
-	public static HeightMap getMap() {
+	public static Map getMap() {
 		return map;
 	}
 

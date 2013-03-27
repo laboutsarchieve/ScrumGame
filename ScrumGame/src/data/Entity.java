@@ -139,7 +139,7 @@ public abstract class Entity {
 			break;
 		}
 
-		HeightMap map = MainGame.getMap();
+		Map map = MainGame.getMap();
 
 		if (!map.contains(position)
 				|| map.getTileType(position) != TileType.Grass) {

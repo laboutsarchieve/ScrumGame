@@ -21,6 +21,8 @@ public class TextureRepository {
 	private void addTiles() {
 		addToTileMap(TileType.Grass, "art/AWgrass.png");
 		addToTileMap(TileType.Mountain, "art/AWmountain.png");
+		addToTileMap(TileType.Village, "art/City.png");
+		addToTileMap(TileType.Forest, "art/forest.png");
 	}
 
 	private void addSheets() {

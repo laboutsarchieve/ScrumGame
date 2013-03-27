@@ -1,18 +1,22 @@
 package data;
 
+import java.util.LinkedList;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import jLibNoise.noise.module.Perlin;
 
-public class HeightMap {
+public class Map {
 	private float[][] values;
+	private LinkedList<Village> villages = new LinkedList<Village>( );
+	private LinkedList<Forest> forests = new LinkedList<Forest>( );
 
-	public HeightMap( ) {
+	public Map( ) {
 		values = new float[1][1];
 	}
 	
-	public static HeightMap randomMap(int sizeX, int sizeY) {
-		HeightMap map = new HeightMap( );
+	public static Map randomMap(int sizeX, int sizeY) {
+		Map map = new Map( );
 		Perlin noiseMaker = new Perlin();
 		map.values = new float[sizeX][sizeY];
 
@@ -20,6 +24,15 @@ public class HeightMap {
 			for (int y = 0; y < sizeY; y++) {
 				map.values[x][y] = (float) noiseMaker.GetValue(x / 8.0, y / 8.0, 1);
 			}
+		}
+		
+		int numVillages =(int)( Math.sqrt(sizeX*sizeY) / 5.0);
+		
+		for(int k = 0; k < numVillages; k++) {
+			map.getVillages( ).add(new Village(map.getRandomPosWithTile(TileType.Grass)));
+		}
+		for(int k = 0; k < 2*numVillages/3.0; k++) {
+			map.getForests( ).add(new Forest(map.getRandomPosWithTile(TileType.Grass)));
 		}
 		
 		return map;
@@ -62,5 +75,13 @@ public class HeightMap {
 
 	public int getHeight() {
 		return values[0].length;
+	}
+
+	public LinkedList<Village> getVillages() {
+		return villages;
+	}
+
+	public LinkedList<Forest> getForests() {
+		return forests;
 	}
 }
