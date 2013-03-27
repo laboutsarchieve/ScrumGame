@@ -37,6 +37,7 @@ public class Monster extends Entity {
 		case Idle:
 			state = AIState.Roam;
 		case Roam:
+			actionInterval = GameData.getActionInterval(unitType);
 			if (!validTarget())
 				if((target = manager.getClosest(this, Faction.Villager)) == null)
 					target = manager.getClosest(this, Faction.Player);
@@ -48,24 +49,29 @@ public class Monster extends Entity {
 				}
 				
 				targetRange = manager.distance(target.getPosition(), position);
-				if ( targetRange < visionRange )
+				if ( targetRange <= visionRange )
 					state = AIState.Hunt;
-			} 
+			}
 			
-			roam();
+			if(state == AIState.Roam)
+				roam();
 			break;
 		case Hunt:
+			actionInterval = GameData.getAggroInterval(unitType);
 			if (!validTarget()) {
 				state = AIState.Roam;
-				actionInterval = GameData.getActionInterval(unitType);
 				break;
 			}
-			actionInterval = GameData.getAggroInterval(unitType);
 			moveTo(target);
 			targetRange = manager.distance(target.getPosition(), position);
 			
 			if (targetRange <= attackRange)
 				state = AIState.Attack;
+			
+			if (targetRange > visionRange + 3) {
+				state = AIState.Roam;
+			}
+			
 			break;
 		case Attack:
 			if (!attack(target)) {
@@ -76,7 +82,6 @@ public class Monster extends Entity {
 			{
 				target = null;
 				state = AIState.Roam;
-				actionInterval = GameData.getActionInterval(unitType);
 			}
 			break;
 		case Dead:
