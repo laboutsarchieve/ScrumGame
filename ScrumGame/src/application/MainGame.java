@@ -66,9 +66,10 @@ public class MainGame implements ApplicationListener {
 		update(deltaTime);
 		drawer.draw(deltaTime);
 	}
-	public void update(float deltaTime) {
+	public void update(float deltaTime) {		
 		gameInput.update(deltaTime);
 		entityManager.update(deltaTime);
+		entityManager.removeEntites();
 	}
 	@Override
 	public void resize(int width, int height) {

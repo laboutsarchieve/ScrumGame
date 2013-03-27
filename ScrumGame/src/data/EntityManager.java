@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.*;
 public class EntityManager {
 	HashMap<Faction, LinkedList<Entity>> factionLists = new HashMap<Faction, LinkedList<Entity>>( );  
 	LinkedList<Entity> entityList = new LinkedList<Entity>( );
+	LinkedList<Entity> toRemoveList = new LinkedList<Entity>( );
 	
 	public EntityManager( ){
 		factionLists.put(Faction.Player, new LinkedList<Entity>( ));
@@ -18,9 +19,12 @@ public class EntityManager {
 		entityList.add(toAdd);
 		factionLists.get(toAdd.getFaction( )).add(toAdd);
 	}
-	public void removeEntity(Entity toAdd) {
-		entityList.remove(toAdd);
-		factionLists.get(toAdd.getFaction( )).remove(toAdd);
+	public void removeEntites() {
+		for(Entity entity : toRemoveList) {
+			entityList.remove(entity);
+			factionLists.get(entity.getFaction( )).remove(entity);
+		}
+		toRemoveList.clear( );
 	}
 	public LinkedList<Entity> getFactionMembers(Faction faction) {
 		return factionLists.get(faction);
@@ -56,6 +60,10 @@ public class EntityManager {
 		}
 		
 		return closest;
+	}
+
+	public void queueRemoveEntity(Entity entity) {
+		toRemoveList.add(entity);		
 	}
 
 }

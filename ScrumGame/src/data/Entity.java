@@ -175,9 +175,7 @@ public abstract class Entity {
 
 	protected void death() {
 		state = AIState.Disabled;
-		//manager.removeEntity(this);
-		position.x = 9999;
-		position.y = 9999;
+		manager.queueRemoveEntity(this);
 		
 		deathcount++;
 		System.out.println("omg im dead " + deathcount);
