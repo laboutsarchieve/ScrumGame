@@ -20,17 +20,6 @@ public class Monster extends Entity {
 		init();
 	}
 	
-	/**
-	 * Monster AI summary:
-	 * 1. find closest villager, begin hunt if in range
-	 * 	1a. if no villagers left, hunt player units
-	 * 2. if in range, begin moving faster for the hunt
-	 * 3. attack target until dead
-	 * 4. start from 1
-	 * 
-	 * If attacked by player unit while villager is target, switch hunt target to player unit
-	 */
-	
 	@Override
 	protected void takeAction() {
 		switch(state) {

@@ -2,9 +2,9 @@ package data;
 
 public class GameData {
 	private static int baseMonsterHP = 100;
-	private static int baseSoldierHP = 100;
-	private static int baseArcherHP = 60;
-	private static int baseMageHP = 60;
+	private static int baseSoldierHP = 200;
+	private static int baseArcherHP = 80;
+	private static int baseMageHP = 70;
 	private static int baseVillagerHP = 40;
 	
 	private static int baseMonsterATK = 20;
@@ -17,34 +17,34 @@ public class GameData {
 	private static int baseMonsterRange = 1;
 	private static int baseSoldierRange = 1;
 	private static int baseArcherRange = 4;
-	private static int baseMageRange = 2;
+	private static int baseMageRange = 3;
 	private static int baseVillagerRange = 0;
 	
 	//This is the scout/explore radius to begin moving towards a unit
-	private static int baseMonsterVision = 10;
-	private static int baseSoldierVision = 7;
-	private static int baseArcherVision = 10;
-	private static int baseMageVision = 8;
-	private static int baseVillagerVision = 7;
+	private static int baseMonsterVision = 5;
+	private static int baseSoldierVision = 6;
+	private static int baseArcherVision = 7;
+	private static int baseMageVision = 7;
+	private static int baseVillagerVision = 6;
 	
 	//This is the radius to begin offensive/defensive action
 	private static int baseMonsterAggro = 5;
-	private static int baseSoldierAggro = 5;
-	private static int baseArcherAggro = 5;
-	private static int baseMageAggro = 5;
+	private static int baseSoldierAggro = 6;
+	private static int baseArcherAggro = 7;
+	private static int baseMageAggro = 7;
 	private static int baseVillagerAggro = 6;
 	
 	private static float baseMonsterActionInterval = 1.5f;
-	private static float baseSoldierActionInterval = 1.0f;
-	private static float baseArcherActionInterval = 0.8f;
-	private static float baseMageActionInterval = 0.8f;
+	private static float baseSoldierActionInterval = 1.5f;
+	private static float baseArcherActionInterval = 1.2f;
+	private static float baseMageActionInterval = 1.3f;
 	private static float baseVillagerActionInterval = 2.0f;
 	
-	private static float baseMonsterAggroInterval = 0.5f;
-	private static float baseSoldierAggroInterval = 0.9f;
+	private static float baseMonsterAggroInterval = 0.9f;
+	private static float baseSoldierAggroInterval = 1.0f;
 	private static float baseArcherAggroInterval = 0.8f;
 	private static float baseMageAggroInterval = 0.8f;
-	private static float baseVillagerAggroInterval = 1.1f;
+	private static float baseVillagerAggroInterval = 1.3f;
 	
 	//Note: Only affects new units created after being modified
 	private static float difficultyMultiplier = 1.0f;
