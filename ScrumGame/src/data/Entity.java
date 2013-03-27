@@ -117,6 +117,10 @@ public abstract class Entity {
 		return !(target == null || (target.getState() == AIState.Dead || target.getState() == AIState.Disabled));
 	}
 	
+	protected boolean validTarget(Entity t) {
+		return !(t == null || (t.getState() == AIState.Dead || t.getState() == AIState.Disabled));
+	}
+	
 	protected void roam() {
 		Facing nextFacing = facing;
 		if (MathUtils.random() > 0.6) {
@@ -183,6 +187,9 @@ public abstract class Entity {
 		state = AIState.Disabled;
 		manager.queueRemoveEntity(this);
 
+		position.x = 9999;
+		position.y = 9999;
+		
 		//debug output
 		deathcount++;
 		System.out.println("omg im dead " + deathcount + " " + myVillagerID);

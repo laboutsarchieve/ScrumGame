@@ -20,6 +20,17 @@ public class Monster extends Entity {
 		init();
 	}
 	
+	/**
+	 * Monster AI summary:
+	 * 1. find closest villager, begin hunt if in range
+	 * 	1a. if no villagers left, hunt player units
+	 * 2. if in range, begin moving faster for the hunt
+	 * 3. attack target until dead
+	 * 4. start from 1
+	 * 
+	 * If attacked by player unit while villager is target, switch hunt target to player unit
+	 */
+	
 	@Override
 	protected void takeAction() {
 		switch(state) {
@@ -27,7 +38,8 @@ public class Monster extends Entity {
 			state = AIState.Roam;
 		case Roam:
 			if (!validTarget())
-				target = manager.getClosest(this, Faction.Villager);
+				if((target = manager.getClosest(this, Faction.Villager)) == null)
+					target = manager.getClosest(this, Faction.Player);
 			
 			if (target != null) {
 				if (target.getState() == AIState.Dead || target.getState() == AIState.Disabled) {

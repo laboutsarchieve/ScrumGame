@@ -29,6 +29,28 @@ public class EntityManager {
 	public LinkedList<Entity> getFactionMembers(Faction faction) {
 		return factionLists.get(faction);
 	}
+	
+	public Entity getClosestType(Entity e, EntityType t, Faction f) {
+		Entity closest = null;
+		LinkedList<Entity> mobs = getFactionMembers(f);
+		
+		Vector2 pos;
+		Vector2 myPos = e.getPosition();
+		float dis = 9999f;
+		for(Entity entity : mobs) {
+			if (entity.getUnitType() != t)
+				continue;
+			pos = entity.getPosition();
+			float myDis = distance(myPos, pos);
+			if (myDis < dis) {
+				closest = entity;
+				dis = myDis;
+			}
+		}
+		
+		return closest;
+	}
+	
 	public LinkedList<Entity> getEntities() {
 		return entityList;
 	}

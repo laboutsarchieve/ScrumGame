@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Archer extends Entity {
 
+	private Entity soldierBuddy;
+	
 	public Archer(Vector2 position, Facing facing) {
 		super(position, facing, Faction.Player);
 		animations = new AnimatedSprite(MainGame.getTextureRepo()
@@ -22,6 +24,25 @@ public class Archer extends Entity {
 	
 	@Override
 	protected void takeAction() {
+		switch(state) {
+		case Idle:
+			state = AIState.Roam;
+		case Roam:
+			if (!validTarget(soldierBuddy))
+					soldierBuddy = manager.getClosestType(this, EntityType.Soldier, Faction.Player);
+				
+		case Hunt:
+		case Attack:
+		default:
+		}
+		
+		
+		
+		
+		
+		
+		target = manager.getClosestType(this, EntityType.Soldier, Faction.Player);
+		moveTo(target);
 		roam();
 	}
 	
