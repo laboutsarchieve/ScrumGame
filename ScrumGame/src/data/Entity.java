@@ -183,7 +183,33 @@ public abstract class Entity {
 	//test func
 	protected void moveTo(Entity e) {
 		Vector2 targetPos = e.getPosition();
-		position.x = targetPos.x;
-		position.y = targetPos.y;
+		Vector2 toTarget = targetPos.cpy().sub(position);
+		if(toTarget.x != 0)
+			toTarget.x /= Math.abs(toTarget.x);
+		if(toTarget.y != 0)
+			toTarget.y /= Math.abs(toTarget.y);
+		
+		Vector2 oldPosition = position.cpy( );
+		
+		position.add(toTarget);
+		
+		if(MainGame.getMap().getTileType(position) != TileType.Grass) {
+			position = oldPosition.cpy( );
+		}
+		else {		
+			if(toTarget.x == 1) {
+				facing = Facing.Right;
+			}
+			else if(toTarget.x == -1) {
+				facing = Facing.Left;
+			}
+			else if(toTarget.y == 1 ) {
+				facing = Facing.Up;
+			}
+			else {
+				facing = Facing.Down;
+			}
+				
+		}
 	}
 }

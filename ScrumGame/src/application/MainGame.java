@@ -28,7 +28,7 @@ public class MainGame implements ApplicationListener {
 		entityManager = new EntityManager( );
 		
 		//addTestMonsters(50, 10, 10, 10, 100);
-		addTestMonsters(30, 5, 5, 5, 30);
+		addTestMonsters(30, 0, 0, 0, 70);
 	}
 	
 	public void addTestMonsters(int numMonsters, int numSoldier, int numArcher, int numMage, int numVillager) {
