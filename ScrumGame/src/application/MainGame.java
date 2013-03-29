@@ -21,7 +21,7 @@ public class MainGame implements ApplicationListener {
 	public void create() {		
 		textureRepo = new TextureRepository();
 		entityManager = new EntityManager( );
-		map = Map.randomMap(50, 50);
+		map = Map.randomMap(100, 100);
 		drawer = new Drawer(map);	
 		gameInput = new GameInput(this);		
 		Gdx.input.setInputProcessor(gameInput);

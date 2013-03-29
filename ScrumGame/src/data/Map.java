@@ -33,7 +33,7 @@ public class Map {
 		for(int k = 0; k < numVillages; k++) {
 			Vector2 villagePos = map.getRandomPosWithTile(TileType.Grass);
 			map.getVillages( ).add(new Village(villagePos));
-			for(int j = 0; j < 10; j++) {
+			for(int j = 0; j < 8; j++) {
 				Entity newEntity = MainGame.getEntityManager().addWithin(EntityType.Villager, villagePos, new Vector2(sizeX-1, sizeY-1), 5);
 				if(map.getTileType(newEntity.getPosition()) != TileType.Grass) 
 					MainGame.getEntityManager().queueRemoveEntity(newEntity);					
