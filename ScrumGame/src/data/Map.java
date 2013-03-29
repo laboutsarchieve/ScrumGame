@@ -2,6 +2,8 @@ package data;
 
 import java.util.LinkedList;
 
+import application.MainGame;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import jLibNoise.noise.module.Perlin;
@@ -29,10 +31,22 @@ public class Map {
 		int numVillages =(int)( Math.sqrt(sizeX*sizeY) / 5.0);
 		
 		for(int k = 0; k < numVillages; k++) {
-			map.getVillages( ).add(new Village(map.getRandomPosWithTile(TileType.Grass)));
+			Vector2 villagePos = map.getRandomPosWithTile(TileType.Grass);
+			map.getVillages( ).add(new Village(villagePos));
+			for(int j = 0; j < 10; j++) {
+				Entity newEntity = MainGame.getEntityManager().addWithin(EntityType.Villager, villagePos, new Vector2(sizeX-1, sizeY-1), 5);
+				if(map.getTileType(newEntity.getPosition()) != TileType.Grass) 
+					MainGame.getEntityManager().queueRemoveEntity(newEntity);					
+			}
 		}
 		for(int k = 0; k < 2*numVillages/3.0; k++) {
-			map.getForests( ).add(new Forest(map.getRandomPosWithTile(TileType.Grass)));
+			Vector2 forestPos = map.getRandomPosWithTile(TileType.Grass);
+			map.getForests( ).add(new Forest(forestPos));
+			for(int j = 0; j < 5; j++) {
+				Entity newEntity = MainGame.getEntityManager().addWithin(EntityType.Monster, forestPos, new Vector2(sizeX-1, sizeY-1), 5);
+				if(map.getTileType(newEntity.getPosition()) != TileType.Grass) 
+					MainGame.getEntityManager().queueRemoveEntity(newEntity);
+			}
 		}
 		
 		return map;
@@ -41,6 +55,9 @@ public class Map {
 		return getTileType((int)position.x, (int)position.y);
 	}
 	public TileType getTileType(int x, int y) {
+		if(!contains(x,y))
+			return TileType.Grass;
+		
 		float height = values[x][y];
 		
 		if (height < 0.2)
