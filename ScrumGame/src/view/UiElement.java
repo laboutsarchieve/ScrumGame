@@ -5,5 +5,6 @@ public enum UiElement {
 	Numbers,
 	ManaBar,
 	Circles,
-	Buttons
+	Buttons,
+	Health
 }

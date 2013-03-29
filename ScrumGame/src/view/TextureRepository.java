@@ -41,9 +41,10 @@ public class TextureRepository {
 	private void addUi() {
 		addToUiMap(UiElement.MoveCenter, "art/UiElements.png", new Vector2(0,0), new Vector2(3,3), 64, 64);//cursor
 		addToUiMap(UiElement.Numbers, "art/UiElements.png", new Vector2(6,2), new Vector2(6,6), 32, 32);
-		addToUiMap(UiElement.ManaBar, "art/UiElements.png", new Vector2(0,3), new Vector2(4,3), 64, 64);
+		addToUiMap(UiElement.ManaBar, "art/UiElements.png", new Vector2(0,3), new Vector2(2,3), 64, 64);
 		addToUiMap(UiElement.Circles, "art/UiElements.png", new Vector2(3,0), new Vector2(3,4), 64, 64);//in order: base, OK status, critical status
 		addToUiMap(UiElement.Buttons, "art/UiElements.png", new Vector2(0,5), new Vector2( 4, 4), 64, 64);
+		addToUiMap(UiElement.Health, "art/UiElements.png", new Vector2(4,8), new Vector2(5,8), 32, 32);
 	}
 
 	private void addToTileMap(TileType type, String fileName) {

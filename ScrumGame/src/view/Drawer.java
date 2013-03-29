@@ -84,8 +84,16 @@ public class Drawer {
 	public void drawEntities(float deltaTime) {
 		for(Entity entity : MainGame.getEntityManager( ).getEntities( )) {			
 			Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
-			if(isOnScreen(monsterPos))
+			if(isOnScreen(monsterPos)){
+				
+				Sprite Empty = MainGame.getTextureRepo().getUiElement(UiElement.Health).getStepInRow(0,0);
+				Sprite health = MainGame.getTextureRepo().getUiElement(UiElement.Health).getStepInRow(1,0);
+				health.setScale(entity.getHitpoints()/100 , 1);
+				
+				drawAtLocation(Empty, monsterPos.x, monsterPos.y+TILE_SIZE);
+				drawAtLocation(health, monsterPos.x, monsterPos.y+TILE_SIZE);
 				drawAtLocation(entity.getSprite(), monsterPos.x, monsterPos.y);
+			}
 		}
 	}
 	private boolean isOnScreen(Vector2 monsterPos) {
@@ -181,7 +189,7 @@ public class Drawer {
 		bigFont.draw(batch, ((Villagers < 10 ) ? "0": "") +Integer.toString(Villagers), DrawLoc.x, DrawLoc.y);
 		
 		font.setColor(Color.BLACK);
-		font.draw(batch, str + "Time: "+deltaTime, 192/Scale,25);
+		font.draw(batch, str + "Mana: "+GlobalGameData.getPlayer().getMana(), 192/Scale,25);
 		
 		//font.scale((float)-2.3);
 	}
