@@ -5,70 +5,84 @@ import view.SheetType;
 
 import application.MainGame;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Mage extends Entity {
-	private float BETWEEN_MOVES = 1.0f;
-	private float tillNextMove = 0;
-	//TODO: This should managed in a separate but parallel class
-	private AnimatedSprite animations;
+	
+	private Entity soldierBuddy;
 	
 	public Mage(Vector2 position, Facing facing) {
 		super(position, facing, Faction.Player);
 		animations = new AnimatedSprite(MainGame.getTextureRepo().getSpriteSheet(SheetType.Mage));
+	
+		unitType = EntityType.Mage;
+		init();
 	}
 	
 	@Override
-	public void update(float deltaTime) {
-		animations.update(deltaTime);
-		tillNextMove -= deltaTime;
-		
-		while(tillNextMove < 0) {
-			move();
-			tillNextMove += BETWEEN_MOVES;
-		}
-	}
-	
-	private void move() {
-		Facing nextFacing = facing;
-		if (MathUtils.random() > 0.6) {
-			nextFacing = Facing.getRandom();
-		}
-
-		Vector2 oldPosition = position.cpy();
-		switch (nextFacing) {
-		case Down:
-			position.y--;
-			animations.setCurrAnimation(0);
+	protected void takeAction() {
+		switch(state) {
+		case Idle:
+			state = AIState.Roam;
+		case Roam:
+			actionInterval = GameData.getActionInterval(unitType);
+			if (!validTarget(soldierBuddy))
+					soldierBuddy = manager.getClosestType(this, EntityType.Soldier, Faction.Player);
+				
+			target = manager.getClosest(this, Faction.Monster);
+			
+			if (target != null) {
+				if (target.getState() == AIState.Dead || target.getState() == AIState.Disabled) {
+					target = null;
+					break;
+				}
+				
+				targetRange = manager.distance(target.getPosition(), position);
+				if ( targetRange <= visionRange )
+					state = AIState.Hunt;
+			}
+			
+			if (state == AIState.Roam) {
+				if (manager.distance(soldierBuddy.getPosition(), position) <= 2)
+					roam();
+				else
+					moveTo(soldierBuddy);
+			}
+				
 			break;
-		case Left:
-			position.x--;
-			animations.setCurrAnimation(1);
+		case Hunt:
+			actionInterval = GameData.getAggroInterval(unitType);
+			if (!validTarget()) {
+				state = AIState.Roam;
+				break;
+			}
+			moveTo(target);
+			targetRange = manager.distance(target.getPosition(), position);
+			
+			if (targetRange <= attackRange)
+				state = AIState.Attack;
+			
+			if (targetRange > visionRange + 3) {
+				state = AIState.Roam;
+			}
+			
 			break;
-		case Right:
-			position.x++;
-			animations.setCurrAnimation(2);
-			break;
-		case Up:
-			position.y++;
-			animations.setCurrAnimation(3);
+		case Attack:
+			if (!attack(target)) {
+				state = AIState.Hunt;
+			}
+			
+			if (!validTarget())
+			{
+				target = null;
+				state = AIState.Roam;
+			}
 			break;
 		default:
-			break;
-		}
-
-		HeightMap map = MainGame.getMap();
-
-		if (!map.contains(position)
-				|| map.getTileType(position) != TileType.Grass) {
-			position = oldPosition;
-			facing = Facing.getRandom();
 		}
 	}
 	
-	public Sprite getSprite( ) {
-		return animations.getSprite();
+	protected  void attackedByEntity(Entity e) {
+		//null
 	}
 }

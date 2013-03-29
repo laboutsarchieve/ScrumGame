@@ -30,4 +30,25 @@ public enum Facing {
 			}
 		}
 	}
+	
+	public static Facing getOpposite(Facing f) {
+		Facing opp;
+		switch(f){
+		case Up:
+			opp = Down;
+			break;
+		case Down:
+			opp = Up;
+			break;
+		case Left:
+			opp = Right;
+			break;
+		case Right:
+			opp = Left;
+			break;
+		default:
+				throw new GameException("Facing: something bad happened");
+		}
+		return opp;
+	}
 }

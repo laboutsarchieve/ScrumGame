@@ -10,7 +10,7 @@ import data.TileType;
 public class TextureRepository {
 	HashMap<TileType, SpriteHelper> tileMap = new HashMap<TileType, SpriteHelper>();
 	HashMap<SheetType, SpriteSheet> sheetMap = new HashMap<SheetType, SpriteSheet>();
-	HashMap<UiElement, SpriteHelper> uiElementMap = new HashMap<UiElement, SpriteHelper>();
+	HashMap<UiElement, SpriteSheet> uiElementMap = new HashMap<UiElement, SpriteSheet>();
 
 	public TextureRepository() {
 		addTiles();
@@ -21,6 +21,8 @@ public class TextureRepository {
 	private void addTiles() {
 		addToTileMap(TileType.Grass, "art/AWgrass.png");
 		addToTileMap(TileType.Mountain, "art/AWmountain.png");
+		addToTileMap(TileType.Village, "art/City.png");
+		addToTileMap(TileType.Forest, "art/forest.png");
 	}
 
 	private void addSheets() {
@@ -37,7 +39,11 @@ public class TextureRepository {
 	}
 
 	private void addUi() {
-		addToUiMap(UiElement.MoveCenter, "art/MoveCenter.png");
+		addToUiMap(UiElement.MoveCenter, "art/UiElements.png", new Vector2(0,0), new Vector2(3,3), 64, 64);//cursor
+		addToUiMap(UiElement.Numbers, "art/UiElements.png", new Vector2(6,2), new Vector2(6,6), 32, 32);
+		addToUiMap(UiElement.ManaBar, "art/UiElements.png", new Vector2(0,3), new Vector2(4,3), 64, 64);
+		addToUiMap(UiElement.Circles, "art/UiElements.png", new Vector2(3,0), new Vector2(3,4), 64, 64);//in order: base, OK status, critical status
+		addToUiMap(UiElement.Buttons, "art/UiElements.png", new Vector2(0,5), new Vector2( 4, 4), 64, 64);
 	}
 
 	private void addToTileMap(TileType type, String fileName) {
@@ -50,8 +56,8 @@ public class TextureRepository {
 				frameWidth));
 	}
 
-	private void addToUiMap(UiElement type, String fileName) {
-		uiElementMap.put(type, new SpriteHelper(fileName));
+	private void addToUiMap(UiElement type, String fileName, Vector2 start, Vector2 end, int frameHeight, int frameWidth) {
+		uiElementMap.put(type, new SpriteSheet(fileName, start, end, frameHeight, frameWidth));
 	}
 
 	public SpriteHelper getTile(TileType type) {
@@ -62,7 +68,7 @@ public class TextureRepository {
 		return sheetMap.get(type);
 	}
 	
-	public SpriteHelper getUiElement(UiElement type) {
+	public SpriteSheet getUiElement(UiElement type) {
 		return uiElementMap.get(type);
 	}
 

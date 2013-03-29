@@ -1,5 +1,9 @@
 package view;
 
 public enum UiElement {
-	MoveCenter
+	MoveCenter,
+	Numbers,
+	ManaBar,
+	Circles,
+	Buttons
 }

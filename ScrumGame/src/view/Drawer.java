@@ -1,23 +1,29 @@
 package view;
 
+
 import application.GameTools;
 import application.MainGame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 import data.Entity;
+import data.GlobalGameData;
+import data.EntityManager;
+import data.Faction;
 import data.GameSettings;
-import data.HeightMap;
+import data.Map;
 
 public class Drawer {
 	public final int TILE_SIZE = 32;
-	private HeightMap map;
+	private Map map;
 	private Vector2 lowerLeftOfView;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -26,22 +32,33 @@ public class Drawer {
 	private Vector2 currTouchPosition;
 	private float tileScreenWidth;
 	private float tileScreenHeight;
+	private BitmapFont font;
+	private BitmapFont bigFont;
+	private CharSequence str;
+	private EntityManager Manager;
 	
-	public Drawer(HeightMap map) {
+	public Drawer(Map map, EntityManager Manager) {
+		Gdx.graphics.setDisplayMode(480, 800, true);
 		this.map = map;
-		lowerLeftOfView = Vector2.Zero;		
-		
+		this.Manager=Manager;
+		font=new BitmapFont(Gdx.files.internal("font/Dialog.fnt"), Gdx.files.internal("font/Dialog.png"), false);
+		bigFont= new BitmapFont(Gdx.files.internal("font/DialogBig.fnt"), Gdx.files.internal("font/DialogBig.png"), false);
+		lowerLeftOfView = Vector2.Zero;	
 		camera = new OrthographicCamera(1, GameSettings.getAspectRatio());
         camera.update();
 		batch = new SpriteBatch();
 		batch.enableBlending();
+		str="Test Build 1.0 Width: "+GameSettings.getScreenWidth( ) +" Height: "+GameSettings.getScreenHeight( );
+		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
+		batch.setProjectionMatrix(normalProjection);
 	}	
 	public void draw(float deltaTime) {
-		setupDisplay( );		
-		batch.begin();		
+		setupDisplay( );
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		batch.begin();
 		drawMap(deltaTime);
 		drawEntities(deltaTime);
-		drawUi(deltaTime);		
+		drawUi(deltaTime);
 		batch.end();
 	}
 	public void drawMap(float deltaTime) {		
@@ -79,12 +96,94 @@ public class Drawer {
 		
 		return clampedLoc.epsilonEquals(monsterPosInPixels, 2);
 	}	
-	public void drawUi(float deltaTime) {
+	public void drawUi(float deltaTime) {		//STUFF I NEED TO CHANGE
+		
+		int MAX=99;//Max units to show in UI
+		int Critical = 25;//when to show the critical circle
+		
+		//GlobalGameData.getPlayer();
+		float Scale= GameSettings.getAspectRatio();
+		float mana= (float) 0.8;//Test Variable for Mana Bar
+		
+		int Villagers=Manager.getFactionMembers(Faction.Villager).size();
+		Villagers=(Villagers>MAX)? MAX : Villagers;
+		
 		if(drawMoveCenter) {
-			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.MoveCenter).getSprite();
-			drawAtLocation(toDraw, startTouchPosition);
-		}
 			
+			int cursorSize=32;
+			
+			//First, get direction (one of 9 including no direction)
+			Vector2 currentDirection=currTouchPosition.cpy();
+			Vector2 cursorPos = new Vector2();//init to zero
+			
+			cursorPos.x=(currentDirection.x > (startTouchPosition.x+cursorSize))? 2: 0;
+			cursorPos.x=(currentDirection.x < (startTouchPosition.x+cursorSize) && currentDirection.x > (startTouchPosition.x-cursorSize))? 1: cursorPos.x;
+			
+			cursorPos.y=(currentDirection.y > (startTouchPosition.y +cursorSize))? 0: 2;
+			cursorPos.y=(currentDirection.y < (startTouchPosition.y +cursorSize) && currentDirection.y > (startTouchPosition.y-cursorSize))? 1: cursorPos.y;
+			
+			//Second, get appropriate cursor using math
+			
+			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.MoveCenter).getStepInRow((int)cursorPos.x,(int)cursorPos.y);
+			drawAtLocation(toDraw, new Vector2(startTouchPosition.x-(cursorSize), startTouchPosition.y-(cursorSize)));
+			
+		}
+		//Now draw HUD
+		//start with baseCircle
+		int CircleSize=64;
+		Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInCol(0, 0);//get base circle
+		Vector2 DrawLoc = new Vector2(16, (camera.viewportHeight * GameSettings.getScreenHeight() - 80) );
+		drawAtLocation(toDraw, DrawLoc);
+		for(int i=0;i<4;i++)
+		{
+			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(i, 0);//get Empty Mana Bar
+			drawAtLocation(toDraw, new Vector2(DrawLoc.x+(i * CircleSize), DrawLoc.y));
+		}
+		
+		//
+		//	DRAW ACTUAL MANA BAR
+		float toFill = 3 * mana;
+	
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0, 1);//get Filled Mana Bar 
+		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(0 * CircleSize), DrawLoc.y));
+		
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(1, 1);//get Filled Mana Bar 
+		toDraw.setScale(toFill, 1);
+		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(1 * CircleSize), DrawLoc.y));
+		
+		
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(((Villagers> Critical)? 1 : 2),0); //get Critical Circle
+		drawAtLocation(toDraw, DrawLoc);
+		//Draw Buttons (Warrior, Archer, Mage)
+		for(int i=0;i<4;i++)
+		{
+			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(i, 0);//get buttons
+			drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
+		}
+		
+		float textWidth=bigFont.getBounds("00").width;
+		float textHeight=bigFont.getBounds("00").height;
+		
+		
+		//ONLY DRAW TEXT AFTER THIS:
+		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight()); //required to render text properly
+		batch.setProjectionMatrix(normalProjection);
+		
+		DrawLoc = new Vector2((DrawLoc.x / Scale) + ( CircleSize/Scale/2 ) - (textWidth/2), (DrawLoc.y/Scale) + ( CircleSize/Scale/2 ) + (textHeight/2));
+		
+		
+		//font.draw(batch, "Drawing to X: "+(int)DrawLoc.x +" Y: "+ (int)DrawLoc.y, 32, 80/Scale);
+		if(drawMoveCenter)
+		{
+			font.draw(batch, "Current Touch X: "+(int)currTouchPosition.x+"Y: "+(int)currTouchPosition.y, 32,80/Scale);
+		}
+		//font.scale((float) 2.3);
+		bigFont.draw(batch, ((Villagers < 10 ) ? "0": "") +Integer.toString(Villagers), DrawLoc.x, DrawLoc.y);
+		
+		font.setColor(Color.BLACK);
+		font.draw(batch, str + "Time: "+deltaTime, 192/Scale,25);
+		
+		//font.scale((float)-2.3);
 	}
 	private void drawAtLocation(Sprite sprite, Vector2 position) {
 		drawAtLocation(sprite, position.x, position.y);
@@ -96,10 +195,13 @@ public class Drawer {
 	}
 	private void setupDisplay( ) {
 		GL10 gl = Gdx.graphics.getGL10();
-		gl.glViewport(0, 0, (int)GameSettings.getScreenWidth( ), (int)GameSettings.getScreenHeight( ));		
+		gl.glViewport(0, 0, (int)GameSettings.getScreenWidth( ), (int)GameSettings.getScreenHeight( ));	
+		
 		camera.position.set(0.5f, GameSettings.getScreenHeight() / GameSettings.getScreenWidth() / 2, 0);		
+		
 		camera.update();
 		camera.apply(gl);
+		
 		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -131,7 +233,7 @@ public class Drawer {
 	}
 	public void setCurrTouch(Vector2 startTouchPoint) {
 		currTouchPosition = startTouchPoint.cpy( );		
-		currTouchPosition.y = GameSettings.getScreenHeight() - startTouchPosition.y;
+		currTouchPosition.y = GameSettings.getScreenHeight() - currTouchPosition.y;
 		currTouchPosition.mul(GameSettings.getAspectRatio());
 	}
 	

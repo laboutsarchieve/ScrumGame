@@ -2,10 +2,10 @@ package data;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class Village {
+public class Forest {
 	private Vector2 position;
 	
-	public Village(Vector2 position) {
+	public Forest(Vector2 position) {
 		this.position = position;
 	}
 

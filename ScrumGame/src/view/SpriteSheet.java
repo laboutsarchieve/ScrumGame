@@ -34,7 +34,9 @@ public class SpriteSheet {
 				TextureFilter.MipMapLinearNearest);
 
 		numRow = (int) (end.y - start.y);
+		numRow = (numRow == 0)? 1 : numRow;
 		numCol = (int) (end.x - start.x);
+		numCol = (numCol == 0)? 1 : numCol;
 	}
 
 	public Sprite getFrame(int step) {
