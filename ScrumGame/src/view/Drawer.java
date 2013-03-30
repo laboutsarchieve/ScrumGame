@@ -18,8 +18,6 @@ import data.GameSettings;
 import data.Map;
 import data.TileType;
 import data.Village;
-
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 import data.Entity;
