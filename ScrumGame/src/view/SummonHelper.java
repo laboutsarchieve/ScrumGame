@@ -44,6 +44,7 @@ public class SummonHelper {
 		{
 			cost=30;
 		}
+		
 		return cost;
 	}
 	public boolean SummonAtPos(Vector2 Position)//Not Implemented

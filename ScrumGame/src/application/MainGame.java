@@ -25,6 +25,7 @@ public class MainGame implements ApplicationListener {
 		summonHelper=new SummonHelper();
 		time=0;
 		Gdx.input.setInputProcessor(gameInput);
+		GlobalGameData.getPlayer().setMana(30);
 	}
 
 	@Override
@@ -39,7 +40,14 @@ public class MainGame implements ApplicationListener {
 		update(deltaTime);
 		drawer.draw(deltaTime);
 	}
+	int tillMana = 60;
 	public void update(float deltaTime) {	
+		tillMana--;
+		if(tillMana < 0) {
+			tillMana = 60;
+			GlobalGameData.getPlayer().setMana(GlobalGameData.getPlayer().getMana()+1);
+		}
+		
 		time+=deltaTime;
 		if(time >=.25) //tweak as you like right now its .5 mana every .25 seconds so 2 mana per second
 		{
