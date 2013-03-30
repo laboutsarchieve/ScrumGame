@@ -207,8 +207,8 @@ public class Drawer {
 		{
 			font.draw(batch, "Current Touch X: "+(int)currTouchPosition.x+"Y: "+(int)currTouchPosition.y, 32,80/Scale);
 			Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
-			SummonPos.x=(SummonPos.x/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
-			SummonPos.y=(SummonPos.y/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
+			SummonPos.x=(SummonPos.x);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
+			SummonPos.y=(SummonPos.y);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
 			SummonPos.x=(float)roundUp(SummonPos.x, 1);
 			SummonPos.y=(float)roundUp(SummonPos.y, 1);
 			font.draw(batch, "Summon Pos X:" +SummonPos.x + " Y: "+SummonPos.y, 256/Scale, 50);
@@ -301,8 +301,8 @@ public class Drawer {
 			if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)
 			{
 				Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
-				SummonPos.x=(SummonPos.x/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
-				SummonPos.y=(SummonPos.y/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
+				SummonPos.x=(SummonPos.x);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
+				SummonPos.y=(SummonPos.y);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
 				SummonPos.x=(float)roundUp(SummonPos.x, 1)-1;
 				SummonPos.y=(float)roundUp(SummonPos.y, 1)-1;
 				
