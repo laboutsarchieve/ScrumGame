@@ -1,4 +1,4 @@
-package view;
+package src.view;
 
 public enum UiElement {
 	MoveCenter,

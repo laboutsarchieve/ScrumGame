@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+<<<<<<< HEAD
+import com.badlogic.gdx.math.Vector2;
 
 import data.Entity;
 import data.Forest;
@@ -18,7 +20,7 @@ import data.GameSettings;
 import data.Map;
 import data.TileType;
 import data.Village;
-
+=======
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
