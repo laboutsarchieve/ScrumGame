@@ -1,8 +1,8 @@
 package data;
 
 public class Player {
-	int mana;
-	int MaxMana;
+	float mana;
+	float MaxMana;
 	
 	public Player()
 	{
@@ -10,33 +10,37 @@ public class Player {
 		this.MaxMana=100;
 	}
 	
-	public Player(int mana, int MaxMana)
+	public Player(float mana, float MaxMana)
 	{
 		this.mana=mana;
 		this.MaxMana=MaxMana;
 	}
 	
-	public int getMana() {
+	public float getMana() {
 		return mana;
 	}
 
-	public int getMaxMana()
+	public float getMaxMana()
 	{
 		return MaxMana;
 	}
-	public void setMana(int mana) {
+	public void setMana(float mana) {
 		this.mana = mana;
 	}
-	public void addMana(int mana)
+	public void addMana(float mana)
 	{
 		this.mana+=mana;
+		if(this.mana>MaxMana)
+		{
+			this.mana=MaxMana;
+		}
 	}
-	public void subMana(int mana)
+	public void subMana(float mana)
 	{
 		this.mana -=mana;
 	}
 	
-	public void setMaxMana(int mana)
+	public void setMaxMana(float mana)
 	{
 		this.MaxMana=mana;
 	}

@@ -28,6 +28,7 @@ public class Drawer {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private boolean drawMoveCenter;
+	private boolean drawBadSelection;
 	private Vector2 startTouchPosition;
 	private Vector2 currTouchPosition;
 	private float tileScreenWidth;
@@ -112,10 +113,15 @@ public class Drawer {
 		
 		int Villagers=MainGame.getEntityManager().getFactionMembers(Faction.Villager).size();
 		Villagers=(Villagers>MAX)? MAX : Villagers;
-		
-		if(drawMoveCenter) {
+		int cursorSize=32;
+		if(drawBadSelection)
+		{
+			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(0, 1);
+			drawAtLocation(toDraw, startTouchPosition.x-cursorSize, startTouchPosition.y-cursorSize);
+		}
+		else if(drawMoveCenter) {
 			
-			int cursorSize=32;
+			
 			
 			//First, get direction (one of 9 including no direction)
 			Vector2 currentDirection=currTouchPosition.cpy();
@@ -167,7 +173,13 @@ public class Drawer {
 		{
 			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(i, 0);//get buttons
 			drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
-			if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)
+			
+			if(MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.values()[i+1] ) > GlobalGameData.getPlayer().getMana() )//Red Out if not enough  mana
+			{
+				toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(4, 0);
+				drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
+			}
+			else if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)//Black out if unselected
 			{
 				if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.values()[i+1] )
 				{
@@ -175,6 +187,7 @@ public class Drawer {
 					drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
 				}
 			}
+			
 		}
 		
 		
@@ -260,16 +273,7 @@ public class Drawer {
 		boolean draw=false;
 		float touchX = startTouchPosition.x;
 		float touchY = startTouchPosition.y;
-		if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)
-		{
-			Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
-			SummonPos.x=(SummonPos.x/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
-			SummonPos.y=(SummonPos.y/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
-			SummonPos.x=(float)roundUp(SummonPos.x, 1);
-			SummonPos.y=(float)roundUp(SummonPos.y, 1);
-			
-			MainGame.getSummonHelper().SummonAtPos(SummonPos);    //ToDo: Implement
-		}
+		
 		if(touchX < (64 *3) && touchY < (64 ))//touch coordinates are (not?) affected by aspect ratio
 		{
 			if(touchX < 64)
@@ -294,9 +298,28 @@ public class Drawer {
 		}
 		else
 		{
+			if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)
+			{
+				Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
+				SummonPos.x=(SummonPos.x/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
+				SummonPos.y=(SummonPos.y/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
+				SummonPos.x=(float)roundUp(SummonPos.x, 1)-1;
+				SummonPos.y=(float)roundUp(SummonPos.y, 1)-1;
+				
+				if(!MainGame.getSummonHelper().SummonAtPos(SummonPos))    //ToDo: Implement: done
+				{
+					setDrawBadSelection(true);
+				}
+				draw=true;
+			}
 			MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.None);
 		}
 		return draw;
+	}
+	
+	public void setDrawBadSelection(boolean draw)
+	{
+		this.drawBadSelection=draw;
 	}
 	
 	public void setStartTouch(Vector2 startTouchPoint) {

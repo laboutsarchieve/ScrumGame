@@ -29,9 +29,27 @@ public class SummonHelper {
 	{
 		return currentSummonMode;
 	}
-	public int SummonAtPos(Vector2 Position)//Not Implemented
+	public float getSummonCost(SummonMode select)
+	{	
+		float cost=-1;
+		if(select==SummonMode.Warrior)
+		{
+			cost=10;
+		}
+		else if(select == SummonMode.Archer)
+		{
+			cost=20;
+		}
+		else if(select == SummonMode.Mage)
+		{
+			cost=30;
+		}
+		return cost;
+	}
+	public boolean SummonAtPos(Vector2 Position)//Not Implemented
 	{
-		int ManaCost=0;
+		boolean summoned=false;
+		float ManaCost=0;
 		switch(currentSummonMode)
 		{
 		case Warrior:
@@ -42,6 +60,7 @@ public class SummonHelper {
 				System.out.println("Not Enough Mana");
 				break;
 			}
+			summoned=true;
 			MainGame.getEntityManager().addEntity(new data.Soldier(Position,data.Facing.Down));
 			GlobalGameData.getPlayer().subMana(ManaCost);
 			break;
@@ -53,6 +72,7 @@ public class SummonHelper {
 				System.out.println("Not Enough Mana");
 				break;
 			}
+			summoned=true;
 			MainGame.getEntityManager().addEntity(new data.Archer(Position, data.Facing.Down));
 			GlobalGameData.getPlayer().subMana(ManaCost);
 			break;
@@ -64,6 +84,7 @@ public class SummonHelper {
 				System.out.println("Not Enough Mana");
 				break;
 			}
+			summoned=true;
 			MainGame.getEntityManager().addEntity(new data.Mage(Position, data.Facing.Down));
 			GlobalGameData.getPlayer().subMana(ManaCost);
 			break;
@@ -72,7 +93,7 @@ public class SummonHelper {
 			break;
 		}
 		System.out.println(currentSummonMode.toString()+" Summoned at "+(int)Position.x + " " + (int)Position.y);
-		return ManaCost;
+		return summoned;
 	}
 
 }
