@@ -2,6 +2,7 @@ package application;
 
 import view.Drawer;
 import view.GameInput;
+import view.SummonHelper;
 import view.TextureRepository;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -16,14 +17,16 @@ public class MainGame implements ApplicationListener {
 	private static Drawer drawer;
 	private static GameInput gameInput;
 	private static EntityManager entityManager;
+	private static SummonHelper summonHelper;
 
 	@Override
 	public void create() {		
 		textureRepo = new TextureRepository();
 		entityManager = new EntityManager( );
 		map = Map.randomMap(100, 100);
-		drawer = new Drawer(map, entityManager);	
+		drawer = new Drawer(map);	
 		gameInput = new GameInput(this);		
+		summonHelper=new SummonHelper();
 		Gdx.input.setInputProcessor(gameInput);
 	}
 
@@ -76,5 +79,9 @@ public class MainGame implements ApplicationListener {
 
 	public static EntityManager getEntityManager() {
 		return entityManager;
+	}
+	public static SummonHelper getSummonHelper()
+	{
+		return summonHelper;
 	}
 }

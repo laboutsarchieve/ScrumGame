@@ -15,8 +15,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 import data.Entity;
+import data.GameData;
 import data.GlobalGameData;
-import data.EntityManager;
 import data.Faction;
 import data.GameSettings;
 import data.Map;
@@ -35,12 +35,10 @@ public class Drawer {
 	private BitmapFont font;
 	private BitmapFont bigFont;
 	private CharSequence str;
-	private EntityManager Manager;
 	
-	public Drawer(Map map, EntityManager Manager) {
-		Gdx.graphics.setDisplayMode(480, 800, true);
+	public Drawer(Map map) {
+		//Gdx.graphics.setDisplayMode(480, 800, true);
 		this.map = map;
-		this.Manager=Manager;
 		font=new BitmapFont(Gdx.files.internal("font/Dialog.fnt"), Gdx.files.internal("font/Dialog.png"), false);
 		bigFont= new BitmapFont(Gdx.files.internal("font/DialogBig.fnt"), Gdx.files.internal("font/DialogBig.png"), false);
 		lowerLeftOfView = Vector2.Zero;	
@@ -88,7 +86,7 @@ public class Drawer {
 				
 				Sprite Empty = MainGame.getTextureRepo().getUiElement(UiElement.Health).getStepInRow(0,0);
 				Sprite health = MainGame.getTextureRepo().getUiElement(UiElement.Health).getStepInRow(1,0);
-				health.setScale(entity.getHitpoints()/100 , 1);
+				health.setScale(entity.getHitpoints()/GameData.getHitpoints(entity.getUnitType()) , 1);
 				
 				drawAtLocation(Empty, monsterPos.x, monsterPos.y+TILE_SIZE);
 				drawAtLocation(health, monsterPos.x, monsterPos.y+TILE_SIZE);
@@ -111,9 +109,8 @@ public class Drawer {
 		
 		//GlobalGameData.getPlayer();
 		float Scale= GameSettings.getAspectRatio();
-		float mana= (float) 0.8;//Test Variable for Mana Bar
 		
-		int Villagers=Manager.getFactionMembers(Faction.Villager).size();
+		int Villagers=MainGame.getEntityManager().getFactionMembers(Faction.Villager).size();
 		Villagers=(Villagers>MAX)? MAX : Villagers;
 		
 		if(drawMoveCenter) {
@@ -142,7 +139,8 @@ public class Drawer {
 		Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInCol(0, 0);//get base circle
 		Vector2 DrawLoc = new Vector2(16, (camera.viewportHeight * GameSettings.getScreenHeight() - 80) );
 		drawAtLocation(toDraw, DrawLoc);
-		for(int i=0;i<4;i++)
+		
+		for(int i=0;i<4;i++)//Draw Empty Mana Bar (background)
 		{
 			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(i, 0);//get Empty Mana Bar
 			drawAtLocation(toDraw, new Vector2(DrawLoc.x+(i * CircleSize), DrawLoc.y));
@@ -150,24 +148,35 @@ public class Drawer {
 		
 		//
 		//	DRAW ACTUAL MANA BAR
-		float toFill = 3 * mana;
+		
+		float toFill = 3 * (float)((float)GlobalGameData.getPlayer().getMana() / (float)GlobalGameData.getPlayer().getMaxMana());//sets scaling factor for drawing filled manabar
 	
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0, 1);//get Filled Mana Bar 
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0, 1);//get Filled Mana Bar part 1(static) 
 		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(0 * CircleSize), DrawLoc.y));
 		
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(1, 1);//get Filled Mana Bar 
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(1, 1);//get Filled Mana Bar part 2(dynamic)
 		toDraw.setScale(toFill, 1);
 		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(1 * CircleSize), DrawLoc.y));
 		
 		
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(((Villagers> Critical)? 1 : 2),0); //get Critical Circle
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(((Villagers> Critical)? 1 : 2),0); //get OK Cirlce or Critical Circle
 		drawAtLocation(toDraw, DrawLoc);
+		
 		//Draw Buttons (Warrior, Archer, Mage)
-		for(int i=0;i<4;i++)
+		for(int i=0;i<3;i++)
 		{
 			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(i, 0);//get buttons
 			drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
+			if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)
+			{
+				if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.values()[i+1] )
+				{
+					toDraw=MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(3,0);
+					drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
+				}
+			}
 		}
+		
 		
 		float textWidth=bigFont.getBounds("00").width;
 		float textHeight=bigFont.getBounds("00").height;
@@ -181,9 +190,15 @@ public class Drawer {
 		
 		
 		//font.draw(batch, "Drawing to X: "+(int)DrawLoc.x +" Y: "+ (int)DrawLoc.y, 32, 80/Scale);
-		if(drawMoveCenter)
+		if(drawMoveCenter)//Debug Info on Touch:
 		{
 			font.draw(batch, "Current Touch X: "+(int)currTouchPosition.x+"Y: "+(int)currTouchPosition.y, 32,80/Scale);
+			Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
+			SummonPos.x=(SummonPos.x/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
+			SummonPos.y=(SummonPos.y/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
+			SummonPos.x=(float)roundUp(SummonPos.x, 1);
+			SummonPos.y=(float)roundUp(SummonPos.y, 1);
+			font.draw(batch, "Summon Pos X:" +SummonPos.x + " Y: "+SummonPos.y, 256/Scale, 50);
 		}
 		//font.scale((float) 2.3);
 		bigFont.draw(batch, ((Villagers < 10 ) ? "0": "") +Integer.toString(Villagers), DrawLoc.x, DrawLoc.y);
@@ -234,6 +249,56 @@ public class Drawer {
 		drawMoveCenter = draw;
 		
 	}
+	double roundUp(double x, double f) {
+		  return f * Math.ceil(x / f);
+		}
+
+	public boolean setButtonDraw()//Also handles summoning units. Move functionality elsewhere?
+	{
+		//0, 1, 2, 3 | All, Warrior, Archer, Mage
+		float Scale=GameSettings.getAspectRatio();
+		boolean draw=false;
+		float touchX = startTouchPosition.x;
+		float touchY = startTouchPosition.y;
+		if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)
+		{
+			Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
+			SummonPos.x=(SummonPos.x/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
+			SummonPos.y=(SummonPos.y/Scale);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
+			SummonPos.x=(float)roundUp(SummonPos.x, 1);
+			SummonPos.y=(float)roundUp(SummonPos.y, 1);
+			
+			MainGame.getSummonHelper().SummonAtPos(SummonPos);    //ToDo: Implement
+		}
+		if(touchX < (64 *3) && touchY < (64 ))//touch coordinates are (not?) affected by aspect ratio
+		{
+			if(touchX < 64)
+			{
+				//set Warrior
+				System.out.println("!Warrior Selected");
+				MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Warrior);
+			}
+			else if(touchX < (64*2))
+			{
+				//set Archer
+				System.out.println("!Archer Seleted");
+				MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Archer);
+			}
+			else
+			{
+				//set Mage
+				System.out.println("!Mage Selected");
+				MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Mage);
+			}
+			draw=true;
+		}
+		else
+		{
+			MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.None);
+		}
+		return draw;
+	}
+	
 	public void setStartTouch(Vector2 startTouchPoint) {
 		startTouchPosition = startTouchPoint.cpy( );		
 		startTouchPosition.y = GameSettings.getScreenHeight() - startTouchPosition.y;

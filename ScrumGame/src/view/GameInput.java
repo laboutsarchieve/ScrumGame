@@ -41,10 +41,9 @@ public class GameInput implements InputProcessor {
 		touching = true;
 		startTouchPoint = new Vector2(screenX, screenY);
 		previousTouchPoint = new Vector2(screenX, screenY);
-		
-		MainGame.getMapDrawer().setDrawMoveCenter(true);
 		MainGame.getMapDrawer().setStartTouch(startTouchPoint);
-		MainGame.getMapDrawer().setCurrTouch(previousTouchPoint);		
+		MainGame.getMapDrawer().setCurrTouch(previousTouchPoint);
+		MainGame.getMapDrawer().setDrawMoveCenter(!MainGame.getMapDrawer().setButtonDraw());
 		return false;
 	}
 	@Override
