@@ -15,7 +15,8 @@ public class EntityManager {
 	HashMap<Faction, LinkedList<Entity>> factionLists = new HashMap<Faction, LinkedList<Entity>>();
 	LinkedList<Entity> entityList = new LinkedList<Entity>();
 	LinkedList<Entity> toRemoveList = new LinkedList<Entity>();
-	private Set<Vector2> entityPositionSet = new TreeSet<Vector2>(new VectorCompare( ));
+	private Set<Vector2> entityPositionSet = new TreeSet<Vector2>(
+			new VectorCompare());
 
 	public EntityManager() {
 		factionLists.put(Faction.Player, new LinkedList<Entity>());
@@ -49,7 +50,7 @@ public class EntityManager {
 
 		Vector2 pos;
 		Vector2 myPos = e.getPosition();
-		float dis = 9999f;
+		float dis = Float.MAX_VALUE;
 		for (Entity entity : mobs) {
 			if (entity.getUnitType() != t)
 				continue;
@@ -112,8 +113,8 @@ public class EntityManager {
 		pos.x -= MathUtils.random(0, dist);
 		pos.y += MathUtils.random(0, dist);
 		pos.y -= MathUtils.random(0, dist);
-		
-		GameTools.clamp(pos, new Vector2(0,0), max);
+
+		GameTools.clamp(pos, new Vector2(0, 0), max);
 
 		entity.position = pos.cpy();
 		addEntity(entity);
