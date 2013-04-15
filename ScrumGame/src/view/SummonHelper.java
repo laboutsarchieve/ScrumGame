@@ -3,6 +3,7 @@ package view;
 import com.badlogic.gdx.math.Vector2;
 
 import data.GlobalGameData;
+import data.TileType;
 
 import application.MainGame;
 
@@ -47,8 +48,11 @@ public class SummonHelper {
 		
 		return cost;
 	}
-	public boolean SummonAtPos(Vector2 Position)//Not Implemented
+	public boolean SummonAtPos(Vector2 position)
 	{
+		if(MainGame.getMap().getTileType(position) != TileType.Grass)
+			return false;
+		
 		boolean summoned=false;
 		float ManaCost=0;
 		switch(currentSummonMode)
@@ -62,7 +66,7 @@ public class SummonHelper {
 				break;
 			}
 			summoned=true;
-			MainGame.getEntityManager().addEntity(new data.Soldier(Position,data.Facing.Down));
+			MainGame.getEntityManager().addEntity(new data.Soldier(position,data.Facing.Down));
 			GlobalGameData.getPlayer().subMana(ManaCost);
 			break;
 		case Archer:
@@ -74,7 +78,7 @@ public class SummonHelper {
 				break;
 			}
 			summoned=true;
-			MainGame.getEntityManager().addEntity(new data.Archer(Position, data.Facing.Down));
+			MainGame.getEntityManager().addEntity(new data.Archer(position, data.Facing.Down));
 			GlobalGameData.getPlayer().subMana(ManaCost);
 			break;
 		case Mage:
@@ -86,14 +90,14 @@ public class SummonHelper {
 				break;
 			}
 			summoned=true;
-			MainGame.getEntityManager().addEntity(new data.Mage(Position, data.Facing.Down));
+			MainGame.getEntityManager().addEntity(new data.Mage(position, data.Facing.Down));
 			GlobalGameData.getPlayer().subMana(ManaCost);
 			break;
 		default:
 			System.out.println("Error: Tried to summon bad unit");
 			break;
 		}
-		System.out.println(currentSummonMode.toString()+" Summoned at "+(int)Position.x + " " + (int)Position.y);
+		System.out.println(currentSummonMode.toString()+" Summoned at "+(int)position.x + " " + (int)position.y);
 		return summoned;
 	}
 
