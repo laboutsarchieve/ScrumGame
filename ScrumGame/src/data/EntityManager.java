@@ -1,12 +1,13 @@
 package data;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 
 import application.GameException;
 import application.GameTools;
+import application.VectorCompare;
 
 import com.badlogic.gdx.math.*;
 
@@ -14,7 +15,7 @@ public class EntityManager {
 	HashMap<Faction, LinkedList<Entity>> factionLists = new HashMap<Faction, LinkedList<Entity>>();
 	LinkedList<Entity> entityList = new LinkedList<Entity>();
 	LinkedList<Entity> toRemoveList = new LinkedList<Entity>();
-	private Set<Vector2> entityPositionSet = new HashSet<Vector2>( );
+	private Set<Vector2> entityPositionSet = new TreeSet<Vector2>(new VectorCompare( ));
 
 	public EntityManager() {
 		factionLists.put(Faction.Player, new LinkedList<Entity>());

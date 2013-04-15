@@ -211,6 +211,7 @@ public abstract class Entity {
 
 		if (MainGame.getMap().getTileType(position) != TileType.Grass || MainGame.getEntityManager().isEntityAt(position)) {
 			position = oldPosition.cpy();
+			roam( );
 		} else {
 			if (toTarget.x == 1) {
 				facing = Facing.Right;
