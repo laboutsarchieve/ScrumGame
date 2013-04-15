@@ -1,7 +1,9 @@
 package data;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import application.GameException;
 import application.GameTools;
@@ -12,6 +14,7 @@ public class EntityManager {
 	HashMap<Faction, LinkedList<Entity>> factionLists = new HashMap<Faction, LinkedList<Entity>>();
 	LinkedList<Entity> entityList = new LinkedList<Entity>();
 	LinkedList<Entity> toRemoveList = new LinkedList<Entity>();
+	private Set<Vector2> entityPositionSet = new HashSet<Vector2>( );
 
 	public EntityManager() {
 		factionLists.put(Faction.Player, new LinkedList<Entity>());
@@ -22,10 +25,13 @@ public class EntityManager {
 	public void addEntity(Entity toAdd) {
 		entityList.add(toAdd);
 		factionLists.get(toAdd.getFaction()).add(toAdd);
+		entityPositionSet.add(toAdd.position);
 	}
 
 	public void removeEntites() {
+		entityPositionSet.clear();
 		for (Entity entity : toRemoveList) {
+			entityPositionSet.remove(entity.position);
 			entityList.remove(entity);
 			factionLists.get(entity.getFaction()).remove(entity);
 		}
@@ -63,7 +69,9 @@ public class EntityManager {
 
 	public void update(float deltaTime) {
 		for (Entity entity : entityList) {
+			entityPositionSet.remove(entity.position);
 			entity.update(deltaTime);
+			entityPositionSet.add(entity.position);
 		}
 	}
 
@@ -127,6 +135,10 @@ public class EntityManager {
 		default:
 			throw new GameException("Entity type not recognised!");
 		}
+	}
+
+	public boolean isEntityAt(Vector2 position) {
+		return entityPositionSet.contains(position);
 	}
 
 }
