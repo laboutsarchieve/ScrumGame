@@ -1,5 +1,7 @@
 package data;
 
+import application.MainGame;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class SpawnTile {
@@ -17,5 +19,16 @@ public class SpawnTile {
 
 	public void setPosition(Vector2 position) {
 		this.position = position;
+	}
+	
+	public boolean attemptSpawn(int range) {
+		Entity newEntity = MainGame.getEntityManager().addWithin(EntityType.Villager, position, new Vector2(MainGame.getMap().getWidth()-1, MainGame.getMap().getHeight()-1), range);
+		
+		if(MainGame.getMap().getTileType(newEntity.getPosition()) != TileType.Grass) { 
+			MainGame.getEntityManager().queueRemoveEntity(newEntity);
+			return false;
+		}
+		else
+			return true;
 	}
 }
