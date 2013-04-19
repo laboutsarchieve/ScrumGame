@@ -39,7 +39,7 @@ public class SpawnTile {
 	}
 	
 	public boolean attemptSpawn() {
-		Entity newEntity = MainGame.getEntityManager().addWithin(EntityType.Villager, position, new Vector2(MainGame.getMap().getWidth()-1, MainGame.getMap().getHeight()-1), range);
+		Entity newEntity = MainGame.getEntityManager().addWithin(spawnType, position, new Vector2(MainGame.getMap().getWidth()-1, MainGame.getMap().getHeight()-1), range);
 		
 		if(MainGame.getMap().getTileType(newEntity.getPosition()) != TileType.Grass) { 
 			MainGame.getEntityManager().queueRemoveEntity(newEntity);
