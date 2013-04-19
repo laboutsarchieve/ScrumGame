@@ -22,12 +22,9 @@ import data.Village;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
-import data.Entity;
 import data.GameData;
 import data.GlobalGameData;
 import data.Faction;
-import data.GameSettings;
-import data.Map;
 
 public class Drawer {
 	public final int TILE_SIZE = 32;

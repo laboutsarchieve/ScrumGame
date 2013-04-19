@@ -2,9 +2,13 @@ package data;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import application.GameException;
 import application.GameTools;
+import application.VectorCompare;
 
 import com.badlogic.gdx.math.*;
 
@@ -12,20 +16,30 @@ public class EntityManager {
 	HashMap<Faction, LinkedList<Entity>> factionLists = new HashMap<Faction, LinkedList<Entity>>();
 	LinkedList<Entity> entityList = new LinkedList<Entity>();
 	LinkedList<Entity> toRemoveList = new LinkedList<Entity>();
+	private Set<Vector2> entityPositionSet = new TreeSet<Vector2>(
+			new VectorCompare());
+	private List<SpawnTile> spawnTileList = new LinkedList<SpawnTile>( );
 
 	public EntityManager() {
 		factionLists.put(Faction.Player, new LinkedList<Entity>());
 		factionLists.put(Faction.Villager, new LinkedList<Entity>());
 		factionLists.put(Faction.Monster, new LinkedList<Entity>());
 	}
+	
+	public void addSpawnTile(SpawnTile spawner) {
+		spawnTileList.add(spawner);
+	}
 
 	public void addEntity(Entity toAdd) {
 		entityList.add(toAdd);
 		factionLists.get(toAdd.getFaction()).add(toAdd);
+		entityPositionSet.add(toAdd.position);
 	}
 
 	public void removeEntites() {
+		entityPositionSet.clear();
 		for (Entity entity : toRemoveList) {
+			entityPositionSet.remove(entity.position);
 			entityList.remove(entity);
 			factionLists.get(entity.getFaction()).remove(entity);
 		}
@@ -42,7 +56,7 @@ public class EntityManager {
 
 		Vector2 pos;
 		Vector2 myPos = e.getPosition();
-		float dis = 9999f;
+		float dis = Float.MAX_VALUE;
 		for (Entity entity : mobs) {
 			if (entity.getUnitType() != t)
 				continue;
@@ -63,7 +77,13 @@ public class EntityManager {
 
 	public void update(float deltaTime) {
 		for (Entity entity : entityList) {
+			entityPositionSet.remove(entity.position);
 			entity.update(deltaTime);
+			entityPositionSet.add(entity.position);
+		}
+		
+		for (SpawnTile spawn : spawnTileList) {
+			spawn.tickSpawn();
 		}
 	}
 
@@ -103,8 +123,8 @@ public class EntityManager {
 		pos.x -= MathUtils.random(0, dist);
 		pos.y += MathUtils.random(0, dist);
 		pos.y -= MathUtils.random(0, dist);
-		
-		GameTools.clamp(pos, new Vector2(0,0), max);
+
+		GameTools.clamp(pos, new Vector2(0, 0), max);
 
 		entity.position = pos.cpy();
 		addEntity(entity);
@@ -127,6 +147,10 @@ public class EntityManager {
 		default:
 			throw new GameException("Entity type not recognised!");
 		}
+	}
+
+	public boolean isEntityAt(Vector2 position) {
+		return entityPositionSet.contains(position);
 	}
 
 }
