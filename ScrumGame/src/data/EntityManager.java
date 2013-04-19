@@ -2,6 +2,7 @@ package data;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -17,11 +18,16 @@ public class EntityManager {
 	LinkedList<Entity> toRemoveList = new LinkedList<Entity>();
 	private Set<Vector2> entityPositionSet = new TreeSet<Vector2>(
 			new VectorCompare());
+	private List<SpawnTile> spawnTileList = new LinkedList<SpawnTile>( );
 
 	public EntityManager() {
 		factionLists.put(Faction.Player, new LinkedList<Entity>());
 		factionLists.put(Faction.Villager, new LinkedList<Entity>());
 		factionLists.put(Faction.Monster, new LinkedList<Entity>());
+	}
+	
+	public void addSpawnTile(SpawnTile spawner) {
+		spawnTileList.add(spawner);
 	}
 
 	public void addEntity(Entity toAdd) {
@@ -74,6 +80,10 @@ public class EntityManager {
 			entityPositionSet.remove(entity.position);
 			entity.update(deltaTime);
 			entityPositionSet.add(entity.position);
+		}
+		
+		for (SpawnTile spawn : spawnTileList) {
+			
 		}
 	}
 
