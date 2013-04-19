@@ -2,6 +2,7 @@ package data;
 
 import view.AnimatedSprite;
 
+import application.LevelData;
 import application.MainGame;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -185,6 +186,13 @@ public abstract class Entity {
 	protected abstract void attackedByEntity(Entity e);
 
 	protected void death() {
+		if( this.getFaction() == Faction.Monster ) {
+			LevelData.monsterDied();
+		}
+		else if( this.getFaction() == Faction.Villager ) {
+			LevelData.villagerDied();
+		}
+		
 		state = AIState.Disabled;
 		manager.queueRemoveEntity(this);
 

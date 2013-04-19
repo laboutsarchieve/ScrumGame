@@ -83,7 +83,7 @@ public class EntityManager {
 		}
 		
 		for (SpawnTile spawn : spawnTileList) {
-			
+			spawn.tickSpawn();
 		}
 	}
 
