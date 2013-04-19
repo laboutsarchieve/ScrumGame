@@ -146,15 +146,15 @@ public class Drawer {
 			
 			
 			
-			//First, get direction (one of 9 including no direction)
-			Vector2 currentDirection=currTouchPosition.cpy();
+			//First, get directionection (one of 9 including no directionection)
+			Vector2 currentdirectionection=currTouchPosition.cpy();
 			Vector2 cursorPos = new Vector2();//init to zero
 			
-			cursorPos.x=(currentDirection.x > (startTouchPosition.x+cursorSize))? 2: 0;
-			cursorPos.x=(currentDirection.x < (startTouchPosition.x+cursorSize) && currentDirection.x > (startTouchPosition.x-cursorSize))? 1: cursorPos.x;
+			cursorPos.x=(currentdirectionection.x > (startTouchPosition.x+cursorSize))? 2: 0;
+			cursorPos.x=(currentdirectionection.x < (startTouchPosition.x+cursorSize) && currentdirectionection.x > (startTouchPosition.x-cursorSize))? 1: cursorPos.x;
 			
-			cursorPos.y=(currentDirection.y > (startTouchPosition.y +cursorSize))? 0: 2;
-			cursorPos.y=(currentDirection.y < (startTouchPosition.y +cursorSize) && currentDirection.y > (startTouchPosition.y-cursorSize))? 1: cursorPos.y;
+			cursorPos.y=(currentdirectionection.y > (startTouchPosition.y +cursorSize))? 0: 2;
+			cursorPos.y=(currentdirectionection.y < (startTouchPosition.y +cursorSize) && currentdirectionection.y > (startTouchPosition.y-cursorSize))? 1: cursorPos.y;
 			
 			//Second, get appropriate cursor using math
 			
