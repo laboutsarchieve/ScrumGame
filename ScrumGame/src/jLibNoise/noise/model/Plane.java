@@ -40,7 +40,7 @@ import jLibNoise.noise.module.Module;
  * - two-dimensional textures
  * - terrain height maps for local areas
  *
- * This plane extends infinitely in both directions.
+ * This plane extends infinitely in both directionections.
  * 
  * @source 'model/plane.h/cpp'
  */

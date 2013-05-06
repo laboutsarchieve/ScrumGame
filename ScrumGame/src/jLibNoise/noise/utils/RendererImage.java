@@ -749,13 +749,13 @@ public class RendererImage {
     /**
      * Calculates the intensity of the light given some elevation values.
      * <p/>
-     * These values come directly from the noise map.
+     * These values come directionectly from the noise map.
      *
      * @param center Elevation of the center point.
-     * @param left   Elevation of the point directly left of the center point.
-     * @param right  Elevation of the point directly right of the center point.
-     * @param down   Elevation of the point directly below the center point.
-     * @param up     Elevation of the point directly above the center point.
+     * @param left   Elevation of the point directionectly left of the center point.
+     * @param right  Elevation of the point directionectly right of the center point.
+     * @param down   Elevation of the point directionectly below the center point.
+     * @param up     Elevation of the point directionectly above the center point.
      * @return
      */
     private double CalcLightIntensity(double center, double left, double right, double down, double up) {

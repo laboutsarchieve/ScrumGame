@@ -26,6 +26,9 @@ public class Archer extends Entity {
 		case Idle:
 			state = AIState.Roam;
 		case Roam:
+			if(soldierBuddy == null)
+				soldierBuddy = this;
+			
 			actionInterval = GameData.getActionInterval(unitType);
 			if (!validTarget(soldierBuddy))
 					soldierBuddy = manager.getClosestType(this, EntityType.Soldier, Faction.Player);

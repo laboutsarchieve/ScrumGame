@@ -53,7 +53,7 @@ public class GameInput implements InputProcessor {
 		previousTouchPoint = new Vector2(screenX, screenY);
 		
 		MainGame.getMapDrawer().setDrawMoveCenter(false);
-		MainGame.getMapDrawer().setDrawBadSelection(false);
+		//MainGame.getMapDrawer().setDrawBadSelection(false);
 		return false;
 	}
 	@Override

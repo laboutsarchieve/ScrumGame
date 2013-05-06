@@ -1,16 +1,10 @@
 package application;
 
-import view.Drawer;
-import view.GameInput;
-import view.SummonHelper;
-import view.TextureRepository;
+import view.*;
+import data.*;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-
-import data.EntityManager;
-import data.GlobalGameData;
-import data.Map;
 
 public class MainGame implements ApplicationListener {
 	private static TextureRepository textureRepo;	
@@ -19,6 +13,7 @@ public class MainGame implements ApplicationListener {
 	private static GameInput gameInput;
 	private static EntityManager entityManager;
 	private static SummonHelper summonHelper;
+	private static SoundHelper soundHelper;
 	private float time;
 
 	@Override
@@ -29,8 +24,10 @@ public class MainGame implements ApplicationListener {
 		drawer = new Drawer(map);	
 		gameInput = new GameInput(this);		
 		summonHelper=new SummonHelper();
+		soundHelper = new SoundHelper();
 		time=0;
 		Gdx.input.setInputProcessor(gameInput);
+		GlobalGameData.getPlayer().setMana(100);
 	}
 
 	@Override
@@ -45,17 +42,61 @@ public class MainGame implements ApplicationListener {
 		update(deltaTime);
 		drawer.draw(deltaTime);
 	}
+	int tillMana = 60;
+	int overlayKill=0;
 	public void update(float deltaTime) {	
+		/*tillMana--;
+		if(tillMana < 0) {
+			tillMana = 60;
+			//GlobalGameData.getPlayer().setMana(GlobalGameData.getPlayer().getMana()+1);
+		}*/
+		//Please only one mana management...thing at a time
+		
 		time+=deltaTime;
 		if(time >=.25) //tweak as you like right now its .5 mana every .25 seconds so 2 mana per second
 		{
 			time=0;
 			GlobalGameData.getPlayer().addMana((float).5);
 		}
+		if(overlayKill>0)
+		{
+			overlayKill++;
+		}
+		if(overlayKill>90)//3 second fade in + 3 seconds on screen
+		{
+			overlayKill=0;
+			drawer.setOverlayFadeOut(true);
+		}
+		
 		gameInput.update(deltaTime);
 		entityManager.update(deltaTime);
 		entityManager.removeEntites();
+		
+		if(LevelData.getMonstersTillNextLevel() <= 0) {
+			levelUp( );
+		}
+		if(LevelData.getVillagersTillGameOver() <= 0) {
+			gameOver( );
+		}
 	}
+	private boolean playOnce=true;
+	private void gameOver() {
+		// TODO Auto-generated method stub
+		drawer.setDrawGameOver(true);
+		if(playOnce){
+			soundHelper.playSound(Sounds.GameOver);
+			playOnce=false;
+		}
+	}
+
+	private void levelUp() {
+		drawer.setDrawLevelUp(true);
+		overlayKill=1;
+		LevelData.levelUp();
+		LevelData.setMonstersTillNextLevel(LevelData.getLevel() * 10);
+		LevelData.addVillagersTillGameOver(LevelData.getLevel() * 5);
+	}
+
 	@Override
 	public void resize(int width, int height) {
 	}
@@ -92,5 +133,9 @@ public class MainGame implements ApplicationListener {
 	public static SummonHelper getSummonHelper()
 	{
 		return summonHelper;
+	}
+	public static SoundHelper getSoundHelper()
+	{
+		return soundHelper;
 	}
 }
