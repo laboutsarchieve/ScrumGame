@@ -49,7 +49,7 @@ public class Monster extends Entity {
 				state = AIState.Roam;
 				break;
 			}
-			moveTo(target);
+			moveTo(target, 1);
 			targetRange = manager.distance(target.getPosition(), position);
 			
 			if (targetRange <= attackRange)

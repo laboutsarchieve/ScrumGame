@@ -21,6 +21,7 @@ public abstract class Entity {
 
 	protected EntityType unitType;
 	protected int hitpoints;
+	protected float healthScale;
 	protected int attackDamage;
 	protected int attackRange;
 	protected int visionRange;
@@ -40,6 +41,7 @@ public abstract class Entity {
 		this.faction = faction;
 		state = AIState.Idle;
 		manager = MainGame.getEntityManager();
+		attackRange = 1;
 	}
 
 	public void update(float deltaTime) {
@@ -105,6 +107,7 @@ public abstract class Entity {
 
 	protected void init() {
 		hitpoints = GameData.getHitpoints(unitType);
+		setHealthScale();
 		attackDamage = GameData.getAttackDamage(unitType);
 		attackRange = GameData.getRange(unitType);
 		visionRange = GameData.getVisionRadius(unitType);
@@ -175,7 +178,7 @@ public abstract class Entity {
 
 	protected void takeDamage(Entity e) {
 		hitpoints -= e.getAttackDamage();
-
+		setHealthScale();
 		attackedByEntity(e);
 
 		if (hitpoints <= 0) {
@@ -204,10 +207,11 @@ public abstract class Entity {
 		System.out.println("omg im dead " + deathcount + " " + myVillagerID);
 	}
 
-	// test func
-	protected void moveTo(Entity e) {
+	protected void moveTo(Entity e, int howClose) {
 		Vector2 targetPos = e.getPosition();
 		Vector2 toTarget = targetPos.cpy().sub(position);
+		float desiredDistance = (toTarget.len() - howClose);
+		toTarget.nor().mul(desiredDistance);
 		if (toTarget.x != 0)
 			toTarget.x /= Math.abs(toTarget.x);
 		if (toTarget.y != 0)
@@ -253,5 +257,15 @@ public abstract class Entity {
 			}
 
 		}
+	}
+
+	//Added By: Chris
+	public float getHealthScale()
+	{
+		return healthScale;
+	}
+	private void setHealthScale()
+	{
+		healthScale = (float)this.getHitpoints()/(float)GameData.getHitpoints(this.getUnitType());
 	}
 }

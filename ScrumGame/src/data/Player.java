@@ -3,6 +3,7 @@ package data;
 public class Player {
 	float mana;
 	float MaxMana;
+	float manaPercent;
 	
 	public Player()
 	{
@@ -14,6 +15,7 @@ public class Player {
 	{
 		this.mana=mana;
 		this.MaxMana=MaxMana;
+		setManaPercent();
 	}
 	
 	public float getMana() {
@@ -26,6 +28,7 @@ public class Player {
 	}
 	public void setMana(float mana) {
 		this.mana = mana;
+		setManaPercent();
 	}
 	public void addMana(float mana)
 	{
@@ -34,14 +37,29 @@ public class Player {
 		{
 			this.mana=MaxMana;
 		}
+		setManaPercent();
 	}
 	public void subMana(float mana)
 	{
 		this.mana -=mana;
+
+		setManaPercent();
 	}
 	
 	public void setMaxMana(float mana)
 	{
 		this.MaxMana=mana;
+
+		setManaPercent();
+	}
+	
+	private void setManaPercent()
+	{
+		this.manaPercent=this.mana/this.MaxMana;
+	}
+	
+	public float getManaPercent()
+	{
+		return manaPercent;
 	}
 }

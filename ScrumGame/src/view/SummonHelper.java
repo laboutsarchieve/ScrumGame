@@ -24,7 +24,7 @@ public class SummonHelper {
 	}
 	public void setSummonMode(SummonMode mode)
 	{
-		currentSummonMode=mode;
+		currentSummonMode = (currentSummonMode==mode) ? SummonMode.None : mode;
 	}
 	public SummonMode getSummonMode()
 	{
@@ -33,6 +33,9 @@ public class SummonHelper {
 	public float getSummonCost(SummonMode select)
 	{	
 		float cost=-1;
+		if(select==SummonMode.None){
+			cost=0;
+		}
 		if(select==SummonMode.Warrior)
 		{
 			cost=10;
@@ -63,7 +66,8 @@ public class SummonHelper {
 			if(GlobalGameData.getPlayer().getMana() < ManaCost)
 			{
 				System.out.println("Not Enough Mana");
-				break;
+
+				return false;
 			}
 			summoned=true;
 			MainGame.getEntityManager().addEntity(new data.Soldier(position,data.Facing.Down));
@@ -75,7 +79,7 @@ public class SummonHelper {
 			if(GlobalGameData.getPlayer().getMana() < ManaCost)
 			{
 				System.out.println("Not Enough Mana");
-				break;
+				return false;
 			}
 			summoned=true;
 			MainGame.getEntityManager().addEntity(new data.Archer(position, data.Facing.Down));
@@ -87,7 +91,7 @@ public class SummonHelper {
 			if(GlobalGameData.getPlayer().getMana() < ManaCost)
 			{
 				System.out.println("Not Enough Mana");
-				break;
+				return false;
 			}
 			summoned=true;
 			MainGame.getEntityManager().addEntity(new data.Mage(position, data.Facing.Down));
@@ -98,6 +102,8 @@ public class SummonHelper {
 			break;
 		}
 		System.out.println(currentSummonMode.toString()+" Summoned at "+(int)position.x + " " + (int)position.y);
+		MainGame.getSoundHelper().playSound(Sounds.Summon);
+
 		return summoned;
 	}
 
