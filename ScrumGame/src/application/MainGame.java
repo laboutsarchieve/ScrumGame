@@ -52,7 +52,7 @@ public class MainGame implements ApplicationListener {
 		if(timeSinceMana >=.25) //tweak as you like right now its .5 mana every .25 seconds so 2 mana per second
 		{
 			timeSinceMana=0;
-			GlobalGameData.getPlayer().addMana((float).5 + 0.1f * LevelData.getLevel());
+			GlobalGameData.getPlayer().addMana((float).5f + 0.3f * LevelData.getLevel());
 		}
 		gameInput.update(deltaTime);
 		entityManager.update(deltaTime);
@@ -94,8 +94,6 @@ public class MainGame implements ApplicationListener {
 		drawer.setDrawLevelUp(true);
 		overlayKill=1;
 		LevelData.levelUp();
-		LevelData.setMonstersTillNextLevel(LevelData.getLevel() * 10);
-		LevelData.addVillagersTillGameOver(LevelData.getLevel() * 5);
 	}
 	@Override
 	public void resize(int width, int height) {

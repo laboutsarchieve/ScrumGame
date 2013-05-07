@@ -54,7 +54,7 @@ public class Map {
 		
 		float height = values[x][y];
 		
-		if (height < 0.3)
+		if (height < 0.4)
 			return TileType.Grass;
 		else
 			return TileType.Mountain;

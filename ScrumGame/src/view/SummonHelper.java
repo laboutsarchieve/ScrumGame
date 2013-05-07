@@ -2,9 +2,11 @@ package view;
 
 import com.badlogic.gdx.math.Vector2;
 
+import data.Faction;
 import data.GlobalGameData;
 import data.TileType;
 
+import application.LevelData;
 import application.MainGame;
 
 public class SummonHelper {
@@ -53,6 +55,9 @@ public class SummonHelper {
 	}
 	public boolean SummonAtPos(Vector2 position)
 	{
+		if(MainGame.getEntityManager().getFactionMembers(Faction.Player).size() >= LevelData.getPlayerCharOnScreen())
+			return false;
+		
 		if(MainGame.getMap().getTileType(position) != TileType.Grass)
 			return false;
 		

@@ -249,7 +249,9 @@ public class Drawer {
 			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(i, 0);//get buttons
 			drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
 			
-			if(MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.values()[i+1] ) > GlobalGameData.getPlayer().getMana() )//Red Out if not enough  mana
+			
+			
+			if(MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.values()[i+1] ) > GlobalGameData.getPlayer().getMana() ||  MainGame.getEntityManager().getFactionMembers(Faction.Player).size() >= LevelData.getPlayerCharOnScreen())//Red Out if not enough  mana
 			{
 				toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(4, 0);
 				drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
@@ -268,7 +270,7 @@ public class Drawer {
 			
 		}
 		if(canSummon)
-		DrawManaCost(MainGame.getSummonHelper().getSummonMode(), DrawLoc.x + CircleSize + ManaWidth, DrawLoc.y + (CircleSize/2));
+			DrawManaCost(MainGame.getSummonHelper().getSummonMode(), DrawLoc.x + CircleSize + ManaWidth, DrawLoc.y + (CircleSize/2));
 		//DrawManaCost(MainGame.getSummonHelper().getSummonMode(), 400, 400);
 		
 		//Draw Help Notifications (if any)

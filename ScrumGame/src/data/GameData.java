@@ -23,18 +23,18 @@ public class GameData {
 	private static int baseVillagerRange = 0;
 
 	// This is the scout/explore radius to begin moving towards a unit
-	private static int baseMonsterVision = 5;
-	private static int baseSoldierVision = 6;
-	private static int baseArcherVision = 7;
-	private static int baseMageVision = 7;
-	private static int baseVillagerVision = 6;
+	private static int baseMonsterVision = 6;
+	private static int baseSoldierVision = 7;
+	private static int baseArcherVision = 8;
+	private static int baseMageVision = 8;
+	private static int baseVillagerVision = 7;
 
 	// This is the radius to begin offensive/defensive action
-	private static int baseMonsterAggro = 5;
-	private static int baseSoldierAggro = 6;
-	private static int baseArcherAggro = 7;
-	private static int baseMageAggro = 7;
-	private static int baseVillagerAggro = 6;
+	private static int baseMonsterAggro = 7;
+	private static int baseSoldierAggro = 8;
+	private static int baseArcherAggro = 9;
+	private static int baseMageAggro = 9;
+	private static int baseVillagerAggro = 8;
 
 	private static float baseMonsterActionInterval = 1.5f;
 	private static float baseSoldierActionInterval = 1.5f;
@@ -183,7 +183,7 @@ public class GameData {
 		float m = 0;
 		switch (t) {
 		case Monster:
-			m = baseMonsterActionInterval / difficultyMultiplier;
+			m = Math.max(0.5f, baseMonsterActionInterval - 0.05f * LevelData.getLevel());
 			break;
 		case Soldier:
 			m = baseSoldierActionInterval;
@@ -231,10 +231,10 @@ public class GameData {
 		int m = 0;
 		switch (t) {
 		case Monster:
-			m = Math.max(800 - 50 * LevelData.getLevel(), 50);
+			m = Math.max(600 - 50 * LevelData.getLevel(), 50);
 			break;
 		case Villager:
-			m = Math.max(600 - 25 * LevelData.getLevel(), 50);
+			m = Math.max(600 - 50 * LevelData.getLevel(), 50);
 			break;
 		default:
 			m = 1000;

@@ -6,6 +6,8 @@ public class LevelData {
 	private static int monstersTillNextLevel = 10;
 	private static int villagersTillGameOver = 20;
 	private static int villagerCritical=10;
+	private static int playerCharOnScreen=15;
+
 	private static float monstersTillNextLevelPercent=0;
 	
 	public static int getLevel() {
@@ -14,6 +16,9 @@ public class LevelData {
 
 	public static void levelUp() {
 		LevelData.level++;
+		playerCharOnScreen = 15 + LevelData.level * 6;
+		LevelData.setMonstersTillNextLevel(LevelData.getLevel() * 10);
+		LevelData.addVillagersTillGameOver(10 * LevelData.getLevel());
 		setVillagerCriticalStatus();
 	}
 
@@ -77,4 +82,9 @@ public class LevelData {
 	{
 		return villagerCritical;
 	}
+	
+	public static int getPlayerCharOnScreen() {
+		return playerCharOnScreen;
+	}
+
 }
