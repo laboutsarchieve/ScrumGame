@@ -57,6 +57,7 @@ public class MainGame implements ApplicationListener {
 		{
 			time=0;
 			GlobalGameData.getPlayer().addMana((float).5);
+			GlobalGameData.getPlayer().addGodCharge(1);
 		}
 		if(overlayKill>0)
 		{

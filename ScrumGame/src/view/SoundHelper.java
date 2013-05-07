@@ -26,6 +26,7 @@ public class SoundHelper {
 		//SoundMap.put(Sounds.Help, Gdx.audio.newSound(Gdx.files.internal("sound/Help.wav"))); //NYI
 		SoundMap.put(Sounds.Gaben, Gdx.audio.newSound(Gdx.files.internal("sound/Gaben.wav")));
 		SoundMap.put(Sounds.Mage, Gdx.audio.newSound(Gdx.files.internal("sound/Mage_Summon.wav")));
+		SoundMap.put(Sounds.BadSelection, Gdx.audio.newSound(Gdx.files.internal("sound/BadSelection.wav")));
 	}
 	
 	/*public void playSound(Sounds type)	//Unfortunate in that this won't work on Android :(

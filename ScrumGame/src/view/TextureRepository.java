@@ -44,7 +44,7 @@ public class TextureRepository {
 		addToUiMap(UiElement.MoveCenter, "art/UiElements.png", new Vector2(0,0), new Vector2(3,3), 64, 64);//cursor
 		addToUiMap(UiElement.ManaBar, "art/UiElements.png", new Vector2(0,3), new Vector2(2,3), 64, 64);
 		addToUiMap(UiElement.Circles, "art/UiElements.png", new Vector2(3,0), new Vector2(6,1), 64, 64);//in order: base, OK status, critical status(low villagers)
-		addToUiMap(UiElement.Buttons, "art/UiElements.png", new Vector2(0,5), new Vector2( 5, 5), 64, 64);
+		addToUiMap(UiElement.Buttons, "art/UiElements.png", new Vector2(0,5), new Vector2( 5, 6), 64, 64);
 		addToUiMap(UiElement.Health, "art/UiElements.png", new Vector2(4,8), new Vector2(5,8), 32, 32);
 		addToUiMap(UiElement.HelpBubble, "art/UiElements.png", new Vector2(4,9), new Vector2(5, 9), 32, 32);
 		addToUiMap(UiElement.HelpNotifyVertical, "art/UiElements.png", new Vector2(0,3), new Vector2(1,3), 128, 128);

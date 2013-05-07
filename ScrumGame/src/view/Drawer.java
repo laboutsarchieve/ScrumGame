@@ -194,14 +194,16 @@ public class Drawer {
 		toDraw.setScale(3,1);
 		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(CircleSize), DrawLoc.y));
 		
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(2, 0);//get Mana Caps(little things on the end)
+		drawAtLocation(toDraw, new Vector2(DrawLoc.x+( 4 * CircleSize), DrawLoc.y));
 		
 		//
 		//	DRAW ACTUAL MANA BAR
 		
 		float toFill = 3 * GlobalGameData.getPlayer().getManaPercent();//sets scaling factor for drawing filled manabar
 	
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0, 1);//get Filled Mana Bar part 1(static) 
-		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(0 * CircleSize), DrawLoc.y));
+		//toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0, 1);//get Filled Mana Bar part 1(static) 
+		//drawAtLocation(toDraw, new Vector2(DrawLoc.x+(0 * CircleSize), DrawLoc.y));
 		
 		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(1, 1);//get Filled Mana Bar part 2(dynamic)
 		toDraw.setScale(toFill, 1);
@@ -213,10 +215,10 @@ public class Drawer {
 		//  Draw Secondary Bar (Represents Villagers remaining?)
 		
 		toFill = 3 * LevelData.getMonstersSlainPercent();
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(2, 0);//get Filled Health? Bar part 1(static) 
-		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(0 * CircleSize), DrawLoc.y));
+		//toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(2, 0);//get Filled Health? Bar part 1(static) 
+		//drawAtLocation(toDraw, new Vector2(DrawLoc.x+(0 * CircleSize), DrawLoc.y));
 		
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(3,0);
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0,1);
 		//toDraw.setScale; //Set Scale Based on villagers remaining to game over
 		toDraw.setScale( toFill, 1 ); //For now it will represent Monsters to slay till next level
 		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(1 * CircleSize), DrawLoc.y));
@@ -239,7 +241,7 @@ public class Drawer {
 			
 			if(MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.values()[i+1] ) > GlobalGameData.getPlayer().getMana() )//Red Out if not enough  mana
 			{
-				toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(4, 0);
+				toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(5, 0);
 				drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
 				if( MainGame.getSummonHelper().getSummonMode() == SummonHelper.SummonMode.values()[i+1] )
 					canSummon=false;
@@ -249,7 +251,7 @@ public class Drawer {
 			{
 				if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.values()[i+1] )
 				{
-					toDraw=MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(3,0);
+					toDraw=MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(4,0);
 					drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
 				}
 			}
@@ -257,7 +259,16 @@ public class Drawer {
 		}
 		if(canSummon)
 		DrawManaCost(MainGame.getSummonHelper().getSummonMode(), DrawLoc.x + CircleSize + ManaWidth, DrawLoc.y + (CircleSize/2));
-		//DrawManaCost(MainGame.getSummonHelper().getSummonMode(), 400, 400);
+		
+		//
+		//Draw God Button
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(3, 0);
+		drawAtLocation(toDraw, new Vector2((3 * CircleSize), 0));
+		
+		//Draw God Button Cooldown
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(6, 0);
+		toDraw.setScale(1, GlobalGameData.getPlayer().getGodAttackPercent());
+		drawAtLocation(toDraw, new Vector2((3 * CircleSize), 0));
 		
 		//Draw Help Notifications (if any)
 		
@@ -325,7 +336,7 @@ public class Drawer {
 	{
 		Sprite toDraw=MainGame.getTextureRepo().getUiElement(UiElement.ManaChunk).getStepInCol(0, 0);
 		float scale = MainGame.getSummonHelper().getSummonCost(mode);
-		float scaleMod = 9;
+		float scaleMod = 10;
 		float superScale = 3 * scale/scaleMod;
 		toDraw.setScale(superScale, 1);
 		toDraw.setOrigin(0,0);
@@ -492,29 +503,52 @@ public class Drawer {
 		float touchX = startTouchPosition.x;
 		float touchY = startTouchPosition.y;
 		
-		if(touchX < (64 *3) && touchY < (64 ))//touch coordinates are (not?) affected by aspect ratio
+		if(touchX < (64 *4) && touchY < (64 ))//touch coordinates are (not?) affected by aspect ratio
 		{
 			if(touchX < 64)
 			{
 				//set Warrior
-				System.out.println("!Warrior Selected");
-				MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Warrior);
+				if(GlobalGameData.getPlayer().getMana() >= MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.Warrior))
+				{
+					System.out.println("!Warrior Selected");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Warrior);
+				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
 			}
 			else if(touchX < (64*2))
 			{
 				//set Archer
-				System.out.println("!Archer Seleted");
-				MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Archer);
+				if(GlobalGameData.getPlayer().getMana() >= MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.Archer))
+				{
+					System.out.println("!Archer Seleted");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Archer);
+				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
 			}
-			else
+			else if(touchX < (64*3))
 			{
 				//set Mage
-				System.out.println("!Mage Selected");
-				MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Mage);
-				if(!MagePlayed){
-					MagePlayed=true;
-					//MainGame.getSoundHelper().playSound(Sounds.Mage);
+				
+				if(GlobalGameData.getPlayer().getMana() >= MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.Mage))
+				{
+					System.out.println("!Mage Selected");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Mage);
+					if(!MagePlayed)
+					{
+						MagePlayed=true;
+						//MainGame.getSoundHelper().playSound(Sounds.Mage);
+					}
 				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
+			}
+			else	//NEW: God Attack
+			{
+				if(GlobalGameData.getPlayer().getGodAttackPercent() == 1)
+				{
+					System.out.println("!God Attack Selected");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.GodAttack);
+				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
 			}
 			draw=true;
 		}
@@ -538,6 +572,8 @@ public class Drawer {
 		}
 		return draw;
 	}
+		
+	
 	
 	public void setDrawBadSelection(boolean draw)
 	{
@@ -545,13 +581,19 @@ public class Drawer {
 	}
 	public void DrawBadSelection()
 	{
-		this.dispError++;
-		int cursorSize=32;
+		this.dispError++;	//the counter for how long to display the sign
+		//Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
 		if(BadSelectionVect==null)
 		{
-			BadSelectionVect=new Vector2(startTouchPosition.x-cursorSize, startTouchPosition.y-cursorSize);
+			Vector2 temp= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
+			System.out.println("Bad Draw Pos (TILES): "+temp.toString());
+			temp.x=(float)Math.floor(temp.x);
+			temp.y=(float)Math.floor(temp.y);
+			System.out.println("Bad Draw Pos (TILES FLOORED): "+temp.toString());
+			BadSelectionVect=temp;
+			MainGame.getSoundHelper().playSound(Sounds.BadSelection);
 		}
-		if(this.dispError==45)
+		if(this.dispError==60)
 		{
 			setDrawBadSelection(false);
 			this.dispError=0;
@@ -559,8 +601,12 @@ public class Drawer {
 		}
 		else
 		{
+			
+			Vector2 drawPos = BadSelectionVect.cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
 			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(1,1);
-			drawAtLocation(toDraw, BadSelectionVect);
+			toDraw.setScale((float).5,(float).5);
+			drawAtLocation(toDraw, drawPos);
+			
 		}
 	}
 	

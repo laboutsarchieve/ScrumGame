@@ -14,6 +14,7 @@ public class SummonHelper {
 		Warrior,
 		Archer,
 		Mage,
+		GodAttack,
 		Gaben	//Not Implemented
 	};
 	SummonMode currentSummonMode;
@@ -96,9 +97,10 @@ public class SummonHelper {
 			MainGame.getEntityManager().addEntity(new data.Mage(position, data.Facing.Down));
 			GlobalGameData.getPlayer().subMana(ManaCost);
 			break;
+			
 		default:
 			System.out.println("Error: Tried to summon bad unit");
-			break;
+			return false;
 		}
 		System.out.println(currentSummonMode.toString()+" Summoned at "+(int)position.x + " " + (int)position.y);
 		MainGame.getSoundHelper().playSound(Sounds.Summon);

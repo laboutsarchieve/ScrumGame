@@ -7,6 +7,7 @@ public enum Sounds {
 	LevelUp,
 	Gaben,
 	Help,
+	BadSelection,
 	Mage,
 	Warrior,
 	Archer
