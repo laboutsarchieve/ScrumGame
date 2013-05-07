@@ -120,11 +120,11 @@ public class Drawer {
 		for (Entity entity : MainGame.getEntityManager().getEntities()) {
 			Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE)
 					.sub(lowerLeftOfView);
-			if(!isOnScreen(monsterPos) && entity.getUnitType() == EntityType.Villager && entity.isWasAttacked()) {
+			if(!isOnScreen(entity.getPosition()) && entity.getUnitType() == EntityType.Villager && entity.isWasAttacked()) {
 				villagerInTrouble(entity);
 			}
 			
-			if (isOnScreen(monsterPos)) {
+			if (isOnScreen(entity.getPosition())) {
 
 				// Draw HealthBars
 				if (entity.getUnitType() != EntityType.Villager) {
@@ -211,7 +211,7 @@ public class Drawer {
 		for (Village entity : MainGame.getMap().getVillages()) {
 			Vector2 pos = entity.getPosition().cpy().mul(TILE_SIZE)
 					.sub(lowerLeftOfView);
-			if (isOnScreen(pos))
+			if (isOnScreen(entity.getPosition()))
 				drawAtLocation(
 						MainGame.getTextureRepo().getTile(TileType.Village)
 								.getSprite(), pos.x, pos.y);
@@ -222,7 +222,7 @@ public class Drawer {
 		for (Forest entity : MainGame.getMap().getForests()) {
 			Vector2 pos = entity.getPosition().cpy().mul(TILE_SIZE)
 					.sub(lowerLeftOfView);
-			if (isOnScreen(pos))
+			if (isOnScreen(entity.getPosition()))
 				drawAtLocation(
 						MainGame.getTextureRepo().getTile(TileType.Forest)
 								.getSprite(), pos.x, pos.y);
@@ -231,11 +231,9 @@ public class Drawer {
 
 	private boolean isOnScreen(Vector2 pos) {
 		Vector2 posInPixels = pos.cpy().mul(TILE_SIZE);
-		Vector2 clampedLoc = posInPixels;
 
-		GameTools.clamp(clampedLoc, lowerLeftOfView, getUpperRightOfView());
-
-		return clampedLoc.epsilonEquals(posInPixels, 1);
+		return (posInPixels.x > lowerLeftOfView.x && posInPixels.y > lowerLeftOfView.y &&
+				posInPixels.x < getUpperRightOfView().x && posInPixels.y < getUpperRightOfView().y);
 	}
 
 	public void drawUi(float deltaTime) { // STUFF I NEED TO CHANGE
@@ -567,7 +565,7 @@ public class Drawer {
 		Vector2 Position = theVillager.getPosition().cpy().mul(TILE_SIZE);
 		Vector2 UpperRight = getUpperRightOfView();
 
-		if (isOnScreen(Position) && !drawGameOver) {
+		if (!isOnScreen(theVillager.getPosition()) && !drawGameOver) {
 			if (Position.y > UpperRight.y) {
 				setDrawHelp(0, true);
 			}
@@ -590,8 +588,8 @@ public class Drawer {
 
 	public void ResetDrawHelp(float deltaTime) {
 		for (int i = 0; i < 4; i++) {
-			sinceHelpStart[i] += deltaTime;
-			if(sinceHelpStart[i] > 100) {
+			sinceHelpStart[i] += deltaTime*1000;
+			if(sinceHelpStart[i] > 400) {
 				setDrawHelp(i, false);
 			}
 		}
