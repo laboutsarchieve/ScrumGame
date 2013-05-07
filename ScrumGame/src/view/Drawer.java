@@ -54,6 +54,7 @@ public class Drawer {
 	private boolean drawLevelUp = false;
 	private boolean OverlayFade = false;
 	private boolean[] drawHelp = { false, false, false, false };
+	private int[] sinceHelpStart = {0,0,0,0};
 	private BitmapFont gameOverFont;
 	// private boolean initBadSelection;
 	private Vector2 BadSelectionVect;
@@ -87,7 +88,7 @@ public class Drawer {
 		drawVillages(deltaTime);
 		drawForests(deltaTime);
 		drawUi(deltaTime);
-		ResetDrawHelp();
+		ResetDrawHelp(deltaTime);
 		batch.end();
 	}
 
@@ -119,6 +120,10 @@ public class Drawer {
 		for (Entity entity : MainGame.getEntityManager().getEntities()) {
 			Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE)
 					.sub(lowerLeftOfView);
+			if(!isOnScreen(monsterPos) && entity.getUnitType() == EntityType.Villager && entity.isWasAttacked()) {
+				villagerInTrouble(entity);
+			}
+			
 			if (isOnScreen(monsterPos)) {
 
 				// Draw HealthBars
@@ -142,14 +147,15 @@ public class Drawer {
 						// Sprite Help =
 						// MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(0,0);
 						drawAtLocation(Help, monsterPos.x, monsterPos.y
-								+ TILE_SIZE);
+								+ TILE_SIZE);						
+						
 						// System.out.println("Help me!"+monsterPos.x +" "+
 						// monsterPos.y);
 					}
 				}
 				Color color = Color.WHITE;
 				if (entity.isWasAttacked()) {
-					if(entity.getSinceAttacked() < 4)
+					if(entity.getSinceAttacked() < 20)
 						color = Color.RED;
 					else
 						entity.unsetWasAttacked();
@@ -180,10 +186,12 @@ public class Drawer {
 						}							
 						break;
 					case Mage:
-						if(entity.getSinceAttacking() < 5) {
+						if(entity.getSinceAttacking() < 20) {
 							Vector2 enemyPos = entity.attackedRecently().getPosition();
 							Vector2 toEnemy = entity.getPosition().cpy().sub(enemyPos);
-							Sprite fireballSprite = MainGame.getTextureRepo().getObject(ObjectType.Arrow).getSprite();
+							toEnemy.nor();
+							toEnemy.mul(TILE_SIZE);
+							Sprite fireballSprite = MainGame.getTextureRepo().getObject(ObjectType.Fireball).getSprite();
 							
 							Vector2 enemyScreenPos = enemyPos.cpy().mul(TILE_SIZE)
 									.sub(lowerLeftOfView);
@@ -201,7 +209,6 @@ public class Drawer {
 
 	public void drawVillages(float deltaTime) {
 		for (Village entity : MainGame.getMap().getVillages()) {
-			villageInTrouble(entity);
 			Vector2 pos = entity.getPosition().cpy().mul(TILE_SIZE)
 					.sub(lowerLeftOfView);
 			if (isOnScreen(pos))
@@ -228,7 +235,7 @@ public class Drawer {
 
 		GameTools.clamp(clampedLoc, lowerLeftOfView, getUpperRightOfView());
 
-		return clampedLoc.epsilonEquals(posInPixels, 2);
+		return clampedLoc.epsilonEquals(posInPixels, 1);
 	}
 
 	public void drawUi(float deltaTime) { // STUFF I NEED TO CHANGE
@@ -556,8 +563,8 @@ public class Drawer {
 
 	}
 
-	public void villageInTrouble(Village entity) {
-		Vector2 Position = entity.getPosition().cpy().mul(TILE_SIZE);
+	public void villagerInTrouble(Entity theVillager) {
+		Vector2 Position = theVillager.getPosition().cpy().mul(TILE_SIZE);
 		Vector2 UpperRight = getUpperRightOfView();
 
 		if (isOnScreen(Position) && !drawGameOver) {
@@ -578,11 +585,15 @@ public class Drawer {
 
 	public void setDrawHelp(int sector, boolean value) {
 		drawHelp[sector] = value;
+		sinceHelpStart[sector] = 0;
 	}
 
-	public void ResetDrawHelp() {
+	public void ResetDrawHelp(float deltaTime) {
 		for (int i = 0; i < 4; i++) {
-			setDrawHelp(i, false);
+			sinceHelpStart[i] += deltaTime;
+			if(sinceHelpStart[i] > 100) {
+				setDrawHelp(i, false);
+			}
 		}
 	}
 

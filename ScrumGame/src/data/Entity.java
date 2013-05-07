@@ -225,6 +225,8 @@ public abstract class Entity {
 	}
 
 	protected void moveTo(Entity e, int howClose) {
+		if(e == null)
+			return;
 		Vector2 targetPos = e.getPosition();
 		Vector2 toTarget = targetPos.cpy().sub(position);
 		float desiredDistance = (toTarget.len() - howClose);
