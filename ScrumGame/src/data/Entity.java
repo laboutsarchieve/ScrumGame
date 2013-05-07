@@ -18,6 +18,8 @@ public abstract class Entity {
 	protected Facing facing;
 	protected boolean wasAttacked;
 	protected Entity attackedRecently;
+	protected int sinceAttacked;
+	protected int sinceAttacking;
 	Faction faction;
 
 	protected EntityType unitType;
@@ -46,6 +48,8 @@ public abstract class Entity {
 	}
 
 	public void update(float deltaTime) {
+		sinceAttacked++;
+		sinceAttacking++;
 		if (state == AIState.Dead) {
 			death();
 		}
@@ -60,6 +64,14 @@ public abstract class Entity {
 				tillNextMove += actionInterval;
 			}
 		}
+	}
+
+	public int getSinceAttacked() {
+		return sinceAttacked;
+	}
+
+	public int getSinceAttacking() {
+		return sinceAttacking;
 	}
 
 	public Sprite getSprite() {
@@ -170,6 +182,7 @@ public abstract class Entity {
 			e.takeDamage(this);
 			attackSuccess = true;
 			attackedRecently = e;
+			sinceAttacking = 0;
 		}
 
 		if (e.getState() == AIState.Dead || e.getState() == AIState.Disabled)
@@ -180,6 +193,7 @@ public abstract class Entity {
 
 	protected void takeDamage(Entity e) {
 		wasAttacked = true;
+		sinceAttacked = 0;
 		hitpoints -= e.getAttackDamage();
 		setHealthScale();
 		attackedByEntity(e);

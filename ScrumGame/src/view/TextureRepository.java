@@ -3,6 +3,7 @@ package view;
 import java.util.HashMap;
 
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 import data.TileType;
@@ -12,12 +13,14 @@ public class TextureRepository {
 	HashMap<SheetType, SpriteSheet> sheetMap = new HashMap<SheetType, SpriteSheet>();
 	HashMap<UiElement, SpriteSheet> uiElementMap = new HashMap<UiElement, SpriteSheet>();
 	HashMap<ScreenOverlay, SpriteSheet> overlays = new HashMap<ScreenOverlay, SpriteSheet>();
+	HashMap<ObjectType, SpriteHelper> objectMap = new HashMap<ObjectType, SpriteHelper>();
 
 	public TextureRepository() {
 		addTiles();
 		addSheets();
 		addUi();
 		addOverlays();
+		addObjects( );
 	}
 
 	private void addTiles() {
@@ -57,6 +60,10 @@ public class TextureRepository {
 		addToOverlayMap(ScreenOverlay.LevelUp, "art/Overlays.png", new Vector2(1,0), new Vector2(1,0), 256, 256 );
 		//TODO: Create and add overlays for: level up, main menu
 	}
+	private void addObjects() {
+		addToObjectMap(ObjectType.Arrow, "art/arrow.png");
+		addToObjectMap(ObjectType.Fireball, "art/fireball.png");
+	}
 	
 	private void addToOverlayMap(ScreenOverlay type, String fileName, Vector2 start, Vector2 end, int frameHeight, int frameWidth)
 	{
@@ -75,6 +82,10 @@ public class TextureRepository {
 
 	private void addToUiMap(UiElement type, String fileName, Vector2 start, Vector2 end, int frameHeight, int frameWidth) {
 		uiElementMap.put(type, new SpriteSheet(fileName, start, end, frameHeight, frameWidth));
+	}
+	
+	private void addToObjectMap(ObjectType type, String fileName) {
+		objectMap.put(type, new SpriteHelper(fileName));
 	}
 
 	public SpriteHelper getTile(TileType type) {
@@ -95,6 +106,10 @@ public class TextureRepository {
 
 	public void dispose() {
 		// TODO
+	}
+
+	public SpriteHelper getObject(ObjectType type) {
+		return objectMap.get(type);
 	}
 
 }

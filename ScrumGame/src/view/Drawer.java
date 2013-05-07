@@ -149,14 +149,52 @@ public class Drawer {
 				}
 				Color color = Color.WHITE;
 				if (entity.isWasAttacked()) {
-					color = Color.RED;
-					entity.unsetWasAttacked();
+					if(entity.getSinceAttacked() < 4)
+						color = Color.RED;
+					else
+						entity.unsetWasAttacked();
 				}
 				Sprite sprite = entity.getSprite();
 				sprite.setColor(color);
 				
 				drawAtLocation(sprite, monsterPos.x, monsterPos.y);
-
+				
+				if(entity.attackedRecently() != null) {
+					switch(entity.getUnitType()) {
+					case Archer:
+						if(entity.getSinceAttacking() < 20) {
+							Vector2 enemyPos = entity.attackedRecently().getPosition();
+							Vector2 toEnemy = entity.getPosition().cpy().sub(enemyPos);
+							toEnemy.nor();
+							float angle = (toEnemy.angle() + 180) % 360;
+							toEnemy.mul(TILE_SIZE);
+							// Draw arrow on enemy at angle.
+							Sprite arrowSprite = MainGame.getTextureRepo().getObject(ObjectType.Arrow).getSprite();
+							arrowSprite.setRotation(angle);
+							Vector2 enemyScreenPos = enemyPos.cpy().mul(TILE_SIZE)
+									.sub(lowerLeftOfView);
+							drawAtLocation(arrowSprite, enemyScreenPos.x + 2*toEnemy.x/3.0f, enemyScreenPos.y + 2*toEnemy.y/3.0f);
+						}
+						else {
+							entity.unsetAttackedRecently();
+						}							
+						break;
+					case Mage:
+						if(entity.getSinceAttacking() < 5) {
+							Vector2 enemyPos = entity.attackedRecently().getPosition();
+							Vector2 toEnemy = entity.getPosition().cpy().sub(enemyPos);
+							Sprite fireballSprite = MainGame.getTextureRepo().getObject(ObjectType.Arrow).getSprite();
+							
+							Vector2 enemyScreenPos = enemyPos.cpy().mul(TILE_SIZE)
+									.sub(lowerLeftOfView);
+							drawAtLocation(fireballSprite, enemyScreenPos.x + 2*toEnemy.x/3.0f, enemyScreenPos.y + 2*toEnemy.y/3.0f);
+						}
+						else {
+							entity.unsetAttackedRecently();
+						}							
+						break;
+					}
+				}
 			}
 		}
 	}
