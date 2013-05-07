@@ -14,9 +14,10 @@ public abstract class Entity {
 	// TODO: This should managed in a separate but parallel class
 	protected AnimatedSprite animations;
 	protected EntityManager manager;
-
 	protected Vector2 position;
 	protected Facing facing;
+	protected boolean wasAttacked;
+	protected Entity attackedRecently;
 	Faction faction;
 
 	protected EntityType unitType;
@@ -168,6 +169,7 @@ public abstract class Entity {
 		if (manager.distance(e.getPosition(), position) <= attackRange) {
 			e.takeDamage(this);
 			attackSuccess = true;
+			attackedRecently = e;
 		}
 
 		if (e.getState() == AIState.Dead || e.getState() == AIState.Disabled)
@@ -177,6 +179,7 @@ public abstract class Entity {
 	}
 
 	protected void takeDamage(Entity e) {
+		wasAttacked = true;
 		hitpoints -= e.getAttackDamage();
 		setHealthScale();
 		attackedByEntity(e);
@@ -267,5 +270,21 @@ public abstract class Entity {
 	private void setHealthScale()
 	{
 		healthScale = (float)this.getHitpoints()/(float)GameData.getHitpoints(this.getUnitType());
+	}
+	
+	public boolean isWasAttacked() {
+		return wasAttacked;
+	}
+
+	public void unsetWasAttacked() {
+		wasAttacked = false;
+	}
+	
+	public Entity attackedRecently() {
+		return attackedRecently;
+	}
+
+	public void unsetAttackedRecently() {
+		attackedRecently = null;
 	}
 }
