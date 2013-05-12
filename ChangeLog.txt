@@ -6,21 +6,6 @@
 
 //----------------------------------
 //
-//ChangeLog 1.1:
-//
-//----------------------------------
-
-* Added Screen functionality, Screens are now managed by the ScreenManager class
-
-* Screens allow us to add various types of screens, currently implemented screens are: 
-
-* Splash screen, main menu screen, and game screen
-
-* Game resets on game over, booting the user to the main menu where they may try again.
-
-
-//----------------------------------
-//
 //ChangeLog 1.0:
 //
 //----------------------------------

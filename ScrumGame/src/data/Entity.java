@@ -14,9 +14,12 @@ public abstract class Entity {
 	// TODO: This should managed in a separate but parallel class
 	protected AnimatedSprite animations;
 	protected EntityManager manager;
-
 	protected Vector2 position;
 	protected Facing facing;
+	protected boolean wasAttacked;
+	protected Entity attackedRecently;
+	protected int sinceAttacked;
+	protected int sinceAttacking;
 	Faction faction;
 
 	protected EntityType unitType;
@@ -41,9 +44,12 @@ public abstract class Entity {
 		this.faction = faction;
 		state = AIState.Idle;
 		manager = MainGame.getEntityManager();
+		attackRange = 1;
 	}
 
 	public void update(float deltaTime) {
+		sinceAttacked++;
+		sinceAttacking++;
 		if (state == AIState.Dead) {
 			death();
 		}
@@ -58,6 +64,14 @@ public abstract class Entity {
 				tillNextMove += actionInterval;
 			}
 		}
+	}
+
+	public int getSinceAttacked() {
+		return sinceAttacked;
+	}
+
+	public int getSinceAttacking() {
+		return sinceAttacking;
 	}
 
 	public Sprite getSprite() {
@@ -167,6 +181,8 @@ public abstract class Entity {
 		if (manager.distance(e.getPosition(), position) <= attackRange) {
 			e.takeDamage(this);
 			attackSuccess = true;
+			attackedRecently = e;
+			sinceAttacking = 0;
 		}
 
 		if (e.getState() == AIState.Dead || e.getState() == AIState.Disabled)
@@ -176,9 +192,10 @@ public abstract class Entity {
 	}
 
 	protected void takeDamage(Entity e) {
+		wasAttacked = true;
+		sinceAttacked = 0;
 		hitpoints -= e.getAttackDamage();
 		setHealthScale();
-
 		attackedByEntity(e);
 
 		if (hitpoints <= 0) {
@@ -207,10 +224,13 @@ public abstract class Entity {
 		System.out.println("omg im dead " + deathcount + " " + myVillagerID);
 	}
 
-	// test func
-	protected void moveTo(Entity e) {
+	protected void moveTo(Entity e, int howClose) {
+		if(e == null)
+			return;
 		Vector2 targetPos = e.getPosition();
 		Vector2 toTarget = targetPos.cpy().sub(position);
+		float desiredDistance = (toTarget.len() - howClose);
+		toTarget.nor().mul(desiredDistance);
 		if (toTarget.x != 0)
 			toTarget.x /= Math.abs(toTarget.x);
 		if (toTarget.y != 0)
@@ -257,6 +277,7 @@ public abstract class Entity {
 
 		}
 	}
+
 	//Added By: Chris
 	public float getHealthScale()
 	{
@@ -265,5 +286,21 @@ public abstract class Entity {
 	private void setHealthScale()
 	{
 		healthScale = (float)this.getHitpoints()/(float)GameData.getHitpoints(this.getUnitType());
+	}
+	
+	public boolean isWasAttacked() {
+		return wasAttacked;
+	}
+
+	public void unsetWasAttacked() {
+		wasAttacked = false;
+	}
+	
+	public Entity attackedRecently() {
+		return attackedRecently;
+	}
+
+	public void unsetAttackedRecently() {
+		attackedRecently = null;
 	}
 }

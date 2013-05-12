@@ -50,7 +50,7 @@ public class Archer extends Entity {
 				if (manager.distance(soldierBuddy.getPosition(), position) <= 2)
 					roam();
 				else
-					moveTo(soldierBuddy);
+					moveTo(soldierBuddy, 3);
 			}
 				
 			break;
@@ -60,7 +60,7 @@ public class Archer extends Entity {
 				state = AIState.Roam;
 				break;
 			}
-			moveTo(target);
+			moveTo(target, attackRange);
 			targetRange = manager.distance(target.getPosition(), position);
 			
 			if (targetRange <= attackRange)
@@ -74,11 +74,6 @@ public class Archer extends Entity {
 		case Attack:
 			if (!attack(target)) {
 				state = AIState.Hunt;
-			}
-			//Added by: Chris
-			else{
-				if(MainGame.getMapDrawer().isOnScreenPublic(this.position))
-					MainGame.getSoundHelper().playSound(EntityType.Archer);
 			}
 			
 			if (!validTarget())

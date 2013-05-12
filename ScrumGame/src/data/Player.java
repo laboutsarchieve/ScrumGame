@@ -4,13 +4,9 @@ public class Player {
 	float mana;
 	float MaxMana;
 	float manaPercent;
-<<<<<<< HEAD
 	float cooldownGodAttackMax=300; //30 fps so a full charge every 100 seconds (needs fine tuning for a sweet spot)
-=======
-	float cooldownGodAttackMax=300; //30 fps so a full charge every 100 seconds
->>>>>>> 578673f98688ed68727b7a6595659cb12112f2a5
 	float cooldownGodAttack=0;
-	float cooldownGotAttackPercent=0;
+	float cooldownGodAttackPercent=1;
 	
 	public Player()
 	{
@@ -67,7 +63,7 @@ public class Player {
 	private void setManaPercent()
 	{
 		this.manaPercent=this.mana/this.MaxMana;
-		this.cooldownGotAttackPercent=(this.cooldownGodAttackMax-this.cooldownGodAttack)/this.cooldownGodAttackMax;
+		this.cooldownGodAttackPercent=(this.cooldownGodAttackMax-this.cooldownGodAttack)/this.cooldownGodAttackMax;
 	}
 	public void addGodCharge(float amount){
 		amount+=this.cooldownGodAttack;
@@ -85,6 +81,6 @@ public class Player {
 	
 	public float getGodAttackPercent()
 	{
-		return this.cooldownGotAttackPercent;
+		return this.cooldownGodAttackPercent;
 	}
 }

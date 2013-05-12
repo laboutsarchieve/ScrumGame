@@ -34,11 +34,7 @@ public class SummonHelper {
 	public float getSummonCost(SummonMode select)
 	{	
 		float cost=-1;
-<<<<<<< HEAD
 		if(select==SummonMode.None || select == SummonMode.GodAttack){
-=======
-		if(select==SummonMode.None){
->>>>>>> 578673f98688ed68727b7a6595659cb12112f2a5
 			cost=0;
 		}
 		if(select==SummonMode.Warrior)

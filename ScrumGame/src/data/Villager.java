@@ -28,10 +28,8 @@ public class Villager extends Entity {
 			state = AIState.Roam;
 		case Roam:
 			actionInterval = GameData.getActionInterval(unitType);
-			if (validTarget()){
+			if (validTarget())
 				state = AIState.Flee;
-				MainGame.getMapDrawer().villageInTrouble(this);
-			}
 			else
 				roam();
 			break;
@@ -39,7 +37,7 @@ public class Villager extends Entity {
 			actionInterval = GameData.getAggroInterval(unitType);
 			soldierBuddy = manager.getClosestType(this, EntityType.Soldier, Faction.Player);
 			if (validTarget(soldierBuddy))
-				moveTo(soldierBuddy);
+				moveTo(soldierBuddy, 2);
 			else
 				roam();
 			break;

@@ -47,7 +47,7 @@ public class Soldier extends Entity {
 				state = AIState.Roam;
 				break;
 			}
-			moveTo(target);
+			moveTo(target, 1);
 			targetRange = manager.distance(target.getPosition(), position);
 			
 			if (targetRange <= attackRange)
@@ -61,11 +61,6 @@ public class Soldier extends Entity {
 		case Attack:
 			if (!attack(target)) {
 				state = AIState.Hunt;
-			}
-			//Added by: Chris
-			else{
-				if(MainGame.getMapDrawer().isOnScreenPublic(this.position))
-					MainGame.getSoundHelper().playSound(EntityType.Soldier);
 			}
 			
 			if (!validTarget())

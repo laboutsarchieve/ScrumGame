@@ -46,7 +46,7 @@ public class Mage extends Entity {
 				if (soldierBuddy != null && manager.distance(soldierBuddy.getPosition(), position) <= 2)
 					roam();
 				else
-					moveTo(soldierBuddy);
+					moveTo(soldierBuddy,3);
 			}
 				
 			break;
@@ -56,7 +56,7 @@ public class Mage extends Entity {
 				state = AIState.Roam;
 				break;
 			}
-			moveTo(target);
+			moveTo(target, attackRange);
 			targetRange = manager.distance(target.getPosition(), position);
 			
 			if (targetRange <= attackRange)

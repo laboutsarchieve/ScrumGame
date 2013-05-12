@@ -1,5 +1,6 @@
 package data;
 
+import application.LevelData;
 import application.MainGame;
 
 import com.badlogic.gdx.math.Vector2;
@@ -33,7 +34,7 @@ public class SpawnTile {
 		tillSpawn--;
 		
 		if(tillSpawn < 0) {
-			tillSpawn = spawnRate;
+			tillSpawn = GameData.getSpawnRate(spawnType);
 			return attemptSpawn( );
 		}
 		
@@ -41,7 +42,7 @@ public class SpawnTile {
 	}
 	
 	public boolean attemptSpawn() {
-		int MAX_SPAWNED = 99;
+		int MAX_SPAWNED = 10 * LevelData.getLevel();
 		if(MainGame.getEntityManager().getFactionMembers(factionType).size() >= MAX_SPAWNED) {
 			return false;
 		}
