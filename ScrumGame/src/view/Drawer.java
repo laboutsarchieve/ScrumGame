@@ -28,10 +28,10 @@ import data.Faction;
 
 import data.*;
 
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
-
 import data.GlobalGameData;
+
+import data.*;
+
 
 public class Drawer {
 	public final int TILE_SIZE = 32;
@@ -53,6 +53,7 @@ public class Drawer {
 	private boolean drawGameOver = false;
 	private boolean drawLevelUp = false;
 	private boolean OverlayFade = false;
+	private boolean OverlayFadeOut = false;
 	private boolean[] drawHelp = { false, false, false, false };
 	private int[] sinceHelpStart = {0,0,0,0};
 	private BitmapFont gameOverFont;
@@ -232,149 +233,184 @@ public class Drawer {
 	private boolean isOnScreen(Vector2 pos) {
 		Vector2 posInPixels = pos.cpy().mul(TILE_SIZE);
 
-		return (posInPixels.x > lowerLeftOfView.x && posInPixels.y > lowerLeftOfView.y &&
+
+		return (posInPixels.x > lowerLeftOfView.x-(TILE_SIZE * GameSettings.getAspectRatio()) && posInPixels.y > lowerLeftOfView.y-(TILE_SIZE * GameSettings.getAspectRatio()) &&
 				posInPixels.x < getUpperRightOfView().x && posInPixels.y < getUpperRightOfView().y);
 	}
 
 	public void drawUi(float deltaTime) { // STUFF I NEED TO CHANGE
-
-		int MAX = 99;// Max units to show in UI
-		int Critical = LevelData.getCriticalNumber();// when to show the
-														// critical circle
-
 		// GlobalGameData.getPlayer();
 		float Scale = GameSettings.getAspectRatio();
-		// int
-		// Villagers=MainGame.getEntityManager().getFactionMembers(Faction.Villager).size();
-		int Villagers = LevelData.getVillagersTillGameOver();
-		Villagers = (Villagers > MAX) ? MAX : Villagers;
-		int cursorSize = 32;
-		if (drawBadSelection) {
+		
+		if (drawBadSelection) 
+		{
 			DrawBadSelection();
-		} else if (drawMoveCenter) {
-
-			// First, get direction (one of 9 including no direction)
-			Vector2 currentdirectionection = currTouchPosition.cpy();
-			Vector2 cursorPos = new Vector2();// init to zero
-
-			cursorPos.x = (currentdirectionection.x > (startTouchPosition.x + cursorSize)) ? 2
-					: 0;
-			cursorPos.x = (currentdirectionection.x < (startTouchPosition.x + cursorSize) && currentdirectionection.x > (startTouchPosition.x - cursorSize)) ? 1
-					: cursorPos.x;
-
-			cursorPos.y = (currentdirectionection.y > (startTouchPosition.y + cursorSize)) ? 0
-					: 2;
-			cursorPos.y = (currentdirectionection.y < (startTouchPosition.y + cursorSize) && currentdirectionection.y > (startTouchPosition.y - cursorSize)) ? 1
-					: cursorPos.y;
-
-			// Second, get appropriate cursor using math
-
-			Sprite toDraw = MainGame.getTextureRepo()
-					.getUiElement(UiElement.MoveCenter)
-					.getStepInRow((int) cursorPos.x, (int) cursorPos.y);
-			drawAtLocation(toDraw, new Vector2(startTouchPosition.x
-					- (cursorSize), startTouchPosition.y - (cursorSize)));
-
+		} 
+		else if (drawMoveCenter) 
+		{
+			DrawMoveCenter();
 		}
+		
 		// Now draw HUD
-		// start with baseCircle
-		int CircleSize = 64;
+		
+		Vector2 DrawLoc = new Vector2(16, (camera.viewportHeight * GameSettings.getScreenHeight() - 80*Scale) );
+		
+		DrawButtons(DrawUpperLeft(DrawLoc), DrawLoc); //draw buttons takes the manabars width, which is returned by drawing the upper left area
+		
+		// Draw Help Notifications (if any)
+		DrawHelpNotifications();
+
+		if (drawGameOver || drawLevelUp) {	
+			//this will draw an overlay that fades in 
+		  	//(Game over one stays until destroyed but level up fades after ~3 seconds)
+			if (drawGameOver) {
+				drawLevelUp = false;
+			}// lets say they happen right after another, 
+			 //Game Over takes priority
+			
+			//handles drawing the overlay itself
+			drawOverlay(1, deltaTime);
+			// if level up, its an orange color, if game over, its red
+			float red = (drawLevelUp) ? (float) 233 / (float) 255 : 1;
+			float green = (drawLevelUp) ? (float) 183 / (float) 255 : 0;
+			float blue = (drawLevelUp) ? (float) 74 / (float) 255 : 0;
+			Color color1 = new Color(red, green, blue, overlayFadeIn);
+			
+			gameOverFont.setColor(color1);
+			String str = (drawLevelUp) ? "LEVEL "+LevelData.getLevel() : "YOU FAILED";
+			// Holy hell do I love Dark Souls
+
+			Vector2 DrawCenter = new Vector2(
+					((GameSettings.getScreenWidth() / 2) - (gameOverFont
+							.getBounds(str).width / 2)),
+					((GameSettings.getScreenHeight() / 2) + (gameOverFont
+							.getBounds(str).height / 2)));
+			
+			// required to render text properly
+			Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0,
+					Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); 
+			batch.setProjectionMatrix(normalProjection);
+			gameOverFont.draw(batch, str, DrawCenter.x, DrawCenter.y);
+		}
+
+		// ONLY DRAW TEXT AFTER THIS:
+		DrawText(DrawLoc);
+		
+	}
+
+	private void DrawMoveCenter(){
+		// First, get direction (one of 9 including no direction)
+		Vector2 currentdirectionection = currTouchPosition.cpy();
+		Vector2 cursorPos = new Vector2();// init to zero
+		float cursorSize=32;
+		float Scale = GameSettings.getAspectRatio();
+
+		cursorPos.x = (currentdirectionection.x > (startTouchPosition.x + cursorSize)) ? 2
+				: 0;
+		cursorPos.x = (currentdirectionection.x < (startTouchPosition.x + cursorSize) && currentdirectionection.x > (startTouchPosition.x - cursorSize)) ? 1
+				: cursorPos.x;
+
+		cursorPos.y = (currentdirectionection.y > (startTouchPosition.y + cursorSize)) ? 0
+				: 2;
+		cursorPos.y = (currentdirectionection.y < (startTouchPosition.y + cursorSize) && currentdirectionection.y > (startTouchPosition.y - cursorSize)) ? 1
+				: cursorPos.y;
+
+		// Second, get appropriate cursor using math
+
 		Sprite toDraw = MainGame.getTextureRepo()
-				.getUiElement(UiElement.Circles).getStepInCol(0, 0);// get base
-																	// circle
-		Vector2 DrawLoc = new Vector2(16, (camera.viewportHeight
-				* GameSettings.getScreenHeight() - 80));
+				.getUiElement(UiElement.MoveCenter)
+				.getStepInRow((int) cursorPos.x, (int) cursorPos.y);
+		toDraw.setScale(Scale);
+		cursorSize = toDraw.getRegionWidth() * Scale / 2;
+		drawAtLocation(toDraw, new Vector2(startTouchPosition.x
+				- (cursorSize), startTouchPosition.y - (cursorSize)));
+	}
+	
+	private float DrawUpperLeft(Vector2 DrawLoc){
+		int MAX=99;
+		int Villagers = LevelData.getVillagersTillGameOver();
+		int Critical = LevelData.getCriticalNumber();// when to show the
+													// critical circle
+		Villagers = (Villagers > MAX) ? MAX : Villagers;
+		float Scale = GameSettings.getAspectRatio();
+		
+		float CircleSize=64 * Scale;
+		Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInCol(0, 0);//get base circle
+		//
+		toDraw.setScale(Scale);
+		//
 		drawAtLocation(toDraw, DrawLoc);
-
-		// Draw Empty Mana Bar (background)
-
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar)
-				.getStepInRow(0, 0);// get Empty Mana Bar
+		
+		//Draw Empty Mana Bar (background)
+		
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0, 0);//get Empty Mana Bar
+		//
+		toDraw.setScale(Scale);
+		//
 		drawAtLocation(toDraw, new Vector2(DrawLoc.x, DrawLoc.y));
-
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar)
-				.getStepInRow(1, 0);// get Empty Mana Bar
-		toDraw.setScale(3, 1);
-		drawAtLocation(toDraw, new Vector2(DrawLoc.x + (CircleSize), DrawLoc.y));
-
+		
+		
+		
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(1, 0);//get Empty Mana Bar
+		//-----------------------------
+		toDraw.setScale(3*Scale,Scale);
+		//-----------------------------
+		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(CircleSize), DrawLoc.y));
+		
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(2, 0);//get Mana Caps(little things on the end)
 		//
-		// DRAW ACTUAL MANA BAR
-
-		float toFill = 3 * GlobalGameData.getPlayer().getManaPercent();// sets
-																		// scaling
-																		// factor
-																		// for
-																		// drawing
-																		// filled
-																		// manabar
-
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar)
-				.getStepInRow(0, 1);// get Filled Mana Bar part 1(static)
-		drawAtLocation(toDraw, new Vector2(DrawLoc.x + (0 * CircleSize),
-				DrawLoc.y));
-
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar)
-				.getStepInRow(1, 1);// get Filled Mana Bar part 2(dynamic)
-		toDraw.setScale(toFill, 1);
-		drawAtLocation(toDraw, new Vector2(DrawLoc.x + (1 * CircleSize),
-				DrawLoc.y));
-
-		float ManaWidth = 64 * toFill;
-
+		toDraw.setScale(Scale);
 		//
-		// Draw Secondary Bar (Represents Villagers remaining?)
-
-		toFill = 3 * LevelData.getMonstersSlainPercent();
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar)
-				.getStepInRow(2, 0);// get Filled Health? Bar part 1(static)
-		drawAtLocation(toDraw, new Vector2(DrawLoc.x + (0 * CircleSize),
-				DrawLoc.y));
-
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar)
-				.getStepInRow(3, 0);
-		// toDraw.setScale; //Set Scale Based on villagers remaining to game
-		// over
-		toDraw.setScale(toFill, 1); // For now it will represent Monsters to
-									// slay till next level
-		drawAtLocation(toDraw, new Vector2(DrawLoc.x + (1 * CircleSize),
-				DrawLoc.y));
-
-		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles)
-				.getStepInRow(((Villagers > Critical) ? 1 : 2), 0); // get OK
-																	// Circle or
-																	// Critical
-																	// Circle
+		drawAtLocation(toDraw, new Vector2(DrawLoc.x+( 4 * CircleSize), DrawLoc.y));
+		
+		//
+		//	DRAW ACTUAL MANA BAR
+		
+		float toFill = 3 * GlobalGameData.getPlayer().getManaPercent()*Scale;//sets scaling factor for drawing filled manabar
+	
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(1, 1);//get Filled Mana Bar part 2(dynamic)
+		toDraw.setScale(toFill, Scale);
+		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(1 * CircleSize), DrawLoc.y));
+		
+		float ManaWidth = 64 * toFill * Scale;
+		
+		//
+		//  Draw Secondary Bar (Represents Villagers remaining?)
+		
+		toFill = 3 * LevelData.getMonstersSlainPercent()*Scale;
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.ManaBar).getStepInRow(0,1);
+		toDraw.setScale( toFill, Scale ); //For now it will represent Monsters to slay till next level
+		drawAtLocation(toDraw, new Vector2(DrawLoc.x+(1 * CircleSize), DrawLoc.y));
+		
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(((Villagers> Critical)? 1 : 2),0); //get OK Circle or Critical Circle
+		//
+		toDraw.setScale(Scale);
+		//
 		drawAtLocation(toDraw, DrawLoc);
+		
+		return ManaWidth;
+	}
+	
+	private void DrawButtons(float ManaWidth, Vector2 DrawLoc){
 
-		/*
-		 * toDraw =
-		 * MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow
-		 * (0,0);//This code originally made a background for the Monster
-		 * Counter to display upon drawAtLocation(toDraw, DrawLoc.x,
-		 * DrawLoc.y-CircleSize);
-		 * 
-		 * toDraw =
-		 * MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow
-		 * (2,0); drawAtLocation(toDraw, DrawLoc.x, DrawLoc.y-CircleSize);
-		 */
-
+		Sprite toDraw=null;
+		float Scale = GameSettings.getAspectRatio();
+		float CircleSize=64*Scale;
+		
 		// Draw Buttons (Warrior, Archer, Mage).
 		boolean canSummon = true;
-		for (int i = 0; i < 3; i++) {
-			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons)
-					.getStepInRow(i, 0);// get buttons
-			drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
-
-			if (MainGame.getSummonHelper().getSummonCost(
-					SummonHelper.SummonMode.values()[i + 1]) > GlobalGameData
-					.getPlayer().getMana()
-					|| MainGame.getEntityManager()
-							.getFactionMembers(Faction.Player).size() >= LevelData
-							.getPlayerCharOnScreen())// Red Out if not enough
-														// mana
+		float buttonWidth;
+		for(int i=0;i<4;i++)
+		{
+			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(i, 0);//get buttons
+			toDraw.setScale(GameSettings.getAspectRatio());
+			buttonWidth=toDraw.getRegionWidth() * Scale;
+			drawAtLocation(toDraw, new Vector2((i * buttonWidth), 0));
+			
+			if(MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.values()[i+1] ) > GlobalGameData.getPlayer().getMana() )//Red Out if not enough  mana
 			{
-				toDraw = MainGame.getTextureRepo()
-						.getUiElement(UiElement.Buttons).getStepInRow(4, 0);
+				toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(5, 0);
+				toDraw.setScale(GameSettings.getAspectRatio());
 				drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
 				if (MainGame.getSummonHelper().getSummonMode() == SummonHelper.SummonMode
 						.values()[i + 1])
@@ -390,173 +426,106 @@ public class Drawer {
 																									// IS
 																									// selected
 			{
-				if (MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode
-						.values()[i + 1]) {
-					toDraw = MainGame.getTextureRepo()
-							.getUiElement(UiElement.Buttons).getStepInRow(3, 0);
-					drawAtLocation(toDraw, new Vector2((i * CircleSize), 0));
+				if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.values()[i+1] )
+				{
+					toDraw=MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(4,0);
+					toDraw.setScale(GameSettings.getAspectRatio());
+					drawAtLocation(toDraw, new Vector2((i * buttonWidth), 0));
 				}
 			}
 
 		}
-		if (canSummon)
-			DrawManaCost(MainGame.getSummonHelper().getSummonMode(), DrawLoc.x
-					+ CircleSize + ManaWidth, DrawLoc.y + (CircleSize / 2));
-		// DrawManaCost(MainGame.getSummonHelper().getSummonMode(), 400, 400);
-
-		// Draw Help Notifications (if any)
-
-		DrawHelpNotifications();
-
-		float textWidth = bigFont.getBounds("00").width;
-		float textHeight = bigFont.getBounds("00").height;
-
-		if (drawGameOver || drawLevelUp) {
-
-			if (drawGameOver) {
-				drawLevelUp = false;
-			}// lets say they happen right after another, Game Over takes
-				// priority
-
-			drawOverlay((drawLevelUp) ? 1 : 1);
-			float red = (drawLevelUp) ? (float) 233 / (float) 255 : 1; // if
-																		// level
-																		// up,
-																		// its
-																		// an
-																		// orange
-																		// color,
-																		// if
-																		// game
-																		// over,
-																		// its
-																		// red
-			float green = (drawLevelUp) ? (float) 183 / (float) 255 : 0;
-			float blue = (drawLevelUp) ? (float) 74 / (float) 255 : 0;
-			Color color1 = new Color(red, green, blue, overlayFadeIn);
-
-			// if(drawLevelUp){color=new Color(233, 183, 74, overlayFadeIn);}
-			gameOverFont.setColor(color1);
-			String str = (drawLevelUp) ? "LEVEL UP" : "YOU FAILED";// Holy hell
-																	// do I love
-																	// Dark
-																	// Souls
-
-			Vector2 DrawCenter = new Vector2(
-					((GameSettings.getScreenWidth() / 2) - (gameOverFont
-							.getBounds(str).width / 2)),
-					((GameSettings.getScreenHeight() / 2) + (gameOverFont
-							.getBounds(str).height / 2)));
-
-			// System.out.println("Bounds: "+DrawCenter.x +" | "+DrawCenter.y);
-
-			Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0,
-					Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // required
-																		// to
-																		// render
-																		// text
-																		// properly
-			batch.setProjectionMatrix(normalProjection);
-			gameOverFont.draw(batch, str, DrawCenter.x, DrawCenter.y);
-		}
-
-		// ONLY DRAW TEXT AFTER THIS:
-		bigFont.setColor(Color.WHITE);
-		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0,
-				Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // required
-																	// to render
-																	// text
-																	// properly
-		batch.setProjectionMatrix(normalProjection);
-
-		DrawLoc = new Vector2((DrawLoc.x / Scale) + (CircleSize / Scale / 2)
-				- (textWidth / 2), (DrawLoc.y / Scale)
-				+ (CircleSize / Scale / 2) + (textHeight / 2));
-
-		// font.draw(batch, "Drawing to X: "+(int)DrawLoc.x +" Y: "+
-		// (int)DrawLoc.y, 32, 80/Scale);
-		if (drawMoveCenter)// Debug Info on Touch:
-		{
-			font.draw(batch, "Current Touch X: " + (int) currTouchPosition.x
-					+ "Y: " + (int) currTouchPosition.y, 32, 80 / Scale);
-			Vector2 SummonPos = startTouchPosition.cpy().add(lowerLeftOfView)
-					.div(TILE_SIZE);
-			SummonPos.x = (SummonPos.x);// (float)
-										// Math.ceil(TILE_SIZE/SummonPos.x);
-			SummonPos.y = (SummonPos.y);// (float)
-										// Math.ceil(TILE_SIZE/SummonPos.y);
-			SummonPos.x = (float) roundUp(SummonPos.x, 1);
-			SummonPos.y = (float) roundUp(SummonPos.y, 1);
-			font.draw(batch, "Summon Pos X:" + SummonPos.x + " Y: "
-					+ SummonPos.y, 256 / Scale, 50);
-		}
-		// font.scale((float) 2.3);
-		bigFont.draw(batch,
-				((Villagers < 10) ? "0" : "") + Integer.toString(Villagers),
-				DrawLoc.x, DrawLoc.y);
-
-		// this next code was written out in favor of a bar approach
-		// bigFont.draw(batch, ((MonstersKilled < 10 ) ? "0": "")
-		// +Integer.toString(MonstersKilled), DrawLoc.x,
-		// DrawLoc.y-CircleSize);//This line displays monsters till next level
-		// upon the screen
-
-		font.setColor(Color.BLACK);
-		font.draw(batch, str + "Mana: " + GlobalGameData.getPlayer().getMana(),
-				192 / Scale, 25);
-		// font.draw(batch, str + "DeltaTime: "+deltaTime, 192/Scale,25);
-
-		// font.scale((float)-2.3);
+		float godDraw = (3 * CircleSize);
+		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(6, 0);
+		toDraw.setScale(Scale, GlobalGameData.getPlayer().getGodAttackPercent()*Scale);
+		drawAtLocation(toDraw, new Vector2(godDraw, 0));
+		if(canSummon)
+		DrawManaCost(MainGame.getSummonHelper().getSummonMode(), DrawLoc.x + CircleSize + ManaWidth/Scale, DrawLoc.y + (CircleSize/2));
+		
 	}
 
 	private void DrawManaCost(SummonHelper.SummonMode mode, float PosX,
 			float PosY) {
-		Sprite toDraw = MainGame.getTextureRepo()
-				.getUiElement(UiElement.ManaChunk).getStepInCol(0, 0);
+		Sprite toDraw=MainGame.getTextureRepo().getUiElement(UiElement.ManaChunk).getStepInCol(0, 0);
 		float scale = MainGame.getSummonHelper().getSummonCost(mode);
-		float scaleMod = 9;
-		float superScale = 3 * scale / scaleMod;
-		toDraw.setScale(superScale, 1);
-		toDraw.setOrigin(0, 0);
-		drawAtLocation(toDraw, PosX - ((toDraw.getRegionWidth() * superScale)),
-				PosY);
+		float scaleMod = 10;
+		float Aspect=GameSettings.getAspectRatio();
+		float superScale = 3 * scale/scaleMod * Aspect;
+		toDraw.setScale(superScale, Aspect);
+		toDraw.setOrigin(0,0);
+		drawAtLocation(toDraw, PosX - ( (toDraw.getRegionWidth() * superScale) ), PosY);
+	}
+	
+	private void DrawText(Vector2 ParamDrawLoc){
+		int MAX=99;
+		int Villagers = LevelData.getVillagersTillGameOver();
+		Villagers = (Villagers > MAX) ? MAX : Villagers;
+		
+		float textWidth = bigFont.getBounds("00").width;
+		float textHeight = bigFont.getBounds("00").height;
+		float Scale = GameSettings.getAspectRatio();
+		float CircleSize = 64 * Scale;
+		bigFont.setColor(Color.WHITE);
+		
+		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight()); //required to render text properly
+		batch.setProjectionMatrix(normalProjection);
+		
+		Vector2 DrawLoc = new Vector2((ParamDrawLoc.x / Scale) + ( CircleSize/Scale/2 ) - (textWidth/2), (ParamDrawLoc.y/Scale) + ( CircleSize/Scale/2 ) + (textHeight/2));
+		
+		
+		//font.draw(batch, "Drawing to X: "+(int)DrawLoc.x +" Y: "+ (int)DrawLoc.y, 32, 80/Scale);
+		if(drawMoveCenter)//Debug Info on Touch:
+		{
+			font.draw(batch, "Current Touch X: "+(int)currTouchPosition.x+"Y: "+(int)currTouchPosition.y, 32,80/Scale);
+			Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
+			SummonPos.x=(SummonPos.x);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
+			SummonPos.y=(SummonPos.y);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
+			SummonPos.x=(float)roundUp(SummonPos.x, 1);
+			SummonPos.y=(float)roundUp(SummonPos.y, 1);
+			font.draw(batch, "Summon Pos X:" +SummonPos.x + " Y: "+SummonPos.y, 256/Scale, 50/Scale);
+		}
+		bigFont.draw(batch, ((Villagers < 10 ) ? "0": "") +Integer.toString(Villagers), DrawLoc.x, DrawLoc.y);
+		
+		font.setColor(Color.BLACK);
+		font.draw(batch, str + "Mana: "+GlobalGameData.getPlayer().getMana(), 192/Scale,25);
 	}
 
 	private void DrawHelpNotifications() {
+
 		Sprite toDraw;
-		if (drawHelp[0]) {
-			toDraw = MainGame.getTextureRepo()
-					.getUiElement(UiElement.HelpNotifyVertical)
-					.getStepInRow(0, 0);
-			drawAtLocation(
-					toDraw,
-					(GameSettings.getScreenWidth() / 2)
-							- (toDraw.getRegionWidth() / 2),
-					(GameSettings.getScreenHeight() - (toDraw.getRegionHeight())));
+		Vector2 DrawPos=null;
+		float screenPosX = GameSettings.getScreenWidth();
+		float screenPosY = GameSettings.getScreenHeight();
+		float scale = GameSettings.getAspectRatio();
+		if(drawHelp[0]){
+			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.HelpNotifyVertical).getStepInRow(0, 0);
+			toDraw.setScale(scale);
+			DrawPos=new Vector2( 
+					( screenPosX/2 )-( toDraw.getRegionWidth()/2 ), 
+					( screenPosY - (toDraw.getRegionHeight()) ));
+			DrawPos.mul(scale);
+			drawAtLocation( toDraw,  DrawPos);
 		}
-		if (drawHelp[1]) {
-			toDraw = MainGame.getTextureRepo()
-					.getUiElement(UiElement.HelpNotifyVertical)
-					.getStepInRow(1, 0);
-			drawAtLocation(toDraw, (GameSettings.getScreenWidth() / 2)
-					- (toDraw.getRegionWidth() / 2), 0);
+		if(drawHelp[1]){
+			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.HelpNotifyVertical).getStepInRow(1,0);
+			DrawPos=new Vector2(( screenPosX/2 )-( toDraw.getRegionWidth()/2 ), 0);
+			toDraw.setScale(scale);
+			DrawPos.mul(scale);
+			drawAtLocation(toDraw, DrawPos);
 		}
-		if (drawHelp[2]) {
-			toDraw = MainGame.getTextureRepo()
-					.getUiElement(UiElement.HelpNotifyHorizontal)
-					.getStepInRow(0, 0);
-			drawAtLocation(toDraw, 0,
-					(GameSettings.getScreenHeight() / 2 - (toDraw
-							.getRegionHeight() / 2)));
+		if(drawHelp[2]){
+			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.HelpNotifyHorizontal).getStepInRow(0,0);
+			DrawPos= new Vector2(0 , ( screenPosY/2 - (toDraw.getRegionHeight()/2 )));
+			toDraw.setScale(scale);
+			DrawPos.mul(scale);
+			drawAtLocation(toDraw,   DrawPos);
 		}
-		if (drawHelp[3]) {
-			toDraw = MainGame.getTextureRepo()
-					.getUiElement(UiElement.HelpNotifyHorizontal)
-					.getStepInRow(1, 0);
-			drawAtLocation(toDraw, (GameSettings.getScreenWidth() - (toDraw
-					.getRegionWidth())),
-					(GameSettings.getScreenHeight() / 2 - (toDraw
-							.getRegionHeight() / 2)));
+		if(drawHelp[3]){
+			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.HelpNotifyHorizontal).getStepInRow(1,0);
+			DrawPos= new Vector2((screenPosX - (toDraw.getRegionWidth())) , ( screenPosY/2 - (toDraw.getRegionHeight()/2 )));
+			toDraw.setScale(scale);
+			DrawPos.mul(scale);
+			drawAtLocation(toDraw, DrawPos);
 		}
 
 	}
@@ -607,13 +576,13 @@ public class Drawer {
 	}
 
 	public void setOverlayFadeOut(boolean value) {
-		OverlayFade = value;
+		OverlayFadeOut = value;
 		if (drawGameOver) {
-			OverlayFade = false;
+			OverlayFadeOut = false;
 		}
 	}
 
-	private void drawOverlay(int type) {
+	private void drawOverlay(int type, float deltaTime) {
 		int Overlay_dim = 256;// overlay dimensions(its a square)
 		Sprite overlay = null;
 		switch (type) {
@@ -621,7 +590,7 @@ public class Drawer {
 			overlay = MainGame.getTextureRepo()
 					.getOverlays(ScreenOverlay.GameOver).getStepInRow(0, 0);
 			break;
-		case 2:// Draw Level Up Overlay
+		case 2:// Draw Level Up Overlay //NOT USED
 			overlay = MainGame.getTextureRepo()
 					.getOverlays(ScreenOverlay.LevelUp).getStepInRow(0, 0);
 			break;
@@ -645,6 +614,19 @@ public class Drawer {
 		if (overlayFadeIn < 0 && OverlayFade == true) {
 			overlayFadeIn = 0;
 			OverlayFade = false;
+			drawLevelUp = false;
+		}
+		if (overlayFadeIn > 1) {
+			overlayFadeIn = 1;
+		}
+		if (overlayFadeIn < 1 && !OverlayFadeOut) {
+			overlayFadeIn += deltaTime;
+		} else if (overlayFadeIn > 0) {
+			overlayFadeIn -= deltaTime;
+		}
+		if (overlayFadeIn < 0 && OverlayFadeOut == true) {
+			overlayFadeIn = 0;
+			OverlayFadeOut = false;
 			drawLevelUp = false;
 		}
 		if (overlayFadeIn > 1) {
@@ -716,53 +698,77 @@ public class Drawer {
 	boolean WarrPlayed = false;
 	boolean ArchPlayed = false;
 
-	public boolean setButtonDraw()// Also handles summoning units. Move
-									// functionality elsewhere?
+	public boolean setButtonDraw()//Also handles summoning units. Move functionality elsewhere?
 	{
 		// 0, 1, 2, 3 | All, Warrior, Archer, Mage
 		// float Scale=GameSettings.getAspectRatio();
 		boolean draw = false;
 		float touchX = startTouchPosition.x;
 		float touchY = startTouchPosition.y;
-
-		if (touchX < (64 * 3) && touchY < (64))// touch coordinates are (not?)
-												// affected by aspect ratio
+		float buttonDim = 64 * GameSettings.getAspectRatio();
+		
+		if(touchX < (buttonDim *4) && touchY < (buttonDim ))//touch coordinates are (not?) affected by aspect ratio
 		{
-			if (touchX < 64) {
-				// set Warrior
-				System.out.println("!Warrior Selected");
-				MainGame.getSummonHelper().setSummonMode(
-						SummonHelper.SummonMode.Warrior);
-			} else if (touchX < (64 * 2)) {
-				// set Archer
-				System.out.println("!Archer Seleted");
-				MainGame.getSummonHelper().setSummonMode(
-						SummonHelper.SummonMode.Archer);
-			} else {
-				// set Mage
-				System.out.println("!Mage Selected");
-				MainGame.getSummonHelper().setSummonMode(
-						SummonHelper.SummonMode.Mage);
-				if (!MagePlayed) {
-					MagePlayed = true;
-					// MainGame.getSoundHelper().playSound(Sounds.Mage);
+			if(touchX < buttonDim)
+			{
+				//set Warrior
+				if(GlobalGameData.getPlayer().getMana() >= MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.Warrior))
+				{
+					System.out.println("!Warrior Selected");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Warrior);
 				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
 			}
-			draw = true;
-		} else {
-			if (MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None) {
-				Vector2 SummonPos = startTouchPosition.cpy()
-						.add(lowerLeftOfView).div(TILE_SIZE);
-				SummonPos.x = (SummonPos.x);// (float)
-											// Math.ceil(TILE_SIZE/SummonPos.x);
-				SummonPos.y = (SummonPos.y);// (float)
-											// Math.ceil(TILE_SIZE/SummonPos.y);
-				SummonPos.x = (float) roundUp(SummonPos.x, 1) - 1;
-				SummonPos.y = (float) roundUp(SummonPos.y, 1) - 1;
-
-				if (!MainGame.getSummonHelper().SummonAtPos(SummonPos)) // ToDo:
-																		// Implement:
-																		// done
+			else if(touchX < (buttonDim*2))
+			{
+				//set Archer
+				if(GlobalGameData.getPlayer().getMana() >= MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.Archer))
+				{
+					System.out.println("!Archer Seleted");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Archer);
+				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
+			}
+			else if(touchX < (buttonDim*3))
+			{
+				//set Mage
+				
+				if(GlobalGameData.getPlayer().getMana() >= MainGame.getSummonHelper().getSummonCost(SummonHelper.SummonMode.Mage))
+				{
+					System.out.println("!Mage Selected");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.Mage);
+					if(!MagePlayed)
+					{
+						MagePlayed=true;
+						//MainGame.getSoundHelper().playSound(Sounds.Mage);
+					}
+				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
+			}
+			else	//NEW: God Attack
+			{
+				if(GlobalGameData.getPlayer().getGodAttackPercent() == 0)
+				{
+					System.out.println("!God Attack Selected");
+					MainGame.getSummonHelper().setSummonMode(SummonHelper.SummonMode.GodAttack);
+				}
+				else{MainGame.getSoundHelper().playSound(Sounds.BadSelection);}
+			}
+			draw=true;
+		}
+		else
+		{
+			if(MainGame.getSummonHelper().getSummonMode() != SummonHelper.SummonMode.None)
+			{
+				Vector2 SummonPos= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
+				/*SummonPos.x=(SummonPos.x);//(float) Math.ceil(TILE_SIZE/SummonPos.x);
+				SummonPos.y=(SummonPos.y);//(float) Math.ceil(TILE_SIZE/SummonPos.y);
+				SummonPos.x=(float)roundUp(SummonPos.x, 1);
+				SummonPos.y=(float)roundUp(SummonPos.y, 1);*/
+				SummonPos.x=(float)Math.floor(SummonPos.x);
+				SummonPos.y=(float)Math.floor(SummonPos.y);
+				
+				if(!MainGame.getSummonHelper().SummonAtPos(SummonPos))    //ToDo: Implement: done
 				{
 					setDrawBadSelection(true);
 				}
@@ -777,13 +783,15 @@ public class Drawer {
 	public void setDrawBadSelection(boolean draw) {
 		this.drawBadSelection = draw;
 	}
-
+	/*
+>>>>>>> 4c7e28b7f88b225ba80d27491ef8d60ccdc0f519
 	public void DrawBadSelection() {
 		this.dispError++;
 		int cursorSize = 32;
 		if (BadSelectionVect == null) {
 			BadSelectionVect = new Vector2(startTouchPosition.x - cursorSize,
 					startTouchPosition.y - cursorSize);
+<<<<<<< HEAD
 		}
 		if (this.dispError == 45) {
 			setDrawBadSelection(false);
@@ -793,6 +801,46 @@ public class Drawer {
 			Sprite toDraw = MainGame.getTextureRepo()
 					.getUiElement(UiElement.Circles).getStepInRow(1, 1);
 			drawAtLocation(toDraw, BadSelectionVect);
+=======
+		}
+		if (this.dispError == 45) {
+			setDrawBadSelection(false);
+			this.dispError = 0;
+			BadSelectionVect = null;
+		} else {
+			Sprite toDraw = MainGame.getTextureRepo()
+					.getUiElement(UiElement.Circles).getStepInRow(1, 1);
+			drawAtLocation(toDraw, BadSelectionVect);
+		}
+	}*/
+	
+	public void DrawBadSelection()
+	{
+		this.dispError++;	//the counter for how long to display the sign
+		//Vector2 monsterPos = entity.getPosition().cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
+		if(BadSelectionVect==null)
+		{
+			Vector2 temp= startTouchPosition.cpy().add(lowerLeftOfView).div(TILE_SIZE);
+			System.out.println("Bad Draw Pos (TILES): "+temp.toString());
+			temp.x=(float)Math.floor(temp.x);
+			temp.y=(float)Math.floor(temp.y);
+			System.out.println("Bad Draw Pos (TILES FLOORED): "+temp.toString());
+			BadSelectionVect=temp;
+			MainGame.getSoundHelper().playSound(Sounds.BadSelection);
+		}
+		if(this.dispError==60)
+		{
+			setDrawBadSelection(false);
+			this.dispError=0;
+			BadSelectionVect=null;
+		}
+		else
+		{
+			
+			Vector2 drawPos = BadSelectionVect.cpy().mul(TILE_SIZE).sub(lowerLeftOfView);
+			Sprite toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Circles).getStepInRow(1,1);
+			toDraw.setScale((float).5,(float).5);
+			drawAtLocation(toDraw, drawPos);
 		}
 	}
 

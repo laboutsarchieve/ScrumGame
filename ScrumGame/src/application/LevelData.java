@@ -86,5 +86,13 @@ public class LevelData {
 	public static int getPlayerCharOnScreen() {
 		return playerCharOnScreen;
 	}
+	public static void resetGame(){
+		level = 1;
+		monstersTillNextLevel = 10;
+		villagersTillGameOver = 20;
+		villagerCritical=10;
+		playerCharOnScreen=15;
+		monstersTillNextLevelPercent=0;
+	}
 
 }

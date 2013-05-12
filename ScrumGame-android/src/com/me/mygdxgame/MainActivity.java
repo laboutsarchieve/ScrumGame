@@ -1,7 +1,7 @@
 package com.me.mygdxgame;
 
+import view.ScreenManager;
 import android.os.Bundle;
-import application.MainGame;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -14,6 +14,6 @@ public class MainActivity extends AndroidApplication {
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = false;
         
-        initialize(new MainGame(), cfg);
+        initialize(new ScreenManager(), cfg);
     }
 }
