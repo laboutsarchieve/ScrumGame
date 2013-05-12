@@ -4,7 +4,11 @@ public class Player {
 	float mana;
 	float MaxMana;
 	float manaPercent;
+<<<<<<< HEAD
+	float cooldownGodAttackMax=300; //30 fps so a full charge every 100 seconds (needs fine tuning for a sweet spot)
+=======
 	float cooldownGodAttackMax=300; //30 fps so a full charge every 100 seconds
+>>>>>>> 578673f98688ed68727b7a6595659cb12112f2a5
 	float cooldownGodAttack=0;
 	float cooldownGotAttackPercent=0;
 	

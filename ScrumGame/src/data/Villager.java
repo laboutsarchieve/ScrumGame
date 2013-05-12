@@ -28,8 +28,10 @@ public class Villager extends Entity {
 			state = AIState.Roam;
 		case Roam:
 			actionInterval = GameData.getActionInterval(unitType);
-			if (validTarget())
+			if (validTarget()){
 				state = AIState.Flee;
+				MainGame.getMapDrawer().villageInTrouble(this);
+			}
 			else
 				roam();
 			break;

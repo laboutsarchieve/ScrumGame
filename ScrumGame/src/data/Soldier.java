@@ -62,6 +62,11 @@ public class Soldier extends Entity {
 			if (!attack(target)) {
 				state = AIState.Hunt;
 			}
+			//Added by: Chris
+			else{
+				if(MainGame.getMapDrawer().isOnScreenPublic(this.position))
+					MainGame.getSoundHelper().playSound(EntityType.Soldier);
+			}
 			
 			if (!validTarget())
 			{

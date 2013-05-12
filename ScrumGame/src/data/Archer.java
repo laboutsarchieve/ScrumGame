@@ -75,6 +75,11 @@ public class Archer extends Entity {
 			if (!attack(target)) {
 				state = AIState.Hunt;
 			}
+			//Added by: Chris
+			else{
+				if(MainGame.getMapDrawer().isOnScreenPublic(this.position))
+					MainGame.getSoundHelper().playSound(EntityType.Archer);
+			}
 			
 			if (!validTarget())
 			{
