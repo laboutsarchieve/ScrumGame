@@ -50,6 +50,10 @@ public class GameData {
 
 	// Note: Only affects new units created after being modified
 	private static float difficultyMultiplier = 1.0f;
+	
+	// These are dynamic difficulty scaling, this is a mult to attack power
+	private static float difficultyPlayerDamageMult = 1.0f;
+	private static float difficultyMonsterDamageMult = 1.0f;
 
 	/**
 	 * A function to read data from a file could be added here
@@ -59,6 +63,30 @@ public class GameData {
 		difficultyMultiplier = d;
 	}
 
+	public static void setPlayerDamageMult(float d) {
+		difficultyPlayerDamageMult = d;
+	}
+	
+	public static void setMonsterDamageMult(float d) {
+		difficultyMonsterDamageMult = d;
+	}
+	
+	public static float getDamageMult(Faction f) {
+		float mult = 1;
+		switch(f){
+		case Monster:
+			mult = difficultyMonsterDamageMult;
+			break;
+		case Player:
+			mult = difficultyPlayerDamageMult;
+			break;
+		default:
+			mult = 1;
+			break;
+		}
+		return mult;
+	}
+	
 	public static int getHitpoints(EntityType t) {
 		int hp = 0;
 		switch (t) {
