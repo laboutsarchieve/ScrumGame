@@ -1,6 +1,6 @@
 package com.me.mygdxgame;
 
-import application.MainGame;
+import view.ScreenManager;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -12,7 +12,6 @@ public class Main {
 		cfg.useGL20 = false;
 		cfg.width = 800;
 		cfg.height = 800;
-		
-		new LwjglApplication(new MainGame(), cfg);
+		new LwjglApplication(new ScreenManager(), cfg);
 	}
 }

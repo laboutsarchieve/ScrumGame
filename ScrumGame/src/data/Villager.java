@@ -37,7 +37,7 @@ public class Villager extends Entity {
 			actionInterval = GameData.getAggroInterval(unitType);
 			soldierBuddy = manager.getClosestType(this, EntityType.Soldier, Faction.Player);
 			if (validTarget(soldierBuddy))
-				moveTo(soldierBuddy);
+				moveTo(soldierBuddy, 2);
 			else
 				roam();
 			break;

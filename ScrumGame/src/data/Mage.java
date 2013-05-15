@@ -26,7 +26,7 @@ public class Mage extends Entity {
 			state = AIState.Roam;
 		case Roam:
 			actionInterval = GameData.getActionInterval(unitType);
-			if (!validTarget(soldierBuddy))
+			if (soldierBuddy == null || !validTarget(soldierBuddy))
 					soldierBuddy = manager.getClosestType(this, EntityType.Soldier, Faction.Player);
 				
 			target = manager.getClosest(this, Faction.Monster);
@@ -43,10 +43,10 @@ public class Mage extends Entity {
 			}
 			
 			if (state == AIState.Roam) {
-				if (manager.distance(soldierBuddy.getPosition(), position) <= 2)
+				if (soldierBuddy != null && manager.distance(soldierBuddy.getPosition(), position) <= 2)
 					roam();
 				else
-					moveTo(soldierBuddy);
+					moveTo(soldierBuddy,3);
 			}
 				
 			break;
@@ -56,7 +56,7 @@ public class Mage extends Entity {
 				state = AIState.Roam;
 				break;
 			}
-			moveTo(target);
+			moveTo(target, attackRange);
 			targetRange = manager.distance(target.getPosition(), position);
 			
 			if (targetRange <= attackRange)

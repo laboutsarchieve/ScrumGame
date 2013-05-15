@@ -6,5 +6,9 @@ public enum UiElement {
 	ManaBar,
 	Circles,
 	Buttons,
-	Health
+	Health,
+	HelpBubble,
+	HelpNotifyVertical,
+	HelpNotifyHorizontal,
+	ManaChunk
 }

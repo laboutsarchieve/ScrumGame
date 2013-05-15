@@ -2,18 +2,8 @@ package data;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class Village {
-	private Vector2 position;
-	
+public class Village extends SpawnTile {
 	public Village(Vector2 position) {
-		this.position = position;
-	}
-
-	public Vector2 getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector2 position) {
-		this.position = position;
+		super(position, EntityType.Villager, Faction.Villager, 600, 5 );
 	}
 }

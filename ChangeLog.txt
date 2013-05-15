@@ -1,0 +1,66 @@
+// Version 1.0
+// Chris Callan
+// Benjamin Sergent 
+// Mathew Baker
+// Andrew Savic
+
+//----------------------------------
+//
+//ChangeLog 1.1:
+//
+//----------------------------------
+
+* Added Screen functionality, Screens are now managed by the ScreenManager class
+
+* Screens allow us to add various types of screens, currently implemented screens are: 
+
+* Splash screen, main menu screen, and game screen
+
+* Game resets on game over, booting the user to the main menu where they may try again.
+
+
+//----------------------------------
+//
+//ChangeLog 1.0:
+//
+//----------------------------------
+
+* Added UI Elements: Bomb Button, Exp Bar
+
+* Added Sounds! Background music disabled by default but is only one line of code to activate it.
+
+* Made the "Bad Selection" more apparent with a sound cue and a circle cross appear on the target square
+
+* Units cannot be selected if resources are not available, triggers sound cue if attempted
+
+* Game Over screen added along with level up screen. The length of which these screens appear and subsequently disappear is controlled by MainGame.java
+
+* Help! icons appear over villagers in the 'Flee' AIState
+
+* Help! icons appear on the sides of the screen and are currently triggered by ANY active village. Line 125 on Drawer.java is currently where the villageInTrouble(Village entity) is called. Simply pass the village object to the method and it will display Help! in the direction of that village. I'll leave that to you Ben.
+
+//----------------------------------
+//
+//Bugs (at least ones I've noticed):
+//
+//----------------------------------
+
+* isOnScreen(Vector2 pos) seems broken, all checks return true
+
+* Villagers only move to flee state once they are within melee range of a monster and are attacked. 
+ 
+* Mages are broken. If the first unit spawned is a Mage, the game crashes. Probably due to the soldierbuddy reference you mentioned before. 
+
+//----------------------------------
+//
+//Other Notes:
+//
+//----------------------------------
+
+* Game gets exponentially more difficult as time goes on (is this a feature?)
+
+* Maybe put a cap on how many units a forest can spawn per level? (i.e: level up means an increase in units that can spawn)
+
+* I was unable to get a working main menu. The project itself is NOT due until the last day of class so we only need a presentable model for tomorrow. 
+
+
