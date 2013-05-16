@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+<<<<<<< HEAD
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="assets"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ScrumGame"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-lwjgl-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-lwjgl.jar" sourcepath="libs/gdx-backend-lwjgl-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/gdx-natives.jar"/>
+	<classpathentry kind="output" path="bin"/>
+=======
     <classpathentry kind="src" path="src"/>
     <classpathentry kind="src" path="assets"/>
     <classpathentry combineaccessrules="false" exported="true" kind="src" path="/ScrumGame"/>
@@ -8,4 +18,5 @@
     <classpathentry exported="true" kind="lib" path="libs/gdx-backend-lwjgl-natives.jar"/>
     <classpathentry exported="true" kind="lib" path="libs/gdx-backend-lwjgl.jar" sourcepath="libs/gdx-backend-lwjgl-sources.jar"/>
     <classpathentry exported="true" kind="lib" path="libs/gdx-natives.jar"/>
+>>>>>>> 985425cc5f03aa02c64d645f4b9ae12e32a311e0
 </classpath>

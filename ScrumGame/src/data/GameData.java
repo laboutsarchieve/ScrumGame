@@ -1,6 +1,8 @@
 package data;
 
 import application.LevelData;
+import java.io.*;
+import java.util.Scanner;
 
 public class GameData {
 	private static int baseMonsterHP = 100;
@@ -50,6 +52,9 @@ public class GameData {
 
 	// Note: Only affects new units created after being modified
 	private static float difficultyMultiplier = 1.0f;
+	// These are dynamic difficulty scaling, this is a mult to attack power
+	private static float difficultyPlayerDamageMult = 1.0f;
+	private static float difficultyMonsterDamageMult = 1.0f;
 
 	/**
 	 * A function to read data from a file could be added here
@@ -59,6 +64,30 @@ public class GameData {
 		difficultyMultiplier = d;
 	}
 
+	public static void setPlayerDamageMult(float d) {
+		difficultyPlayerDamageMult = d;
+	}
+	
+	public static void setMonsterDamageMult(float d) {
+		difficultyMonsterDamageMult = d;
+	}
+	
+	public static float getDamageMult(Faction f) {
+		float mult = 1;
+		switch(f){
+		case Monster:
+			mult = difficultyMonsterDamageMult;
+			break;
+		case Player:
+			mult = difficultyPlayerDamageMult;
+			break;
+		default:
+			mult = 1;
+			break;
+		}
+		return mult;
+	}
+	
 	public static int getHitpoints(EntityType t) {
 		int hp = 0;
 		switch (t) {
@@ -240,5 +269,81 @@ public class GameData {
 			m = 1000;
 		}
 		return m;
+	}
+	
+	public static boolean updateGameStats() {
+		String file = "data.ini";
+        Scanner s = null;
+        try {
+            s = new Scanner(new BufferedReader(new FileReader(file)));
+            //This is pretty hard-coded in required file format
+            //But it does leave room for comments in the file
+            difficultyMultiplier = getNextFloat(s);
+            difficultyPlayerDamageMult = getNextFloat(s);
+            difficultyMonsterDamageMult = getNextFloat(s);
+            
+            baseMonsterHP = getNextInt(s);
+            baseMonsterATK = getNextInt(s);
+            baseMonsterRange = getNextInt(s);
+            baseMonsterVision = getNextInt(s);
+            baseMonsterAggro = getNextInt(s);
+            baseMonsterActionInterval = getNextFloat(s);
+            baseMonsterAggroInterval = getNextFloat(s);
+            
+            baseSoldierHP = getNextInt(s);
+            baseSoldierATK = getNextInt(s);
+            baseSoldierRange = getNextInt(s);
+            baseSoldierVision = getNextInt(s);
+            baseSoldierAggro = getNextInt(s);
+            baseSoldierActionInterval = getNextFloat(s);
+            baseSoldierAggroInterval = getNextFloat(s);
+            
+            baseArcherHP = getNextInt(s);
+            baseArcherATK = getNextInt(s);
+            baseArcherRange = getNextInt(s);
+            baseArcherVision = getNextInt(s);
+            baseArcherAggro = getNextInt(s);
+            baseArcherActionInterval = getNextFloat(s);
+            baseArcherAggroInterval = getNextFloat(s);
+            
+            baseMageHP = getNextInt(s);
+            baseMageATK = getNextInt(s);
+            baseMageRange = getNextInt(s);
+            baseMageVision = getNextInt(s);
+            baseMageAggro = getNextInt(s);
+            baseMageActionInterval = getNextFloat(s);
+            baseMageAggroInterval = getNextFloat(s);
+            
+            baseVillagerHP = getNextInt(s);
+            baseVillagerATK = getNextInt(s);
+            baseVillagerRange = getNextInt(s);
+            baseVillagerVision = getNextInt(s);
+            baseVillagerAggro = getNextInt(s);
+            baseVillagerActionInterval = getNextFloat(s);
+            baseVillagerAggroInterval = getNextFloat(s);
+        }
+        catch (IOException e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        finally {
+            if (s != null)
+                s.close();
+        }
+		return true;
+	}
+	
+	private static float getNextFloat(Scanner s) {
+		while(!s.hasNextFloat()) {
+			s.nextLine();
+		}
+		return s.nextFloat();
+	}
+	
+	private static int getNextInt(Scanner s) {
+		while(!s.hasNextInt()){
+			s.nextLine();
+		}
+		return s.nextInt();
 	}
 }

@@ -99,7 +99,7 @@ public abstract class Entity {
 	}
 
 	public int getAttackDamage() {
-		return attackDamage;
+		return (int)(attackDamage * GameData.getDamageMult(faction));
 	}
 
 	public int getAttackRange() {
