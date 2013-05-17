@@ -2,8 +2,8 @@ package view;
 
 import java.util.HashMap;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+
 import data.TileType;
 
 public class TextureRepository {

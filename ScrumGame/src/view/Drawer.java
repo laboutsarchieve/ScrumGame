@@ -11,26 +11,17 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import data.Entity;
-import data.Forest;
-import data.GameSettings;
-import data.Map;
-import data.TileType;
-import data.Village;
-
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
-import data.GameData;
+import data.Entity;
+import data.EntityType;
+import data.Forest;
+import data.GameSettings;
 import data.GlobalGameData;
-import data.Faction;
-
-import data.*;
-
-import data.GlobalGameData;
-
-import data.*;
+import data.Map;
+import data.TileType;
+import data.Village;
 
 
 public class Drawer {
@@ -73,8 +64,7 @@ public class Drawer {
 		camera.update();
 		batch = new SpriteBatch();
 		batch.enableBlending();
-		str = "Test Build 1.0 Width: " + GameSettings.getScreenWidth()
-				+ " Height: " + GameSettings.getScreenHeight();
+		str = " "; //"Test Build 1.0 Width: " + GameSettings.getScreenWidth()+ " Height: " + GameSettings.getScreenHeight();
 		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0,
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.setProjectionMatrix(normalProjection);
@@ -400,7 +390,7 @@ public class Drawer {
 		// Draw Buttons (Warrior, Archer, Mage).
 		boolean canSummon = true;
 		float buttonWidth;
-		for(int i=0;i<4;i++)
+		for(int i=0;i<3;i++)
 		{
 			toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(i, 0);//get buttons
 			toDraw.setScale(GameSettings.getAspectRatio());
@@ -435,12 +425,12 @@ public class Drawer {
 			}
 
 		}
-		float godDraw = (3 * CircleSize);
+		//float godDraw = (3 * CircleSize);
 		toDraw = MainGame.getTextureRepo().getUiElement(UiElement.Buttons).getStepInRow(6, 0);
 		toDraw.setScale(Scale, GlobalGameData.getPlayer().getGodAttackPercent()*Scale);
-		drawAtLocation(toDraw, new Vector2(godDraw, 0));
+		//drawAtLocation(toDraw, new Vector2(godDraw, 0)); // Bomb - unimplemented
 		if(canSummon)
-		DrawManaCost(MainGame.getSummonHelper().getSummonMode(), DrawLoc.x + CircleSize + ManaWidth/Scale, DrawLoc.y + (CircleSize/2));
+			DrawManaCost(MainGame.getSummonHelper().getSummonMode(), DrawLoc.x + CircleSize + ManaWidth/Scale, DrawLoc.y + (CircleSize/2));
 		
 	}
 
@@ -487,7 +477,7 @@ public class Drawer {
 		bigFont.draw(batch, ((Villagers < 10 ) ? "0": "") +Integer.toString(Villagers), DrawLoc.x, DrawLoc.y);
 		
 		font.setColor(Color.BLACK);
-		font.draw(batch, str + "Mana: "+GlobalGameData.getPlayer().getMana(), 192/Scale,25);
+		font.draw(batch, str + "Mana: "+ (int)GlobalGameData.getPlayer().getMana(), 192/Scale,25);
 	}
 
 	private void DrawHelpNotifications() {

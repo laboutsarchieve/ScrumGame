@@ -53,7 +53,7 @@ public class MainGame implements Screen {
 		if(timeSinceMana >=.25) //tweak as you like right now its .5 mana every .25 seconds so 2 mana per second
 		{
 			timeSinceMana=0;
-			GlobalGameData.getPlayer().addMana((float).5f + 0.3f * LevelData.getLevel());
+			GlobalGameData.getPlayer().addMana((float).5f + 0.05f * LevelData.getLevel());
 		}
 		gameInput.update(deltaTime);
 		entityManager.update(deltaTime);

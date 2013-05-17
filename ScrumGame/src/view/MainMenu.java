@@ -1,7 +1,5 @@
 package view;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -11,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
@@ -27,7 +24,6 @@ public class MainMenu implements Screen {
 	private boolean touching=false;
 	private ScreenManager MyGame;
 	private TextureRepository textureRepo;
-	private SoundHelper soundHelper;
 	private MainMenuInput menuInput;
 	private Vector2 startTouch;
 	private Vector2 currentTouch;
@@ -47,7 +43,6 @@ public class MainMenu implements Screen {
 		currentTouch=new Vector2(0,0);
 		startTouch=new Vector2(0,0);
 		textureRepo=textureRepoParam;
-		soundHelper=soundHelperParam;
 		menuInput=new MainMenuInput(this);
 		Gdx.input.setInputProcessor(menuInput);
 		font = new BitmapFont(Gdx.files.internal("font/Dialog.fnt"),
@@ -166,7 +161,6 @@ public class MainMenu implements Screen {
 	private void drawText(){
 		Matrix4 normalProjection = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight()); //required to render text properly
 		batch.setProjectionMatrix(normalProjection);
-		float textWidth = font.getBounds(versionString).width;
 		float textHeight = font.getBounds(versionString).height;
 		Vector2 drawLoc = new Vector2( 0 , textHeight*2 );
 		font.draw(batch, versionString, drawLoc.x, drawLoc.y);

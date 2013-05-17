@@ -9,7 +9,6 @@ public class SpawnTile {
 	private Vector2 position;
 	private EntityType spawnType;
 	private Faction factionType;
-	private int spawnRate;
 	private int tillSpawn;
 	private int range;
 	
@@ -17,7 +16,6 @@ public class SpawnTile {
 		this.position = position;
 		this.spawnType = spawnType;
 		this.factionType = factionType;
-		this.spawnRate = spawnRate;
 		this.tillSpawn = spawnRate;
 		this.range = range;
 	}
